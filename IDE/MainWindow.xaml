@@ -6,7 +6,22 @@
         xmlns:local="clr-namespace:IDE"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <!--.FocusedElement="{Binding ElementName=mnulexico}"
+    -->
     <Grid>
+        <Grid.Resources>
+            <Style x:Key="options" TargetType="MenuItem">
+                <Style.Triggers>
+                    <Trigger Property="IsFocused" Value="True">
+                        <Setter Property="Background" Value="LightPink"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="Margin" Value="-2"/>
+                        <Setter Property="BorderBrush" Value="Black"/>
+                        <Setter Property="BorderThickness" Value="2"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             
@@ -20,11 +35,27 @@
         <Menu VerticalAlignment="Top">
             <Menu.Height>20</Menu.Height>
 
-                <MenuItem Header="Archivo">
-                    <MenuItem Header="Abrir"/>
-                    <MenuItem Header="Guardar"/>
-                    <MenuItem Header="Guardar como"/>
-                    <MenuItem Header="Cerrar"/>
+                <MenuItem Header="_Archivo">
+                    <MenuItem Header="_Abrir" Click="openFile"  >
+                        <MenuItem.Icon>
+                            <Image Source="/open-folder.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Guardar" Click="saveCode">
+                        <MenuItem.Icon>
+                            <Image Source="/save.png" Width="20"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Guardar como" Click="saveAs">
+                        <MenuItem.Icon>
+                            <Image Source="/saveas.png" Width="20" Height="20"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Cerrar" Click="closeFile" >
+                        <MenuItem.Icon>
+                            <Image Source="/close.png" Width="20" Height="20"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
 
                 </MenuItem>
             <MenuItem Header="Editar"/>
@@ -52,15 +83,15 @@
 
             <TextBox Margin="10" TextWrapping="Wrap" Grid.Row="0"
                  AcceptsReturn="True" VerticalScrollBarVisibility="Visible"
-                  >
+                 Name="codigo" >
                 aa
             </TextBox>
             <DockPanel Grid.Row="1" Grid.ColumnSpan="2" Background="Gray"  Margin="10,0,10,10"
                             >
 
                 <Menu DockPanel.Dock="Top">
-                    <MenuItem Header="Errores"/>
-                    <MenuItem Header="Resultados"/>
+                    <MenuItem Style="{StaticResource options}" Header="Errores" />
+                    <MenuItem Style="{StaticResource options}" Header="Resultados"/>
                 </Menu>
 
                 <TextBox DockPanel.Dock="Bottom" IsReadOnly="True" Margin="5,5,5,10" 
@@ -75,20 +106,22 @@
                             >
                     
                 <Menu DockPanel.Dock="Top">
-                    <MenuItem Header="Lexico" />
-                    <MenuItem Header="Sintactico"/>
-                    <MenuItem Header="Semantico"/>
-                    <MenuItem Header="Codigo Intermedio"/>
+                    <MenuItem Header="Lexico" Style="{StaticResource options}" Click="eventoLexico" Name="mnulexico" />
+                    <MenuItem Header="Sintactico" Style="{StaticResource options}" Name="mnusintactico" Click="eventoSintactico"/>
+
+                    <MenuItem Style="{StaticResource options}" Header="Semantico" Name="mnuSemantico" Click="eventoSemantico" />
+                    <MenuItem Style="{StaticResource options}" Header="Codigo Intermedio" Name="mnuInter" Click="eventoInter" />
                 </Menu>
                 
                 <TextBox DockPanel.Dock="Bottom" IsReadOnly="True" Margin="5,5,5,10" 
                          AcceptsReturn="True" VerticalScrollBarVisibility="Visible"
-                         TextWrapping="Wrap">
-                    aaa
+                         TextWrapping="Wrap" Name="trans">
+                    
                 </TextBox>
                 
             </DockPanel>
             
         </Grid>
     </Grid>
+    
 </Window>

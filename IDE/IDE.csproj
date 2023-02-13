@@ -7,4 +7,18 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="close.png" />
+    <None Remove="open-folder.png" />
+    <None Remove="save.png" />
+    <None Remove="saveas.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="close.png" />
+    <Resource Include="open-folder.png" />
+    <Resource Include="save.png" />
+    <Resource Include="saveas.png" />
+  </ItemGroup>
+
 </Project>
