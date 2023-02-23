@@ -19,3 +19,5 @@ C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\obj\Debug\net6.0-windows\ref
 C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\obj\Debug\net6.0-windows\IDE.pdb
 C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\obj\Debug\net6.0-windows\IDE.genruntimeconfig.cache
 C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\obj\Debug\net6.0-windows\ref\IDE.dll
+C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\bin\Debug\net6.0-windows\ICSharpCode.AvalonEdit.dll
+C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\obj\Debug\net6.0-windows\IDE.csproj.CopyComplete

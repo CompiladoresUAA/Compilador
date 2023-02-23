@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:IDE"
+        xmlns:local="clr-namespace:IDE" xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Jucs=" Height="450" Width="800"  Icon="/icon-512x512.png">
     <!--.FocusedElement="{Binding ElementName=mnulexico}"
     -->
     <Grid>
@@ -81,11 +81,8 @@
 
             </Grid.RowDefinitions>
 
-            <TextBox Margin="10" TextWrapping="Wrap" Grid.Row="0"
-                 AcceptsReturn="True" VerticalScrollBarVisibility="Visible"
-                 Name="codigo" >
-                aa
-            </TextBox>
+            <avalonedit:TextEditor  x:Name="codigo" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" ShowLineNumbers="True" Margin="0,10,0,0"/>
+
             <DockPanel Grid.Row="1" Grid.ColumnSpan="2" Background="Gray"  Margin="10,0,10,10"
                             >
 

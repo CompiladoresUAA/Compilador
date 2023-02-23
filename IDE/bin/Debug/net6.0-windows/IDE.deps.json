@@ -7,8 +7,19 @@
   "targets": {
     ".NETCoreApp,Version=v6.0": {
       "IDE/1.0.0": {
+        "dependencies": {
+          "AvalonEdit": "6.2.0.78"
+        },
         "runtime": {
           "IDE.dll": {}
+        }
+      },
+      "AvalonEdit/6.2.0.78": {
+        "runtime": {
+          "lib/net6.0-windows7.0/ICSharpCode.AvalonEdit.dll": {
+            "assemblyVersion": "6.2.0.78",
+            "fileVersion": "6.2.0.78"
+          }
         }
       }
     }
@@ -18,6 +29,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "AvalonEdit/6.2.0.78": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-mkfpGYDGDxVUrMe8CzOMMD4engMwoQiZ3md0m1c3V4hvQI6PErOjzsRIqetYxB2EyrYG+Gv0icAoADg0UIkv/g==",
+      "path": "avalonedit/6.2.0.78",
+      "hashPath": "avalonedit.6.2.0.78.nupkg.sha512"
     }
   }
 }

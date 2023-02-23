@@ -15,6 +15,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
+using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using System.Xml;
 
 enum LNG{LEXICO,SINTACTICO,SEMANTICO,CDGOINTERMEDIO };
 namespace IDE
@@ -36,6 +40,8 @@ namespace IDE
             myBorder1 = new Border();
             mnu_lenguajes = "";
             InitializeComponent();
+            XmlReader reader = XmlReader.Create("../../../avalonfiles/keywords.xml");//xshd
+            codigo.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
         }
 
         private void eventoLexico(object sender, RoutedEventArgs e)

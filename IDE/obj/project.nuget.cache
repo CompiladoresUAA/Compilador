@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "NKKYNQwwDoPnoLWZJBbfNoLWbpH5D1Uz/YyCgE00OPrCIHebJhWG0nCINtVHpG2AgxgYTPoJg8Au2AgbflUVLg==",
+  "dgSpecHash": "X9aDBcuD9C2PQCJHpzAZ1MyATIASj8aWGY4mLO4W6uKRXOEn67UHmiy73hUc9h/ioekoNT17iOMy3nM+0TbYmw==",
   "success": true,
   "projectFilePath": "C:\\Users\\kris_\\OneDrive\\Documentos\\Compiladores\\IDE\\IDE.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\kris_\\.nuget\\packages\\avalonedit\\6.2.0.78\\avalonedit.6.2.0.78.nupkg.sha512"
+  ],
   "logs": []
 }

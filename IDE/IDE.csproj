@@ -9,6 +9,9 @@
 
   <ItemGroup>
     <None Remove="close.png" />
+    <None Remove="icon-128x128.png" />
+    <None Remove="icon-512x512.png" />
+    <None Remove="icon.png" />
     <None Remove="open-folder.png" />
     <None Remove="save.png" />
     <None Remove="saveas.png" />
@@ -16,9 +19,16 @@
 
   <ItemGroup>
     <Resource Include="close.png" />
+    <Resource Include="icon-128x128.png" />
+    <Resource Include="icon-512x512.png" />
+    <Resource Include="icon.png" />
     <Resource Include="open-folder.png" />
     <Resource Include="save.png" />
     <Resource Include="saveas.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AvalonEdit" Version="6.2.0.78" />
   </ItemGroup>
 
 </Project>
