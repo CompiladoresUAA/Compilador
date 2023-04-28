@@ -19,6 +19,8 @@ using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using System.Xml;
+using System.Diagnostics;
+//using System.Windows.Forms;
 
 enum LNG{LEXICO,SINTACTICO,SEMANTICO,CDGOINTERMEDIO };
 namespace IDE
@@ -33,6 +35,9 @@ namespace IDE
         LNG options;
         SaveFileDialog save_file;
         OpenFileDialog open_file;
+
+        Style avalonstyles;
+       
         public MainWindow()
         {
             this.save_file = new SaveFileDialog();
@@ -42,10 +47,24 @@ namespace IDE
             InitializeComponent();
             XmlReader reader = XmlReader.Create("../../../avalonfiles/keywords.xml");//xshd
             codigo.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+            //this.avalonstyles = (Style)Application.Current.FindResource("avalonstyles");
         }
 
         private void eventoLexico(object sender, RoutedEventArgs e)
         {
+
+            if(this.open_file.FileName != "" )
+            {
+                File.WriteAllText(this.open_file.FileName, this.codigo.Text);
+
+            }else if( this.save_file.FileName != "" )
+            {
+                File.WriteAllText(this.save_file.FileName,this.codigo.Text);
+            }
+            else
+            {
+                this.saveAs(new object (),new RoutedEventArgs ());
+            }
             /*this.removeBorder();
             this.options=LNG.LEXICO;
             myBorder1.BorderBrush = Brushes.SlateBlue;
@@ -63,8 +82,25 @@ namespace IDE
             this.option.Margin= new Thickness(-2);
             */
 
+            ProcessStartInfo startInfo = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = "/c python C:\\Users\\kris_\\OneDrive\\Documentos\\Compiladores\\IDE\\scan.py "+this.open_file.FileName,
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow= true,
+            };
+            Process process = new Process
+            {
+                StartInfo = startInfo
+            };
+            process.Start();
+            string output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+          
+
             this.options = LNG.LEXICO;
-            this.trans.Text = "Lexico";
+            this.trans.Text = output;
         }
        
         private void removeBorder()
@@ -210,6 +246,40 @@ namespace IDE
         {
             this.options = LNG.CDGOINTERMEDIO;
             this.trans.Text = "Código intermedio";
+        }
+
+        private void lightTheme(object sender, RoutedEventArgs e)
+        {
+            // avalonstyles.Setters.Remove(avalonstyles.Setters.First(s => s.Equals(TextEditor.BackgroundProperty) ));
+            this.trans.Background = Brushes.White;
+            this.trans.Foreground = Brushes.Black;
+            this.feedback.Background= Brushes.White;
+            this.feedback.Foreground = Brushes.Black;
+            this.codigo.Background = Brushes.White;
+            this.codigo.Foreground = Brushes.Black;
+
+            
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void darkTheme(object sender, RoutedEventArgs e)
+        {
+            this.trans.Background = new BrushConverter().ConvertFromString("#2E2E2E") as Brush; 
+            this.trans.Foreground = Brushes.White;
+            this.feedback.Background = new BrushConverter().ConvertFromString("#2E2E2E") as Brush;
+            this.feedback.Foreground = Brushes.White;
+            this.codigo.Background = new BrushConverter().ConvertFromString("#2E2E2E") as Brush;
+            this.codigo.Foreground = Brushes.White;
+            
+
+
+
+
+
         }
     }
 }

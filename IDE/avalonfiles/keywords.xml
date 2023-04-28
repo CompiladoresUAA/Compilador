@@ -17,11 +17,25 @@
 			</RuleSet>
 		</Span>
 
-		<Keywords fontWeight="bold" foreground="Blue">
+		<Keywords fontWeight="bold" foreground="Aqua">
+			<Word>main</Word>
 			<Word>if</Word>
+			<Word>then</Word>
 			<Word>else</Word>
+			<Word>end</Word>
+			<Word>do</Word>
+			<Word>while</Word>
+			<Word>repeat</Word>
+			<Word>until</Word>
+			<Word>cin</Word>
+			<Word>cout</Word>
+			<Word>real</Word>
 			<Word>int</Word>
-			<Word>juca</Word>
+			<Word>boolean</Word>
+
+
+
+
 			<!-- ... -->
 		</Keywords>
 
@@ -32,8 +46,8 @@
 		<!-- Digits -->
 		<Rule foreground="Red" fontWeight="bold">
 			\b0[xX][0-9a-fA-F]+  # hex number
-			|    \b
-			(    \d+(\.[0-9]+)?   #number with optional floating point
+			|    
+			(    -?\d+(\.[0-9]+)?   #number with optional floating point
 			|    \.[0-9]+         #or just starting with floating point
 			)
 			([eE][+-]?[0-9]+)? # optional exponent
