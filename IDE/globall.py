@@ -49,3 +49,4 @@ class TokenType(Enum):
 
     REMAINDER = 40#%
 lineno = 0
+colpos = 0

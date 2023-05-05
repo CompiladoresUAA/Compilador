@@ -46,19 +46,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\kris_\\.nuget\\packages\\": {}
+    "C:\\Users\\jucaa\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\kris_\\OneDrive\\Documentos\\Compiladores\\IDE\\IDE.csproj",
+      "projectUniqueName": "C:\\Users\\jucaa\\OneDrive\\Documentos\\Proyecto\\Compilador\\IDE\\IDE.csproj",
       "projectName": "IDE",
-      "projectPath": "C:\\Users\\kris_\\OneDrive\\Documentos\\Compiladores\\IDE\\IDE.csproj",
-      "packagesPath": "C:\\Users\\kris_\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\kris_\\OneDrive\\Documentos\\Compiladores\\IDE\\obj\\",
+      "projectPath": "C:\\Users\\jucaa\\OneDrive\\Documentos\\Proyecto\\Compilador\\IDE\\IDE.csproj",
+      "packagesPath": "C:\\Users\\jucaa\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\jucaa\\OneDrive\\Documentos\\Proyecto\\Compilador\\IDE\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\kris_\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\jucaa\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -108,7 +108,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
       }
     }
   }

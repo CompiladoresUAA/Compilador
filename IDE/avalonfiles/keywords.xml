@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0"?>
 <SyntaxDefinition name="Custom Highlighting" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
-	<Color name="Comment" foreground="Green" />
+	<Color name="Comment" foreground="#FF9999" />
 	<Color name="String" foreground="Blue" />
 
 	<!-- This is the main ruleset. -->
@@ -16,8 +16,12 @@
 				<Span begin="\\" end="." />
 			</RuleSet>
 		</Span>
-
-		<Keywords fontWeight="bold" foreground="Aqua">
+		
+		<Rule  foreground="yellow" fontWeight="bold">
+			/.
+		</Rule>
+		
+		<Keywords fontWeight="bold" foreground="aqua">
 			<Word>main</Word>
 			<Word>if</Word>
 			<Word>then</Word>
@@ -47,10 +51,14 @@
 		<Rule foreground="Red" fontWeight="bold">
 			\b0[xX][0-9a-fA-F]+  # hex number
 			|    
-			(    -?\d+(\.[0-9]+)?   #number with optional floating point
-			|    \.[0-9]+         #or just starting with floating point
+			(    -?\d+   #number
 			)
 			([eE][+-]?[0-9]+)? # optional exponent
+		</Rule>
+		<Rule foreground="yellow" fontWeight="bold">
+			(    (-)?[0-9]+\.[0-9]+   #number with  floating point
+			|    \.[0-9]+         #or just starting with floating point
+			)
 		</Rule>
 	</RuleSet>
 </SyntaxDefinition>

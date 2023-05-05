@@ -1,4 +1,6 @@
 import sys
+import os
+import globall
 from globall import TokenType as tp
 from globall import lineno
 from enum import Enum
@@ -10,7 +12,7 @@ linea = str()
 MAXBUFFER = 1024
 namefile = sys.argv[1]
 source = open(namefile,'r')
-colpos = 0
+
 consume:bool  = True
 c:str
 reservedWords ={
@@ -55,33 +57,33 @@ class States(Enum):
     HECHO = 19
     
 def getNextChar():
-    global colpos
+    
     global bufsize
     global source
-    global linea,lineno
-    if( not(colpos < bufsize) ):
+    global linea
+    if( not(globall.colpos < bufsize) ):
         linea = source.readline()
         
         if  linea:
-            lineno+=1
+            globall.lineno+=1
+            
             bufsize = len(linea)
-            colpos = 0
-            char = linea[colpos]
-            colpos+=1
+            globall.colpos = 0
+            char = linea[globall.colpos]
+            globall.colpos+=1
             return char
         else:
             
             return "EOF"    
     else:
-        char = linea[colpos]
+        char = linea[globall.colpos]
         
-        colpos+=1
+        globall.colpos+=1
         return char
     
         
 def ungetChar():
-    global colpos
-    colpos-=1
+    globall.colpos-=1
 
 def isReservedWord(tokenString:str)->tp:
     for key in reservedWords.keys():
@@ -292,5 +294,8 @@ def getToken()->tp:
     TokenString.clear()
     return currentToken
 
+
+
 while getToken() != tp.ENDFILE:
     pass
+fileoutput.close()
