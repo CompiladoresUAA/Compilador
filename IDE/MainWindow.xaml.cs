@@ -48,6 +48,7 @@ namespace IDE
             XmlReader reader = XmlReader.Create("../../../avalonfiles/keywords.xml");//xshd
             codigo.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
             //this.avalonstyles = (Style)Application.Current.FindResource("avalonstyles");
+            
         }
 
         private void eventoLexico(object sender, RoutedEventArgs e)
@@ -81,11 +82,15 @@ namespace IDE
             this.option.FontWeight= FontWeights.Bold;
             this.option.Margin= new Thickness(-2);
             */
+            string path = Directory.GetCurrentDirectory();
+            string r = "/c " + path.Remove(path.Length - 25, 25) + "\\scan.py " + this.open_file.FileName;
+            //MessageBox.Show("Ruta: "+r);/*Revisa la ruta a ejecutar del python*/
 
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 FileName = "cmd.exe",
-                Arguments = "/c python C:\\Users\\kris_\\OneDrive\\Documentos\\Compiladores\\IDE\\scan.py "+this.open_file.FileName,
+                //Arguments = "/c python C:\\Users\\kris_\\OneDrive\\Documentos\\Compiladores\\IDE\\scan.py "+this.open_file.FileName,
+                Arguments = "/c python "+path.Remove(path.Length - 25, 25)+"\\scan.py " + this.open_file.FileName,
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
                 CreateNoWindow= true,
@@ -257,8 +262,10 @@ namespace IDE
             this.feedback.Foreground = Brushes.Black;
             this.codigo.Background = Brushes.White;
             this.codigo.Foreground = Brushes.Black;
+            XmlReader reader = XmlReader.Create("../../../avalonfiles/keywords2.xml");
+            codigo.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
 
-            
+
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -274,7 +281,9 @@ namespace IDE
             this.feedback.Foreground = Brushes.White;
             this.codigo.Background = new BrushConverter().ConvertFromString("#2E2E2E") as Brush;
             this.codigo.Foreground = Brushes.White;
-            
+
+            XmlReader reader2 = XmlReader.Create("../../../avalonfiles/keywords.xml");
+            codigo.SyntaxHighlighting = HighlightingLoader.Load(reader2, HighlightingManager.Instance);
 
 
 

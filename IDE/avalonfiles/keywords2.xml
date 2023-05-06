@@ -1,0 +1,56 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="Custom Highlighting" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+	<Color name="Comment" foreground="#660066" />
+	<Color name="String" foreground="green" />
+
+	<!-- This is the main ruleset. -->
+	<RuleSet>
+		<Span color="Comment" begin="//" />
+		<Span color="Comment" multiline="true" begin="/\*" end="\*/" />
+
+		<Span color="String">
+			<Begin>"</Begin>
+			<End>"</End>
+			<RuleSet>
+				<!-- nested span for escape sequences -->
+				<Span begin="\\" end="." />
+			</RuleSet>
+		</Span>
+
+		<Keywords fontWeight="bold" foreground="#ff8800">
+			<Word>main</Word>
+			<Word>if</Word>
+			<Word>then</Word>
+			<Word>else</Word>
+			<Word>end</Word>
+			<Word>do</Word>
+			<Word>while</Word>
+			<Word>repeat</Word>
+			<Word>until</Word>
+			<Word>cin</Word>
+			<Word>cout</Word>
+			<Word>real</Word>
+			<Word>int</Word>
+			<Word>boolean</Word>
+
+
+
+
+			<!-- ... -->
+		</Keywords>
+
+		<Keywords fontWeight="bold" fontStyle="italic" foreground="Red">
+			<Word>AvalonEdit</Word>
+		</Keywords>
+
+		<!-- Digits -->
+		<Rule foreground="Red" fontWeight="bold">
+			\b0[xX][0-9a-fA-F]+  # hex number
+			|    
+			(    -?\d+(\.[0-9]+)?   #number with optional floating point
+			|    \.[0-9]+         #or just starting with floating point
+			)
+			([eE][+-]?[0-9]+)? # optional exponent
+		</Rule>
+	</RuleSet>
+</SyntaxDefinition>

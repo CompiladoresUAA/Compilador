@@ -6,14 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
-      "AvalonEdit/6.2.0.78": {
-        "runtime": {
-          "lib/net6.0-windows7.0/ICSharpCode.AvalonEdit.dll": {
-            "assemblyVersion": "6.2.0.78",
-            "fileVersion": "6.2.0.78"
-          }
-        }
-      }
+      "AvalonEdit/6.2.0.78": {}
     }
   },
   "libraries": {
