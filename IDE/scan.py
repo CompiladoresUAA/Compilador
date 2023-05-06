@@ -195,6 +195,7 @@ def getToken()->tp:
             else : 
                 state = States.HECHO
                 currentToken = tp.ERROR
+                consume = False
         elif state == States.EREAL:
             if c.isdigit():
                 TokenString.append(c)

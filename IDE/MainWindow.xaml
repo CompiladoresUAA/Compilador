@@ -14,7 +14,7 @@
         
         <Grid.Resources>
 
-            <Style TargetType="{x:Type Thumb}"  x:Key="ScrollBarThumb">
+            <!--<Style TargetType="{x:Type Thumb}"  x:Key="ScrollBarThumb">
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Thumb}">
@@ -54,7 +54,7 @@
                     </Setter.Value>
                 </Setter>
                 
-            </Style>
+            </Style>-->
 
 
             <Style x:Key="options" TargetType="MenuItem" >
@@ -69,10 +69,10 @@
                 </Style.Triggers>
             </Style>
 
-
+            
             <Style x:Key="avalonstyles" TargetType="avalonedit:TextEditor">
-                <Setter Property="Background" Value="#2E2E2E"/>
-                <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Background" Value="#2E2E2E"/>
+                        <Setter Property="Foreground" Value="White"/>
             </Style>
 
 
@@ -80,15 +80,15 @@
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-
+            
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="15*"/>
 
         </Grid.RowDefinitions>
-        <StackPanel Height="Auto" Background="LightBlue" Grid.Row="0">
-            <Menu VerticalAlignment="Top">
+    <StackPanel Height="Auto" Background="LightBlue" Grid.Row="0">
+        <Menu VerticalAlignment="Top">
                 <Menu.Height>20</Menu.Height>
                 <MenuItem Header="_Archivo">
                     <MenuItem Header="_Abrir" Click="openFile"  >
@@ -113,43 +113,36 @@
                     </MenuItem>
 
                 </MenuItem>
-                <MenuItem Header="Editar">
-                    <MenuItem Header="Tamaño de fuente">
-                        <MenuItem Header="Pequeña"/>
-                        <MenuItem Header="Mediana"/>
-                        <MenuItem Header="Grande"/>
-                    </MenuItem>
-                </MenuItem>
-                <MenuItem Header="_Formato">
+            <MenuItem Header="Editar"/>
+            <MenuItem Header="_Formato">
 
                     <MenuItem Header="_Claro" Click="lightTheme" >
                         <MenuItem.Icon>
                             <Image Source="/light-mode.png" Width="20" Height="20"/>
-                        </MenuItem.Icon>
+                        </MenuItem.Icon> 
                     </MenuItem>
                     <MenuItem Header="_Obscuro" Click="darkTheme"  >
                         <MenuItem.Icon>
                             <Image Source="/night-mode.png" Width="20" Height="20"/>
-                        </MenuItem.Icon>
+                        </MenuItem.Icon> 
                     </MenuItem>
 
 
 
                 </MenuItem>
-                <MenuItem Header="Compilar"/>
-                <MenuItem Header="Ayuda"/>
+            <MenuItem Header="Compilar"/>
+            <MenuItem Header="Ayuda"/>
 
 
 
-            </Menu>
+        </Menu>
 
-
-        </StackPanel>
+        
+    </StackPanel>
         <Grid Background="LightGray" Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="171*"/>
-                <ColumnDefinition Width="69*"/>
-                <ColumnDefinition Width="160*"/>
+                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition/>
 
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -158,15 +151,11 @@
 
             </Grid.RowDefinitions>
 
-<<<<<<< HEAD
             <avalonedit:TextEditor HorizontalScrollBarVisibility="Auto" Style="{StaticResource avalonstyles}" Background="#2E2E2E" x:Name="codigo" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" ShowLineNumbers="True" Margin="0,0,0,0" >
-     
+           
             </avalonedit:TextEditor>
-=======
-            <avalonedit:TextEditor Style="{StaticResource avalonstyles}" Background="#2E2E2E" x:Name="codigo" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" ShowLineNumbers="True" Grid.ColumnSpan="2"/>
->>>>>>> f5b677c3edfdb35192489531fc1a6e4d1beb309a
 
-            <DockPanel Grid.ColumnSpan="3" Background="Gray"  Margin="2,271,2,2" Grid.RowSpan="2"
+            <DockPanel Grid.Row="1" Grid.ColumnSpan="2" Background="Gray"  Margin="2,0,2,2"
                             >
 
                 <Menu DockPanel.Dock="Top">
@@ -184,9 +173,9 @@
 
             </DockPanel>
 
-            <DockPanel Grid.Row="0" Grid.Column="2" Background="Gray"
+            <DockPanel Grid.Row="0" Grid.Column="1" Background="Gray"  Margin="0"
                             >
-
+                    
                 <Menu DockPanel.Dock="Top">
                     <MenuItem Header="Lexico" Style="{StaticResource options}" Click="eventoLexico" Name="mnulexico" />
                     <MenuItem Header="Sintactico" Style="{StaticResource options}" Name="mnusintactico" Click="eventoSintactico"/>
@@ -194,7 +183,7 @@
                     <MenuItem Style="{StaticResource options}" Header="Semantico" Name="mnuSemantico" Click="eventoSemantico" />
                     <MenuItem Style="{StaticResource options}" Header="Codigo Intermedio" Name="mnuInter" Click="eventoInter" />
                 </Menu>
-
+                
                 <!--<TextBox DockPanel.Dock="Bottom" IsReadOnly="True" Margin="5,5,5,10" 
                          AcceptsReturn="True" VerticalScrollBarVisibility="Visible"
                          TextWrapping="Wrap" Name="trans">
@@ -203,8 +192,8 @@
                 <avalonedit:TextEditor Style="{StaticResource avalonstyles}" DockPanel.Dock="Bottom"  IsReadOnly="True" x:Name="trans" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" ShowLineNumbers="False" Margin="0"/>
 
             </DockPanel>
-
+            
         </Grid>
     </Grid>
-
+    
 </Window>

@@ -1,5 +1,5 @@
 ﻿IDE
-
+1.0.0.0
 
 winexe
 C#
@@ -12,9 +12,9 @@ TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\App.xaml
 11407045341
 
-3-1233169557
+5-1625971979
 204-548197478
 MainWindow.xaml;
 
-False
+True
 
