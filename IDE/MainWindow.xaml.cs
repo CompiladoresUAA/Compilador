@@ -48,7 +48,9 @@ namespace IDE
             XmlReader reader = XmlReader.Create("../../../avalonfiles/keywords.xml");//xshd
             codigo.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
             //this.avalonstyles = (Style)Application.Current.FindResource("avalonstyles");
-            
+            this.codigo.FontSize = 12;
+            this.feedback.FontSize = 12;
+            this.trans.FontSize = 12;
         }
 
         private void eventoLexico(object sender, RoutedEventArgs e)
@@ -83,14 +85,14 @@ namespace IDE
             this.option.Margin= new Thickness(-2);
             */
             string path = Directory.GetCurrentDirectory();
-            string r = "/c " + path.Remove(path.Length - 25, 25) + "\\scan.py " + this.open_file.FileName;
+            string r = "/c python " + path.Remove(path.Length - 25, 25) + "\\scan.py " + this.open_file.FileName;
             //MessageBox.Show("Ruta: "+r);/*Revisa la ruta a ejecutar del python*/
 
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 FileName = "cmd.exe",
                 //Arguments = "/c python C:\\Users\\kris_\\OneDrive\\Documentos\\Compiladores\\IDE\\scan.py "+this.open_file.FileName,
-                Arguments = "/c python "+path.Remove(path.Length - 25, 25)+"\\scan.py " + this.open_file.FileName,
+                Arguments = r,
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
                 CreateNoWindow= true,
@@ -268,9 +270,9 @@ namespace IDE
 
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void tamSource(object sender, RoutedEventArgs e)
         {
-            
+            MessageBox.Show("Entre -> ");
         }
 
         private void darkTheme(object sender, RoutedEventArgs e)
@@ -289,6 +291,27 @@ namespace IDE
 
 
 
+        }
+
+        private void tamPequenio(object sender, RoutedEventArgs e)
+        {
+            this.codigo.FontSize = 12;
+            this.feedback.FontSize = 12;
+            this.trans.FontSize = 12;
+        }
+
+        private void tamMediana(object sender, RoutedEventArgs e)
+        {
+            this.codigo.FontSize = 20;
+            this.feedback.FontSize = 20;
+            this.trans.FontSize = 20;
+        }
+
+        private void tamGrande(object sender, RoutedEventArgs e)
+        {
+            this.codigo.FontSize = 30;
+            this.feedback.FontSize = 30;
+            this.trans.FontSize = 30;
         }
     }
 }

@@ -68,9 +68,9 @@
                 </MenuItem>
                 <MenuItem Header="Editar">
                     <MenuItem Header="Tamaño de fuente">
-                        <MenuItem Header="Pequeña"/>
-                        <MenuItem Header="Mediana"/>
-                        <MenuItem Header="Grande"/>
+                        <MenuItem Header="Pequeña" Click="tamPequenio"/>
+                        <MenuItem Header="Mediana" Click="tamMediana"/>
+                        <MenuItem Header="Grande" Click="tamGrande"/>
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="_Formato">
@@ -113,8 +113,7 @@
 
             <avalonedit:TextEditor Style="{StaticResource avalonstyles}" Background="#2E2E2E" x:Name="codigo" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" ShowLineNumbers="True" Grid.ColumnSpan="2"/>
 
-            <DockPanel Grid.ColumnSpan="3" Background="Gray"  Margin="2,271,2,2" Grid.RowSpan="2"
-                            >
+            <DockPanel Grid.ColumnSpan="3" Background="Gray"  Margin="2,271,2,2" Grid.RowSpan="2">
 
                 <Menu DockPanel.Dock="Top">
                     <MenuItem Style="{StaticResource options}" Header="Errores" />
