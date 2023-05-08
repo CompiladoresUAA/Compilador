@@ -15,7 +15,7 @@
 		</Rule>
 
 		<Rule foreground="#06C258" fontWeight="bold">
-			(  ; | , | \( | \) )
+			(  ; | , | \( | \) | { | } )
 		</Rule>
 		
 		<Span color="Comment" begin="//" />
