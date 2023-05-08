@@ -2,7 +2,8 @@ from globall import TokenType as tp
 import globall
 
 import os
-fileoutput = open(os.path.join(os.getcwd(),'hi.txt'),'a')
+fileoutput = open(os.path.join(os.getcwd(),'Archivo_Tokens.txt'),'a')
+fileoutputError = open(os.path.join(os.getcwd(),'Archivo_Errores.txt'),'a')
 
 def printToken(token,tokenString):
    
@@ -89,7 +90,7 @@ def printToken(token,tokenString):
         print( "EOF" )
     elif ( tp.ERROR == token ):
         print( "ERROR: {} linea: {} columna:{}".format(tokenString,globall.lineno,globall.colpos) )
-       
+        writeErrores("ERROR: {} linea: {} columna:{}".format(tokenString,globall.lineno,globall.colpos))
 
     else:
         print("UNKNOWN TOKEN: {}".format(tokenString))
@@ -97,8 +98,6 @@ def printToken(token,tokenString):
         
 
 def write(text):
-   
-   
     try:
        
         # Procesamiento para escribir en el fichero
@@ -108,4 +107,12 @@ def write(text):
     finally:
         pass
 
-    
+def writeErrores(text):
+    try:
+       
+        # Procesamiento para escribir en el fichero
+        fileoutputError.write(text+"\n")
+    except:
+        pass
+    finally:
+        pass  

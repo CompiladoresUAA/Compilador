@@ -1,0 +1,2 @@
+ERROR: @ linea: 1 columna:4
+ERROR: 32. linea: 1 columna:23

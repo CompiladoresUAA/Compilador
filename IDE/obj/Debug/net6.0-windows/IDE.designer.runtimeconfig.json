@@ -13,7 +13,11 @@
     ],
     "additionalProbingPaths": [
       "C:\\Users\\kris_\\.dotnet\\store\\|arch|\\|tfm|",
+<<<<<<< HEAD
       "C:\\Users\\kris_\\.nuget\\packages"
+=======
+      "C:\\Users\\jucaa\\.nuget\\packages"
+>>>>>>> Alonso
     ],
     "configProperties": {
       "Microsoft.NETCore.DotNetHostPolicy.SetAppPaths": true

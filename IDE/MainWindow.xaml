@@ -113,8 +113,14 @@
                     </MenuItem>
 
                 </MenuItem>
-            <MenuItem Header="Editar"/>
-            <MenuItem Header="_Formato">
+                <MenuItem Header="Editar">
+                    <MenuItem Header="Tamaño de fuente">
+                        <MenuItem Header="Pequeña" Click="tamPequenio"/>
+                        <MenuItem Header="Mediana" Click="tamMediana"/>
+                        <MenuItem Header="Grande" Click="tamGrande"/>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="_Formato">
 
                     <MenuItem Header="_Claro" Click="lightTheme" >
                         <MenuItem.Icon>
@@ -151,12 +157,12 @@
 
             </Grid.RowDefinitions>
 
-            <avalonedit:TextEditor HorizontalScrollBarVisibility="Auto" Style="{StaticResource avalonstyles}" Background="#2E2E2E" x:Name="codigo" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" ShowLineNumbers="True" Margin="0,0,0,0" >
+            <avalonedit:TextEditor HorizontalScrollBarVisibility="Auto" Style="{StaticResource avalonstyles}" Background="#2E2E2E" x:Name="codigo" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" Grid.Row="0" ShowLineNumbers="True" Margin="0,0,0,0" >
            
             </avalonedit:TextEditor>
 
-            <DockPanel Grid.Row="1" Grid.ColumnSpan="2" Background="Gray"  Margin="2,0,2,2"
-                            >
+            <!--<DockPanel Grid.Row="1" Grid.ColumnSpan="2" Background="Gray"  Margin="2,0,2,2"  >-->
+            <DockPanel Grid.Row="2" Grid.ColumnSpan="3" Background="Gray"  Margin="2,2,2,2" >
 
                 <Menu DockPanel.Dock="Top">
                     <MenuItem Style="{StaticResource options}" Header="Errores" />
