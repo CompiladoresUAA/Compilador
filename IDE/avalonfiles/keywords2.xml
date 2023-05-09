@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <SyntaxDefinition name="Custom Highlighting" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 	<Color name="Comment" foreground="#660066" />
 	<Color name="String" foreground="green" />
@@ -10,7 +10,7 @@
 		</Rule>
 
 		<Rule foreground="#187BCD" fontWeight="bold">
-			(  >= | > | = )
+			(  >= | > | = | &lt; | &lt;= | &lt;>)
 		</Rule>
 
 		<Rule foreground="#06C258" fontWeight="bold">
@@ -57,11 +57,12 @@
 			-?[0-9]+(\.[0-9]+)   #number floating point
 		</Rule>
 		<Rule foreground="#E9658D" fontWeight="bold">
-			\b0[xX][0-9a-fA-F]+  # hex number
-			|
-			(    -?\d+   #number
-			)
-			([eE][+-]?[0-9]+)? # optional exponent
+			-?\d+   #number
 		</Rule>
+
+		<Rule foreground="black">
+			[a-zA-Z]*[0-9]+[a-zA-Z]*
+		</Rule>
+		
 	</RuleSet>
 </SyntaxDefinition>

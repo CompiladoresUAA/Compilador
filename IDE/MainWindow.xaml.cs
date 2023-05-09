@@ -62,6 +62,7 @@ namespace IDE
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool iscomp = false;
         private Border myBorder1;
         private String mnu_lenguajes;
         LNG options;
@@ -107,49 +108,45 @@ namespace IDE
             // Imprimir la línea y la columna actuales en la consola
             Debug.WriteLine("Línea: {0}, Columna: {1}", caretLine.LineNumber, caretOffset - caretLine.Offset + 1);
         }
-        private void eventoLexico(object sender, RoutedEventArgs e)
+        
+        private string  lecturaArchivo(string file)
         {
+            string read = File.ReadAllText(file);
+            return read;
+        }
 
-            if(this.open_file.FileName != "" )
+        private void compilarFileSource(object sender, RoutedEventArgs e)
+        {
+            this.iscomp = true;
+            if (this.open_file.FileName != "")
             {
                 File.WriteAllText(this.open_file.FileName, this.codigo.Text);
 
-            }else if( this.save_file.FileName != "" )
+            }
+            else if (this.save_file.FileName != "")
             {
-                File.WriteAllText(this.save_file.FileName,this.codigo.Text);
+                File.WriteAllText(this.save_file.FileName, this.codigo.Text);
             }
             else
             {
-                this.saveAs(new object (),new RoutedEventArgs ());
+                this.saveAs(new object(), new RoutedEventArgs());
             }
-            /*this.removeBorder();
-            this.options=LNG.LEXICO;
-            myBorder1.BorderBrush = Brushes.SlateBlue;
-            myBorder1.BorderThickness = new Thickness(5, 10, 15, 20);
-            myBorder1.Background = Brushes.AliceBlue;
-            myBorder1.Padding = new Thickness(5);
-            myBorder1.CornerRadius = new CornerRadius(15);
+            string pathArch = Directory.GetCurrentDirectory(),
+            pathError = pathArch + "\\Archivo_Errores.txt",
+            pathToken = pathArch + "\\Archivo_Tokens.txt";
+
             
-            this.setBorder(this.mnulexico);
-            
-            /*this.option.BorderBrush = Brushes.AntiqueWhite;
-            this.option.BorderThickness = new Thickness(1);
-            this.option.Background = Brushes.Aqua;
-            this.option.FontWeight= FontWeights.Bold;
-            this.option.Margin= new Thickness(-2);
-            */
             string path = Directory.GetCurrentDirectory();
-            string r = "/c python " + path.Remove(path.Length - 25, 25) + "\\scan.py " + this.open_file.FileName;
-            //MessageBox.Show("Ruta: "+r);/*Revisa la ruta a ejecutar del python*/
-            Debug.WriteLine("r-> " + r);
+
+            
+            string r = "/c python " + path + "\\scan.py " + this.open_file.FileName;
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 FileName = "cmd.exe",
-                //Arguments = "/c python C:\\Users\\kris_\\OneDrive\\Documentos\\Compiladores\\IDE\\scan.py "+this.open_file.FileName,
                 Arguments = r,
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
-                CreateNoWindow= true,
+                CreateNoWindow = true,
             };
             Process process = new Process
             {
@@ -158,11 +155,38 @@ namespace IDE
             process.Start();
             string output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
-          
+            if ( process.HasExited )
+            {
 
+            }
+            else
+            {
+
+            }
+            
+        }
+        private void eventoLexico(object sender, RoutedEventArgs e)
+        {
+            if ( !this.iscomp)
+            {
+                MessageBox.Show("Compila primero.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            this.iscomp = false;
+            this.trans.Text = "";
+            this.feedback.Text ="Error\tFila\tColumna\n";
             this.options = LNG.LEXICO;
-            this.trans.Text = output;
-            Debug.WriteLine("out-> " + output);
+
+
+
+            string pathArch = Directory.GetCurrentDirectory(),
+            pathError = pathArch + "\\Archivo_Errores.txt",
+            pathToken = pathArch + "\\Archivo_Tokens.txt";
+
+           
+            MessageBox.Show(pathToken+"\n"+pathError);
+            this.trans.Text += this.lecturaArchivo(pathToken);
+            this.feedback.Text += this.lecturaArchivo(pathError);
         }
        
         private void removeBorder()
@@ -373,5 +397,6 @@ namespace IDE
         {
            
         }
+        
     }
 }
