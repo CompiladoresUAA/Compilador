@@ -63,12 +63,12 @@ namespace IDE
         {
             if (this.open_file.FileName != "")
             {
-                File.WriteAllText(this.open_file.FileName, this.codigo.Text);
+                //File.WriteAllText(this.open_file.FileName, this.codigo.Text);
 
             }
             else if (this.save_file.FileName != "")
             {
-                File.WriteAllText(this.save_file.FileName, this.codigo.Text);
+                //File.WriteAllText(this.save_file.FileName, this.codigo.Text);
             }
             else
             {
