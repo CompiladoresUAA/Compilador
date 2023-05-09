@@ -120,7 +120,7 @@ namespace IDE
             string pathArch = Directory.GetCurrentDirectory(),
                 pathError = pathArch.Remove(59, 24) + "\\Archivo_Errores.txt",
                 pathToken = pathArch.Remove(59, 24) + "\\Archivo_Tokens.txt";
-            MessageBox.Show(pathToken + "\n" + pathError);
+            MessageBox.Show(pathToken+"\n"+pathError);
             this.trans.Text += this.lecturaArchivo(pathToken);
             this.feedback.Text += this.lecturaArchivo(pathError);
         }
