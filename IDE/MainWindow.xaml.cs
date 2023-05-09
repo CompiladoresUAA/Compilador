@@ -20,11 +20,42 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using System.Xml;
 using System.Diagnostics;
+using ICSharpCode.AvalonEdit.Document;
+using System.ComponentModel;
 //using System.Windows.Forms;
 
 enum LNG{LEXICO,SINTACTICO,SEMANTICO,CDGOINTERMEDIO };
 namespace IDE
 {
+    public class MyViewModel : INotifyPropertyChanged
+    {
+        private int _linea=1;
+        private int _columna=1;
+        public int Linea
+        {
+            get { return _linea; }
+            set
+            {
+                _linea = value;
+                OnPropertyChanged(nameof(Linea));
+            }
+        }
+        public int Columna
+        {
+            get { return _columna; }
+            set
+            {
+                _columna = value;
+                OnPropertyChanged(nameof(Columna));
+            }
+        }
+        // Implementación de INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -37,9 +68,16 @@ namespace IDE
         OpenFileDialog open_file;
 
         Style avalonstyles;
-       
+        public int linea { get; set; }
+        public int columna {get;set; }
+        private MyViewModel values = new MyViewModel();
         public MainWindow()
         {
+            linea = 0;
+            columna = 0;
+
+            
+            DataContext = values;
             this.save_file = new SaveFileDialog();
             this.open_file = new OpenFileDialog();
             myBorder1 = new Border();
@@ -51,8 +89,23 @@ namespace IDE
             this.codigo.FontSize = 12;
             this.feedback.FontSize = 12;
             this.trans.FontSize = 12;
-        }
+            codigo.TextArea.Caret.PositionChanged += onCursorPositionChanged;
 
+        }
+        private void onCursorPositionChanged(object sender,EventArgs e)
+        {
+            int caretOffset = codigo.TextArea.Caret.Offset;
+
+            // Obtener la línea correspondiente a la posición del cursor
+            DocumentLine caretLine = codigo.Document.GetLineByOffset(caretOffset);
+            linea = caretLine.LineNumber;
+            columna = caretOffset - caretLine.Offset + 1;
+
+            values.Linea = linea;
+            values.Columna = columna;
+            // Imprimir la línea y la columna actuales en la consola
+            Debug.WriteLine("Línea: {0}, Columna: {1}", caretLine.LineNumber, caretOffset - caretLine.Offset + 1);
+        }
         private void eventoLexico(object sender, RoutedEventArgs e)
         {
 
@@ -313,6 +366,11 @@ namespace IDE
             this.codigo.FontSize = 30;
             this.feedback.FontSize = 30;
             this.trans.FontSize = 30;
+        }
+
+        private void updatePosition(object sender, KeyEventArgs e)
+        {
+           
         }
     }
 }

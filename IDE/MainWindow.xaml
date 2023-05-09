@@ -157,7 +157,8 @@
 
             </Grid.RowDefinitions>
 
-            <avalonedit:TextEditor HorizontalScrollBarVisibility="Auto" Style="{StaticResource avalonstyles}" Background="#2E2E2E" x:Name="codigo" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" Grid.Row="0" ShowLineNumbers="True" Margin="0,0,0,0" >
+            <avalonedit:TextEditor HorizontalScrollBarVisibility="Auto" Style="{StaticResource avalonstyles}" Background="#2E2E2E" x:Name="codigo" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" Grid.Row="0" ShowLineNumbers="True" Margin="0,0,0,0" KeyUp="updatePosition" 
+                                   >
            
             </avalonedit:TextEditor>
 
@@ -167,6 +168,18 @@
                 <Menu DockPanel.Dock="Top">
                     <MenuItem Style="{StaticResource options}" Header="Errores" />
                     <MenuItem Style="{StaticResource options}" Header="Resultados"/>
+                    <MenuItem  >
+                        <MenuItem.Header>
+                            <TextBlock>
+                                 <Run Text="Linea: " />
+                                 <Run Text="{Binding Linea}" />
+                                 <Run Text="    Columna: " />
+                                 <Run Text="{Binding Columna}" />
+
+                            </TextBlock>
+                        </MenuItem.Header>
+                    </MenuItem>
+
                 </Menu>
 
                 <!--<TextBox DockPanel.Dock="Bottom" IsReadOnly="True" Margin="5,5,5,10" 
