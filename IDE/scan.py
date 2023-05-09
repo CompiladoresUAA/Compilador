@@ -1,5 +1,5 @@
 import sys
-import os
+import os 
 import globall
 from globall import TokenType as tp
 from globall import lineno
@@ -293,8 +293,6 @@ def getToken()->tp:
     printToken(currentToken,"".join(TokenString))
     TokenString.clear()
     return currentToken
-
-
 
 while getToken() != tp.ENDFILE:
     pass
