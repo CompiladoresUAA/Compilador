@@ -1,5 +1,6 @@
 from globall import TokenType as tp
 import globall
+#from scan import reservedWords as rw
 
 import os
 fileoutput = open(os.path.join(os.getcwd(),'Archivo_Tokens.txt'),'a')
@@ -12,89 +13,90 @@ def printToken(token,tokenString):
     , tp.END , tp.DO , tp.WHILE , tp.REPEAT
     , tp.UNTIL , tp.CIN , tp.COUT , tp.REAL
     , tp.INT , tp.BOOLEAN]) :
-        print ( "RESERVED WORD {0}".format(tokenString) )
-        write ( "RESERVED WORD {0}".format(tokenString) )
+        print ( "RESERVED-WORD {0}".format(tokenString) )
+        write ( "RESERVED-WORD {0}".format(tokenString) )
     elif ( tp.PLUS == token ):
-        print( "+" )
-        write( "+" )
+
+        print( "PLUS\t+" )
+        write( "PLUS\t+" )
     elif ( tp.MINUS == token ):
-        print( "-" )
-        write( "-" )
+        print( "MINUS\t-" )
+        write( "MINUS\t-" )
     elif ( tp.TIMES == token ):
-        print( "*" )
-        write( "*" )
+        print( "TIMES\t*" )
+        write( "TIMES\t*" )
     elif ( tp.OVER == token ):
-        print( "/" )
-        write( "/" )
+        print( "OVER\t/" )
+        write( "OVER\t/" )
     elif ( tp.RES == token ):
-        print( "%" )
-        write( "%" )
+        print( "RES\t%" )
+        write( "RES\t%" )
     elif ( tp.LESST == token ):
-        print( "<" )
-        write( "<" )
+        print( "LESST\t<" )
+        write( "LESST\t<" )
     elif ( tp.LESSET == token ):
-        print( "<=" )
-        write( "<=" )
+        print( "LESSET\t<=" )
+        write( "LESSET\t<=" )
     elif ( tp.GREATERT == token ):
-        print( ">" )
-        write( ">" )
+        print( "GREATERT\t>" )
+        write( "GREATERT\t>" )
     elif ( tp.GREATERET == token ):
-        print( ">=" )
-        write( ">=" )
+        print( "GREATERET\t>=" )
+        write( "GREATERET\t>=" )
     elif ( tp.EQ == token ):
-        print( "=" )
-        write( "=" )
+        print( "EQ\t=" )
+        write( "EQ\t=" )
     elif ( tp.DIFF == token ):
-        print( "<>" )       
-        write( "<>" )
+        print( "DIFF\t<>" )       
+        write( "DIFF\t<>" )
     elif( token == tp.ASSIGN):
-        print ( ":=" )
-        write(":=")
+        print ( "ASSIGN\t:=" )
+        write("ASSIGN\t:=")
     elif ( tp.LPAREN == token ):
-        print( "(" )
-        write( "(" )
+        print( "LPAREN\t(" )
+        write( "LPAREN\t(" )
     elif ( tp.RPAREN == token ):
-        print( ")" )
-        write( ")" )
+        print( "RPAREN\t)" )
+        write( "RPAREN\t)" )
     elif ( tp.LBPAREN == token ):
-        print( "{" )
-        write( "{" )
+        print( "LBPAREN\t{" )
+        write( "LBPAREN\t{" )
     elif ( tp.RBPAREN == token ):
-        print( "}" )
-        write( "}" )
+        print( "RBPAREN\t}" )
+        write( "RBPAREN\t}" )
     elif ( tp.PLUSP == token ):
-        print( "++" )
-        write( "++" )
+        print( "PLUSP\t++" )
+        write( "PLUSP\t++" )
     elif ( tp.LESSL == token ):
-        print( "--" )
-        write( "--" )
+        print( "LESSL\t--" )
+        write( "LESSL\t--" )
     elif ( tp.COMMA == token ):
-        print( "," )
-        write( "," )
+        print( "COMMA\t," )
+        write( "COMMA\t," )
     elif ( tp.SEMMICOL == token ):
-        print( ";" )
-        write( ";" )
+        print( "SEMMICOL\t;" )
+        write( "SEMMICOL\t;" )
     elif ( tp.ID == token ):
-        print( "ID, NAME: {}".format(tokenString) )
-        write( "ID, NAME: {}".format(tokenString) )
+        print( "ID\t{}".format(tokenString) )
+        write( "ID\t{}".format(tokenString) )
 
     elif ( tp.ENTERO == token ):
-        print( "ENTERO, VALUE: {}".format(tokenString) )
-        write( "ENTERO, VALUE: {}".format(tokenString) )
+        print( "ENTERO\t{}".format(tokenString) )
+        write( "ENTERO\t{}".format(tokenString) )
 
     elif ( tp.NUMREAL == token ):
-        print( "REAL, VALUE: {}".format(tokenString) )
-        write( "REAL, VALUE: {}".format(tokenString) )
+        print( "REAL\t".format(tokenString) )
+        write( "REAL\t".format(tokenString) )
 
     elif ( tp.ENDFILE == token ):
         print( "EOF" )
     elif ( tp.ERROR == token ):
-        print( "ERROR: {} linea: {} columna:{}".format(tokenString,globall.lineno,globall.colpos) )
-       writeErrores("ERROR: {} linea: {} columna:{}".format(tokenString,globall.lineno,globall.colpos))
+        print( "  {}\t  {}\t  {}".format(tokenString,globall.lineno,globall.colpos) )
+        writeErrores("  {}  \t  {}\t  {}".format(tokenString,globall.lineno,globall.colpos))
 
     else:
-        print("UNKNOWN TOKEN: {}".format(tokenString))
-        write("UNKNOWN TOKEN: {}".format(tokenString))
+        print("UNKNOWN TOKEN\t{}".format(tokenString))
+        write("UNKNOWN TOKEN\t{}".format(tokenString))
         
 
 def write(text):

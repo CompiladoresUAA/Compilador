@@ -89,7 +89,7 @@
 
 
                 </MenuItem>
-                <MenuItem Header="Compilar"/>
+                <MenuItem Header="Compilar" Click="compilarFileSource"/>
                 <MenuItem Header="Ayuda"/>
 
 

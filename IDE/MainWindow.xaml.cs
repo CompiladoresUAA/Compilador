@@ -53,20 +53,26 @@ namespace IDE
             this.trans.FontSize = 12;
         }
 
-        private void eventoLexico(object sender, RoutedEventArgs e)
+        private string  lecturaArchivo(string file)
         {
+            string read = File.ReadAllText(file);
+            return read;
+        }
 
-            if(this.open_file.FileName != "" )
+        private void compilarFileSource(object sender, RoutedEventArgs e)
+        {
+            if (this.open_file.FileName != "")
             {
                 File.WriteAllText(this.open_file.FileName, this.codigo.Text);
 
-            }else if( this.save_file.FileName != "" )
+            }
+            else if (this.save_file.FileName != "")
             {
-                File.WriteAllText(this.save_file.FileName,this.codigo.Text);
+                File.WriteAllText(this.save_file.FileName, this.codigo.Text);
             }
             else
             {
-                this.saveAs(new object (),new RoutedEventArgs ());
+                this.saveAs(new object(), new RoutedEventArgs());
             }
             /*this.removeBorder();
             this.options=LNG.LEXICO;
@@ -91,23 +97,32 @@ namespace IDE
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 FileName = "cmd.exe",
-                //Arguments = "/c python C:\\Users\\kris_\\OneDrive\\Documentos\\Compiladores\\IDE\\scan.py "+this.open_file.FileName,
                 Arguments = r,
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
-                CreateNoWindow= true,
+                CreateNoWindow = true,
             };
             Process process = new Process
             {
                 StartInfo = startInfo
             };
             process.Start();
-            string output = process.StandardOutput.ReadToEnd();
+            //string output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
-          
 
+        }
+        private void eventoLexico(object sender, RoutedEventArgs e)
+        {
+            this.trans.Text = "";
+            this.feedback.Text ="Error\tFila\tColumna\n";
             this.options = LNG.LEXICO;
-            this.trans.Text = output;
+
+            string pathArch = Directory.GetCurrentDirectory(),
+                pathError = pathArch.Remove(59, 24) + "\\Archivo_Errores.txt",
+                pathToken = pathArch.Remove(59, 24) + "\\Archivo_Tokens.txt";
+            MessageBox.Show(pathToken + "\n" + pathError);
+            this.trans.Text += this.lecturaArchivo(pathToken);
+            this.feedback.Text += this.lecturaArchivo(pathError);
         }
        
         private void removeBorder()
@@ -313,5 +328,7 @@ namespace IDE
             this.feedback.FontSize = 30;
             this.trans.FontSize = 30;
         }
+
+        
     }
 }
