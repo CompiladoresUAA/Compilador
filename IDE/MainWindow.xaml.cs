@@ -46,6 +46,7 @@ namespace IDE
             set
             {
                 _columna = value;
+                //nameof regresa el nombre como tal de la variable, en este caso 'Columna'
                 OnPropertyChanged(nameof(Columna));
             }
         }
