@@ -184,7 +184,7 @@ namespace IDE
             pathToken = pathArch + "\\Archivo_Tokens.txt";
 
            
-            MessageBox.Show(pathToken+"\n"+pathError);
+ //           MessageBox.Show(pathToken+"\n"+pathError);
             this.trans.Text += this.lecturaArchivo(pathToken);
             this.feedback.Text += this.lecturaArchivo(pathError);
         }

@@ -85,8 +85,8 @@ def printToken(token,tokenString):
         write( "ENTERO\t{}".format(tokenString) )
 
     elif ( tp.NUMREAL == token ):
-        print( "REAL\t".format(tokenString) )
-        write( "REAL\t".format(tokenString) )
+        print( "REAL\t{}".format(tokenString) )
+        write( "REAL\t{}".format(tokenString) )
 
     elif ( tp.ENDFILE == token ):
         print( "EOF" )
