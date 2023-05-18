@@ -22,6 +22,7 @@ using System.Xml;
 using System.Diagnostics;
 using ICSharpCode.AvalonEdit.Document;
 using System.ComponentModel;
+using System.Threading;
 //using System.Windows.Forms;
 
 enum LNG{LEXICO,SINTACTICO,SEMANTICO,CDGOINTERMEDIO };
@@ -62,19 +63,32 @@ namespace IDE
     /// </summary>
     public partial class MainWindow : Window
     {
+        private CancellationTokenSource cancellationTokenSource;
         private bool iscomp = false;
         private Border myBorder1;
         private String mnu_lenguajes;
         LNG options;
         SaveFileDialog save_file;
         OpenFileDialog open_file;
-
+        Process process;
         Style avalonstyles;
         public int linea { get; set; }
         public int columna {get;set; }
         private MyViewModel values = new MyViewModel();
+        private BackgroundWorker worker = new BackgroundWorker();
+        private bool isProcessRuning = false;
+        private bool isCompilado = false;
         public MainWindow()
         {
+            this.cancellationTokenSource = new CancellationTokenSource();
+            //manejadores...
+            worker.DoWork += workerDoWork;
+            worker.ProgressChanged += workerProgressChanged;
+            worker.RunWorkerCompleted += workerCompleted;
+            worker.WorkerReportsProgress = true;
+            worker.WorkerSupportsCancellation= true;
+            //worker.RunWorkerAsync();
+            //worker.CancelAsync();
             linea = 0;
             columna = 0;
 
@@ -93,6 +107,123 @@ namespace IDE
             this.trans.FontSize = 12;
             codigo.TextArea.Caret.PositionChanged += onCursorPositionChanged;
 
+        }
+        private async Task doWorkAsync(CancellationToken cancellationToken)
+        {
+           
+
+ 
+            this.isProcessRuning = true;
+
+            TimeSpan totalProccessorTime = DateTime.Now - process.StartTime;
+            int i = 0;
+            //await process.WaitForExitAsync();
+
+            while (!this.process.HasExited)
+            {
+                TimeSpan proccessRuningTime = DateTime.Now - process.StartTime;
+                double executionPorcentage = (totalProccessorTime.TotalMilliseconds / proccessRuningTime.TotalMilliseconds) * 100;
+                executionPorcentage = Math.Max(0, Math.Min(executionPorcentage, 100));
+                //float cpuUsage = cpuCounter.NextValue();
+                Debug.WriteLine("Porcentaje {0}%", executionPorcentage);
+                if (i <= 100) i++;
+                progress.Dispatcher.Invoke(new Action(() =>
+                {
+                    progress.Value = i;
+
+                }));
+                cancellationToken.ThrowIfCancellationRequested();
+
+                await Task.Delay(100); 
+            }
+            Debug.WriteLine("saliiiiii");
+            progress.Dispatcher.Invoke(new Action(() =>
+            {
+                progress.Value = 100;
+
+            }));
+            Thread.Sleep(1000);
+            msgCompila.Dispatcher.Invoke(new Action(() => {
+                msgCompila.Visibility = Visibility.Collapsed;
+                this.isProcessRuning = false;
+            }));        
+        }
+        private void workerDoWork(object sender ,DoWorkEventArgs e)
+        {
+            
+                this.isProcessRuning = true;
+            
+            //obtenemos la instancia
+            var work = (BackgroundWorker)sender;
+            //for (int i = 0; i <= 100; i++)
+            //{
+            //    if (work.CancellationPending)
+            //    {
+            //        e.Cancel = true;
+            //        return;
+            //    }
+            //    Thread.Sleep(500);
+            //    work.ReportProgress(i);
+            //}
+            //progress.Dispatcher.Invoke(new Action(() =>
+            //{
+
+            //}));
+            TimeSpan totalProccessorTime = DateTime.Now - process.StartTime;
+            int i = 0;
+            while (!process.HasExited)
+            {
+                TimeSpan proccessRuningTime = DateTime.Now - process.StartTime;
+                double executionPorcentage = (totalProccessorTime.TotalMilliseconds / proccessRuningTime.TotalMilliseconds) * 100;
+                executionPorcentage = Math.Max(0, Math.Min(executionPorcentage, 100));
+                //float cpuUsage = cpuCounter.NextValue();
+                Debug.WriteLine("Porcentaje {0}%", executionPorcentage);
+                if (work.CancellationPending)
+                {
+                       e.Cancel = true;
+                       return;
+                }
+                    if (i <= 100)  i++ ;
+                progress.Dispatcher.Invoke(new Action(() =>
+                {
+                    progress.Value = i;
+
+                }));
+                Thread.Sleep(10000);
+            }
+            progress.Dispatcher.Invoke(new Action(() =>
+            {
+                progress.Value = 100;
+
+            }));
+
+            System.Threading.Thread.Sleep(500);
+            msgCompila.Dispatcher.Invoke(new Action(() => {
+                msgCompila.Visibility= Visibility.Collapsed;
+                this.isProcessRuning = false;
+            }));
+            
+        }
+
+            static void workerProgressChanged(object sender ,ProgressChangedEventArgs e)
+        {
+            //actualiza progreso
+            Debug.WriteLine("progreso {0}", e.ProgressPercentage);
+        }
+        static void workerCompleted(object sender,RunWorkerCompletedEventArgs e)
+        {
+            if( e.Cancelled)
+            {
+                //se cancelo
+                Debug.WriteLine("se cancela");
+            }else if ( e.Error != null)
+            {
+                Debug.WriteLine("Error: {0}", e.Error.Message);
+            }
+            else
+            {
+                Debug.WriteLine("Resultado: {0}", e.Result);
+            }
         }
         private void onCursorPositionChanged(object sender,EventArgs e)
         {
@@ -115,55 +246,86 @@ namespace IDE
             return read;
         }
 
-        private void compilarFileSource(object sender, RoutedEventArgs e)
+        private async void compilarFileSource(object sender, RoutedEventArgs e)
         {
-            this.iscomp = true;
-            if (this.open_file.FileName != "")
-            {
-                File.WriteAllText(this.open_file.FileName, this.codigo.Text);
 
-            }
-            else if (this.save_file.FileName != "")
+            if (!this.isProcessRuning)
             {
-                File.WriteAllText(this.save_file.FileName, this.codigo.Text);
-            }
-            else
-            {
-                this.saveAs(new object(), new RoutedEventArgs());
-            }
-            string pathArch = Directory.GetCurrentDirectory(),
-            pathError = pathArch + "\\Archivo_Errores.txt",
-            pathToken = pathArch + "\\Archivo_Tokens.txt";
+                msgCompila.Visibility = Visibility.Visible;
+                
+                
+                if (this.open_file.FileName != "")
+                {
+                    File.WriteAllText(this.open_file.FileName, this.codigo.Text);
 
-            
-            string path = Directory.GetCurrentDirectory();
+                }
+                else if (this.save_file.FileName != "")
+                {
+                    File.WriteAllText(this.save_file.FileName, this.codigo.Text);
+                }
+                else
+                {
+                    this.saveAs(new object(), new RoutedEventArgs());
+                }
+                string pathArch = Directory.GetCurrentDirectory(),
+                pathError = pathArch + "\\Archivo_Errores.txt",
+                pathToken = pathArch + "\\Archivo_Tokens.txt";
+                string path = Directory.GetCurrentDirectory();
 
-            
-            string r = "/c python " + path + "\\scan.py " + this.open_file.FileName;
-            ProcessStartInfo startInfo = new ProcessStartInfo
-            {
-                FileName = "cmd.exe",
-                Arguments = r,
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true,
-            };
-            Process process = new Process
-            {
-                StartInfo = startInfo
-            };
-            process.Start();
-            string output = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
-            if ( process.HasExited )
-            {
 
+                string r = "/c python " + path + "\\scan.py " + this.open_file.FileName;
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    FileName = "cmd.exe",
+                    Arguments = r,
+                    RedirectStandardOutput = false,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                };
+                process = new Process
+                {
+                    StartInfo = startInfo
+                };
+                process.Start();
+
+               // process.WaitForExit();
+
+                // PerformanceCounter cpuCounter = new PerformanceCounter("Process", "% Processor Time", process.ProcessName, true);
+                //progress.Visibility = Visibility.Visible;
+
+                this.cancellationTokenSource = new CancellationTokenSource();
+                try
+                {
+                    await this.doWorkAsync(this.cancellationTokenSource.Token);
+                    Debug.WriteLine("acabe...");
+                    this.iscomp = true;
+                }
+                catch (OperationCanceledException)
+                {
+                    Debug.WriteLine("se cancelo");
+                    this.iscomp = false;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
+                finally
+                {
+                    //limpia el cancellation token source
+                    msgCompila.Dispatcher.Invoke(new Action(() => {
+                        msgCompila.Visibility = Visibility.Collapsed;
+                        this.isProcessRuning = false;
+                    }));
+                    this.cancellationTokenSource.Dispose();
+                }
+
+
+                // progress.Value= 100;
+                //string output = process.StandardOutput.ReadToEnd();
+                Debug.WriteLine("saliiiiii");
+                //               process.WaitForExit();
+                //progress.Visibility = Visibility.Collapsed;
             }
-            else
-            {
-
-            }
-            
         }
         private void eventoLexico(object sender, RoutedEventArgs e)
         {
@@ -172,7 +334,7 @@ namespace IDE
                 MessageBox.Show("Compila primero.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            this.iscomp = false;
+           // this.iscomp = false;
             this.trans.Text = "";
             this.feedback.Text ="Error\tFila\tColumna\n";
             this.options = LNG.LEXICO;
@@ -397,6 +559,17 @@ namespace IDE
         {
            
         }
-        
+
+        private void cancelaCompila(object sender, RoutedEventArgs e)
+        {
+            if (this.isProcessRuning)
+            {
+                this.cancellationTokenSource.Cancel();
+                this.iscomp = false;
+            }
+            //this.worker.CancelAsync();
+            this.isProcessRuning = false;
+            Debug.WriteLine("boton...");
+        }
     }
 }
