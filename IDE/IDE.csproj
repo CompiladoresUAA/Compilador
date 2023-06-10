@@ -12,6 +12,8 @@
     <None Remove="icon-128x128.png" />
     <None Remove="icon-512x512.png" />
     <None Remove="icon.png" />
+    <None Remove="light-mode.png" />
+    <None Remove="night-mode.png" />
     <None Remove="open-folder.png" />
     <None Remove="save.png" />
     <None Remove="saveas.png" />
@@ -22,6 +24,8 @@
     <Resource Include="icon-128x128.png" />
     <Resource Include="icon-512x512.png" />
     <Resource Include="icon.png" />
+    <Resource Include="light-mode.png" />
+    <Resource Include="night-mode.png" />
     <Resource Include="open-folder.png" />
     <Resource Include="save.png" />
     <Resource Include="saveas.png" />

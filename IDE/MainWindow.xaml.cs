@@ -20,16 +20,49 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using System.Xml;
 using System.Diagnostics;
+using ICSharpCode.AvalonEdit.Document;
+using System.ComponentModel;
 //using System.Windows.Forms;
 
 enum LNG{LEXICO,SINTACTICO,SEMANTICO,CDGOINTERMEDIO };
 namespace IDE
 {
+    public class MyViewModel : INotifyPropertyChanged
+    {
+        private int _linea=1;
+        private int _columna=1;
+        public int Linea
+        {
+            get { return _linea; }
+            set
+            {
+                _linea = value;
+                OnPropertyChanged(nameof(Linea));
+            }
+        }
+        public int Columna
+        {
+            get { return _columna; }
+            set
+            {
+                _columna = value;
+                //nameof regresa el nombre como tal de la variable, en este caso 'Columna'
+                OnPropertyChanged(nameof(Columna));
+            }
+        }
+        // Implementación de INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool iscomp = false;
         private Border myBorder1;
         private String mnu_lenguajes;
         LNG options;
@@ -37,9 +70,16 @@ namespace IDE
         OpenFileDialog open_file;
 
         Style avalonstyles;
-       
+        public int linea { get; set; }
+        public int columna {get;set; }
+        private MyViewModel values = new MyViewModel();
         public MainWindow()
         {
+            linea = 0;
+            columna = 0;
+
+            
+            DataContext = values;
             this.save_file = new SaveFileDialog();
             this.open_file = new OpenFileDialog();
             myBorder1 = new Border();
@@ -48,52 +88,65 @@ namespace IDE
             XmlReader reader = XmlReader.Create("../../../avalonfiles/keywords.xml");//xshd
             codigo.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
             //this.avalonstyles = (Style)Application.Current.FindResource("avalonstyles");
-            
+            this.codigo.FontSize = 12;
+            this.feedback.FontSize = 12;
+            this.trans.FontSize = 12;
+            codigo.TextArea.Caret.PositionChanged += onCursorPositionChanged;
+
+        }
+        private void onCursorPositionChanged(object sender,EventArgs e)
+        {
+            int caretOffset = codigo.TextArea.Caret.Offset;
+
+            // Obtener la línea correspondiente a la posición del cursor
+            DocumentLine caretLine = codigo.Document.GetLineByOffset(caretOffset);
+            linea = caretLine.LineNumber;
+            columna = caretOffset - caretLine.Offset + 1;
+
+            values.Linea = linea;
+            values.Columna = columna;
+            // Imprimir la línea y la columna actuales en la consola
+            Debug.WriteLine("Línea: {0}, Columna: {1}", caretLine.LineNumber, caretOffset - caretLine.Offset + 1);
+        }
+        
+        private string  lecturaArchivo(string file)
+        {
+            string read = File.ReadAllText(file);
+            return read;
         }
 
-        private void eventoLexico(object sender, RoutedEventArgs e)
+        private void compilarFileSource(object sender, RoutedEventArgs e)
         {
-
-            if(this.open_file.FileName != "" )
+            this.iscomp = true;
+            if (this.open_file.FileName != "")
             {
                 File.WriteAllText(this.open_file.FileName, this.codigo.Text);
 
-            }else if( this.save_file.FileName != "" )
+            }
+            else if (this.save_file.FileName != "")
             {
-                File.WriteAllText(this.save_file.FileName,this.codigo.Text);
+                File.WriteAllText(this.save_file.FileName, this.codigo.Text);
             }
             else
             {
-                this.saveAs(new object (),new RoutedEventArgs ());
+                this.saveAs(new object(), new RoutedEventArgs());
             }
-            /*this.removeBorder();
-            this.options=LNG.LEXICO;
-            myBorder1.BorderBrush = Brushes.SlateBlue;
-            myBorder1.BorderThickness = new Thickness(5, 10, 15, 20);
-            myBorder1.Background = Brushes.AliceBlue;
-            myBorder1.Padding = new Thickness(5);
-            myBorder1.CornerRadius = new CornerRadius(15);
-            
-            this.setBorder(this.mnulexico);
-            
-            /*this.option.BorderBrush = Brushes.AntiqueWhite;
-            this.option.BorderThickness = new Thickness(1);
-            this.option.Background = Brushes.Aqua;
-            this.option.FontWeight= FontWeights.Bold;
-            this.option.Margin= new Thickness(-2);
-            */
-            string path = Directory.GetCurrentDirectory();
-            string r = "/c " + path.Remove(path.Length - 25, 25) + "\\scan.py " + this.open_file.FileName;
-            //MessageBox.Show("Ruta: "+r);/*Revisa la ruta a ejecutar del python*/
+            string pathArch = Directory.GetCurrentDirectory(),
+            pathError = pathArch + "\\Archivo_Errores.txt",
+            pathToken = pathArch + "\\Archivo_Tokens.txt";
 
+            
+            string path = Directory.GetCurrentDirectory();
+
+            
+            string r = "/c python " + path + "\\scan.py " + this.open_file.FileName;
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 FileName = "cmd.exe",
-                //Arguments = "/c python C:\\Users\\kris_\\OneDrive\\Documentos\\Compiladores\\IDE\\scan.py "+this.open_file.FileName,
-                Arguments = "/c python "+path.Remove(path.Length - 25, 25)+"\\scan.py " + this.open_file.FileName,
+                Arguments = r,
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
-                CreateNoWindow= true,
+                CreateNoWindow = true,
             };
             Process process = new Process
             {
@@ -102,10 +155,38 @@ namespace IDE
             process.Start();
             string output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
-          
+            if ( process.HasExited )
+            {
 
+            }
+            else
+            {
+
+            }
+            
+        }
+        private void eventoLexico(object sender, RoutedEventArgs e)
+        {
+            if ( !this.iscomp)
+            {
+                MessageBox.Show("Compila primero.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            this.iscomp = false;
+            this.trans.Text = "";
+            this.feedback.Text ="Error\tFila\tColumna\n";
             this.options = LNG.LEXICO;
-            this.trans.Text = output;
+
+
+
+            string pathArch = Directory.GetCurrentDirectory(),
+            pathError = pathArch + "\\Archivo_Errores.txt",
+            pathToken = pathArch + "\\Archivo_Tokens.txt";
+
+           
+            MessageBox.Show(pathToken+"\n"+pathError);
+            this.trans.Text += this.lecturaArchivo(pathToken);
+            this.feedback.Text += this.lecturaArchivo(pathError);
         }
        
         private void removeBorder()
@@ -268,9 +349,9 @@ namespace IDE
 
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void tamSource(object sender, RoutedEventArgs e)
         {
-            
+            MessageBox.Show("Entre -> ");
         }
 
         private void darkTheme(object sender, RoutedEventArgs e)
@@ -290,5 +371,32 @@ namespace IDE
 
 
         }
+
+        private void tamPequenio(object sender, RoutedEventArgs e)
+        {
+            this.codigo.FontSize = 12;
+            this.feedback.FontSize = 12;
+            this.trans.FontSize = 12;
+        }
+
+        private void tamMediana(object sender, RoutedEventArgs e)
+        {
+            this.codigo.FontSize = 20;
+            this.feedback.FontSize = 20;
+            this.trans.FontSize = 20;
+        }
+
+        private void tamGrande(object sender, RoutedEventArgs e)
+        {
+            this.codigo.FontSize = 30;
+            this.feedback.FontSize = 30;
+            this.trans.FontSize = 30;
+        }
+
+        private void updatePosition(object sender, KeyEventArgs e)
+        {
+           
+        }
+        
     }
 }

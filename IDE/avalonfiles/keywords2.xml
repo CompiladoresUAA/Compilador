@@ -1,13 +1,25 @@
-﻿<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <SyntaxDefinition name="Custom Highlighting" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
 	<Color name="Comment" foreground="#660066" />
 	<Color name="String" foreground="green" />
 
 	<!-- This is the main ruleset. -->
 	<RuleSet>
+		<Rule foreground="#600080" fontWeight="bold">
+			( \* | - | \+ | / | := | % )
+		</Rule>
+
+		<Rule foreground="#187BCD" fontWeight="bold">
+			(  >= | > | = | &lt; | &lt;= | &lt;>)
+		</Rule>
+
+		<Rule foreground="#06C258" fontWeight="bold">
+			(  ; | , | \( | \) | { | } )
+		</Rule>
+		
 		<Span color="Comment" begin="//" />
 		<Span color="Comment" multiline="true" begin="/\*" end="\*/" />
-
+		
 		<Span color="String">
 			<Begin>"</Begin>
 			<End>"</End>
@@ -16,7 +28,7 @@
 				<Span begin="\\" end="." />
 			</RuleSet>
 		</Span>
-
+		
 		<Keywords fontWeight="bold" foreground="#ff8800">
 			<Word>main</Word>
 			<Word>if</Word>
@@ -32,10 +44,6 @@
 			<Word>real</Word>
 			<Word>int</Word>
 			<Word>boolean</Word>
-
-
-
-
 			<!-- ... -->
 		</Keywords>
 
@@ -44,13 +52,17 @@
 		</Keywords>
 
 		<!-- Digits -->
-		<Rule foreground="Red" fontWeight="bold">
-			\b0[xX][0-9a-fA-F]+  # hex number
-			|    
-			(    -?\d+(\.[0-9]+)?   #number with optional floating point
-			|    \.[0-9]+         #or just starting with floating point
-			)
-			([eE][+-]?[0-9]+)? # optional exponent
+		
+		<Rule foreground="red" fontWeight="bold">
+			-?[0-9]+(\.[0-9]+)   #number floating point
 		</Rule>
+		<Rule foreground="#E9658D" fontWeight="bold">
+			-?\d+   #number
+		</Rule>
+
+		<Rule foreground="black">
+			[a-zA-Z]*[0-9]+[a-zA-Z]*
+		</Rule>
+		
 	</RuleSet>
 </SyntaxDefinition>
