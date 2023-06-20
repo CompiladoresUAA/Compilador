@@ -122,27 +122,27 @@ namespace IDE
             while (!this.process.HasExited)
             {
                 TimeSpan proccessRuningTime = DateTime.Now - process.StartTime;
-                double executionPorcentage = (totalProccessorTime.TotalMilliseconds / proccessRuningTime.TotalMilliseconds) * 100;
+                double executionPorcentage = (totalProccessorTime.TotalMilliseconds / proccessRuningTime.TotalMilliseconds)*100 ;
                 executionPorcentage = Math.Max(0, Math.Min(executionPorcentage, 100));
                 //float cpuUsage = cpuCounter.NextValue();
-                Debug.WriteLine("Porcentaje {0}%", executionPorcentage);
+                Debug.WriteLine("Porcentaje {0}%",100- executionPorcentage);
                 if (i <= 100) i++;
                 progress.Dispatcher.Invoke(new Action(() =>
                 {
-                    progress.Value = i;
+                    progress.Value = 100-executionPorcentage;
 
                 }));
                 cancellationToken.ThrowIfCancellationRequested();
 
                 await Task.Delay(100); 
             }
-            Debug.WriteLine("saliiiiii");
+            
             progress.Dispatcher.Invoke(new Action(() =>
             {
                 progress.Value = 100;
 
             }));
-            Thread.Sleep(1000);
+            await Task.Delay(500);
             msgCompila.Dispatcher.Invoke(new Action(() => {
                 msgCompila.Visibility = Visibility.Collapsed;
                 this.isProcessRuning = false;
