@@ -1,16 +1,6 @@
 from enum import Enum
 import os
 
-rutaToken = os.path.join(os.getcwd(),'Archivo_Tokens.txt')
-rutaError =os.path.join(os.getcwd(),'Archivo_Errores.txt')
-
-if os.path.exists(rutaToken):
-    os.remove(rutaToken)
-    #print("Removio el Token")
-
-if os.path.exists(rutaError):
-    os.remove(rutaError)
-    #print("Removio el Errores")
 
 MAXRESERVEDWORDS = 14
 
