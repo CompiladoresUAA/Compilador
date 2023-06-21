@@ -3,19 +3,12 @@ import globall
 #from scan import reservedWords as rw
 
 import os
-<<<<<<< HEAD
 fileoutput = open(os.path.join(os.getcwd(),'Archivo_Tokens.txt'),'r+')
 #fileoutput.truncate()
 fileoutputError = open(os.path.join(os.getcwd(),'Archivo_Errores.txt'),'r+')
 #fileoutputError.truncate()
 fileoutput2 = open(os.path.join(os.getcwd(),'Archivo_Tokens2.txt'),'r+')
 #fileoutput2.truncate()
-=======
-fileoutput = open(os.path.join(os.getcwd(),'Archivo_Tokens.txt'),'w')
-fileoutputError = open(os.path.join(os.getcwd(),'Archivo_Errores.txt'),'w')
-fileoutput2 = open(os.path.join(os.getcwd(),'Archivo_Tokens2.txt'),'w')
-
->>>>>>> 874c9464bb9153011d6e31ed7b4d7f94443caf9a
 
 def printToken(token,tokenString):
    
@@ -93,11 +86,7 @@ def printToken(token,tokenString):
 
     elif ( tp.ENTERO == token ):
         print( "ENTERO\t{0}".format(tokenString)+"\t  {}\t  {}".format(globall.lineno,globall.colpos) )
-<<<<<<< HEAD
-        write( "ENTERO\t{0}".format(tokenString),"\t  {}\t  {}".format(globall.lineno,globall.colpos) )
-=======
         write( "ENTERO\t{0}".format(tokenString),"\t{}\t{}".format(globall.lineno,globall.colpos) )
->>>>>>> 874c9464bb9153011d6e31ed7b4d7f94443caf9a
 
     elif ( tp.NUMREAL == token ):
         print( "NUMREAL\t {0}".format(tokenString)+"\t  {}\t  {}".format(globall.lineno,globall.colpos) )
