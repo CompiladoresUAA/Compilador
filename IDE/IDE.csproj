@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.2.0.78" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
 </Project>

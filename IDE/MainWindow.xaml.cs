@@ -23,6 +23,7 @@ using System.Diagnostics;
 using ICSharpCode.AvalonEdit.Document;
 using System.ComponentModel;
 using System.Threading;
+using IDE.phases;
 //using System.Windows.Forms;
 
 enum LNG{LEXICO,SINTACTICO,SEMANTICO,CDGOINTERMEDIO };
@@ -122,27 +123,27 @@ namespace IDE
             while (!this.process.HasExited)
             {
                 TimeSpan proccessRuningTime = DateTime.Now - process.StartTime;
-                double executionPorcentage = (totalProccessorTime.TotalMilliseconds / proccessRuningTime.TotalMilliseconds) * 100;
+                double executionPorcentage = (totalProccessorTime.TotalMilliseconds / proccessRuningTime.TotalMilliseconds)*100 ;
                 executionPorcentage = Math.Max(0, Math.Min(executionPorcentage, 100));
                 //float cpuUsage = cpuCounter.NextValue();
-                Debug.WriteLine("Porcentaje {0}%", executionPorcentage);
+                Debug.WriteLine("Porcentaje {0}%",100- executionPorcentage);
                 if (i <= 100) i++;
                 progress.Dispatcher.Invoke(new Action(() =>
                 {
-                    progress.Value = i;
+                    progress.Value = 100-executionPorcentage;
 
                 }));
                 cancellationToken.ThrowIfCancellationRequested();
 
                 await Task.Delay(100); 
             }
-            Debug.WriteLine("saliiiiii");
+            
             progress.Dispatcher.Invoke(new Action(() =>
             {
                 progress.Value = 100;
 
             }));
-            Thread.Sleep(1000);
+            await Task.Delay(500);
             msgCompila.Dispatcher.Invoke(new Action(() => {
                 msgCompila.Visibility = Visibility.Collapsed;
                 this.isProcessRuning = false;
@@ -298,7 +299,27 @@ namespace IDE
                 {
                     await this.doWorkAsync(this.cancellationTokenSource.Token);
                     Debug.WriteLine("acabe...");
+                    //aqui va el sintaxis
                     this.iscomp = true;
+                    try
+                    {
+                        await doSintax(new CancellationTokenSource().Token);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        Debug.WriteLine("se cancelo");
+                        this.iscomp = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.ToString());
+                    }
+                    finally
+                    {
+                        //limpia el cancellation token source
+                    }
+
+
                 }
                 catch (OperationCanceledException)
                 {
@@ -326,6 +347,16 @@ namespace IDE
                 //               process.WaitForExit();
                 //progress.Visibility = Visibility.Collapsed;
             }
+        }
+        private async Task doSintax(CancellationToken cancellationToken)
+        {
+            SintaxAnalyzer obj = new SintaxAnalyzer();
+            obj.doAnalisis();
+            Sintax sin = new Sintax();
+
+            sin.Show();
+            await Task.Delay(500);
+
         }
         private void eventoLexico(object sender, RoutedEventArgs e)
         {
