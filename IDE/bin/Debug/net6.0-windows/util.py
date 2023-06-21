@@ -3,12 +3,12 @@ import globall
 #from scan import reservedWords as rw
 
 import os
-fileoutput = open(os.path.join(os.getcwd(),'Archivo_Tokens.txt'),'w')
-fileoutput.truncate()
-fileoutputError = open(os.path.join(os.getcwd(),'Archivo_Errores.txt'),'w')
-fileoutputError.truncate()
-fileoutput2 = open(os.path.join(os.getcwd(),'Archivo_Tokens2.txt'),'w')
-fileoutput2.truncate()
+fileoutput = open(os.path.join(os.getcwd(),'Archivo_Tokens.txt'),'r+')
+#fileoutput.truncate()
+fileoutputError = open(os.path.join(os.getcwd(),'Archivo_Errores.txt'),'r+')
+#fileoutputError.truncate()
+fileoutput2 = open(os.path.join(os.getcwd(),'Archivo_Tokens2.txt'),'r+')
+#fileoutput2.truncate()
 
 def printToken(token,tokenString):
    
@@ -86,7 +86,7 @@ def printToken(token,tokenString):
 
     elif ( tp.ENTERO == token ):
         print( "ENTERO\t{0}".format(tokenString)+"\t  {}\t  {}".format(globall.lineno,globall.colpos) )
-        write( "ENTERO\t{0}".format(tokenString)+"\t  {}\t  {}".format(globall.lineno,globall.colpos)," Falla" )
+        write( "ENTERO\t{0}".format(tokenString),"\t  {}\t  {}".format(globall.lineno,globall.colpos) )
 
     elif ( tp.NUMREAL == token ):
         print( "REAL\t {0}".format(tokenString)+"\t  {}\t  {}".format(globall.lineno,globall.colpos) )
@@ -94,6 +94,7 @@ def printToken(token,tokenString):
 
     elif ( tp.ENDFILE == token ):
         print( "EOF" )
+        write( "EOF\t EOF","\t  {}\t  {}".format(globall.lineno,globall.colpos))
     elif ( tp.ERROR == token ):
         print( "  {}\t  {}\t  {}".format(tokenString,globall.lineno,globall.colpos) )
         writeErrores("  {}  \t  {}\t  {}".format(tokenString,globall.lineno,globall.colpos))

@@ -1,6 +1,13 @@
 from enum import Enum
 import os
 
+with open(os.path.join(os.getcwd(),'Archivo_Tokens.txt'), "a") as archivo:
+        pass  # No se realiza ninguna operación, simplemente se crea el archivo
+with open(os.path.join(os.getcwd(),'Archivo_Errores.txt'), "a") as archivo:
+        pass  # No se realiza ninguna operación, simplemente se crea el archivo
+with open(os.path.join(os.getcwd(),'Archivo_Tokens2.txt'), "a") as archivo:
+        pass  # No se realiza ninguna operación, simplemente se crea el archivo
+
 
 MAXRESERVEDWORDS = 14
 
