@@ -12,7 +12,11 @@ linea = str()
 MAXBUFFER = 1024
 namefile = sys.argv[1]
 source = open(namefile,'r')
-
+#########################################
+fileoutput = open(os.path.join(os.getcwd(),'Archivo_Tokens.txt'),'w')
+fileoutputError = open(os.path.join(os.getcwd(),'Archivo_Errores.txt'),'w')
+fileoutput2 = open(os.path.join(os.getcwd(),'Archivo_Tokens2.txt'),'w')
+###################################################
 consume:bool  = True
 c:str
 reservedWords ={
@@ -247,11 +251,6 @@ def getToken()->tp:
                     currentToken = tp.LESSL
                     state = States.HECHO
                     TokenString.append(c)
-                elif c.isdigit() :
-                    currentToken = tp.ENTERO
-                    state = States.EENTEROS
-                    TokenString.append(c)
-                    
                 else : 
                     currentToken = tp.MINUS
                     state = States.HECHO
@@ -298,3 +297,5 @@ def getToken()->tp:
 while getToken() != tp.ENDFILE:
     pass
 fileoutput.close()
+fileoutputError.close()
+fileoutput2.close()
