@@ -3,10 +3,12 @@ import globall
 #from scan import reservedWords as rw
 
 import os
-fileoutput = open(os.path.join(os.getcwd(),'Archivo_Tokens.txt'),'w')
-fileoutputError = open(os.path.join(os.getcwd(),'Archivo_Errores.txt'),'w')
-fileoutput2 = open(os.path.join(os.getcwd(),'Archivo_Tokens2.txt'),'w')
-
+fileoutput = open(os.path.join(os.getcwd(),'Archivo_Tokens.txt'),'r+')
+#fileoutput.truncate()
+fileoutputError = open(os.path.join(os.getcwd(),'Archivo_Errores.txt'),'r+')
+#fileoutputError.truncate()
+fileoutput2 = open(os.path.join(os.getcwd(),'Archivo_Tokens2.txt'),'r+')
+#fileoutput2.truncate()
 
 def printToken(token,tokenString):
    
@@ -92,6 +94,7 @@ def printToken(token,tokenString):
 
     elif ( tp.ENDFILE == token ):
         print( "EOF" )
+        write( "EOF\t EOF","\t  {}\t  {}".format(globall.lineno,globall.colpos))
     elif ( tp.ERROR == token ):
         print( "  {}\t  {}\t  {}".format(tokenString,globall.lineno,globall.colpos) )
         writeErrores("  {}  \t  {}\t  {}".format(tokenString,globall.lineno,globall.colpos))

@@ -62,7 +62,7 @@ namespace IDE.phases {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/IDE;component/phases/sintax.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/IDE;V1.0.0.0;component/phases/sintax.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\phases\Sintax.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
