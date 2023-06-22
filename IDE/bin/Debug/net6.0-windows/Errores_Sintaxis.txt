@@ -1,1 +1,2 @@
-Sintax error at line: 23 message:Unexpected token -> x   match stmt_exp match
+Sintax error at line: 4 message:Unexpected Token ;
+Sintax error at line: 5 message:Unexpected Token ;

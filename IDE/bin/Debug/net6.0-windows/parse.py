@@ -15,8 +15,8 @@ import inspect
 
 def sintaxError(msg:str):
     global lineno
-    caller = inspect.currentframe().f_back.f_code.co_name
-    fileSintax.write("Sintax error at line: {} message:{} {}\n".format(lineno,msg,caller))
+    #caller = inspect.currentframe().f_back.f_code.co_name
+    fileSintax.write("Sintax error at line: {} message:{}\n".format(lineno,msg))
 
 
 def match(expected:TokenType):
@@ -360,6 +360,7 @@ def term()->Tree:
 
 def factor()->Tree:
     global token 
+    global lineno
     t = Tree('',[])
     print("factor")
     
@@ -426,7 +427,7 @@ def getTokenSintax():
 
 
 r = parse()
-print(r.pretty_print())
+#print(r.pretty_print())
 convert_to_json(r)
 fileSintax.close()
 

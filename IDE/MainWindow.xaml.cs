@@ -303,7 +303,7 @@ namespace IDE
                     this.iscomp = true;
                     try
                     {
-                        await doSintax(new CancellationTokenSource().Token);
+                        await this.doSintax(this.cancellationTokenSource.Token);
                     }
                     catch (OperationCanceledException)
                     {
@@ -350,9 +350,50 @@ namespace IDE
         }
         private async Task doSintax(CancellationToken cancellationToken)
         {
+            msgCompila.Visibility = Visibility.Visible;
+
             SintaxAnalyzer obj = new SintaxAnalyzer();
-            obj.doAnalisis();
+            Process sintaxProcess= obj.doAnalisis();
+
+            this.isProcessRuning = true;
+
+            TimeSpan totalProccessorTime = DateTime.Now - process.StartTime;
+            int i = 0;
+
+            while ( !sintaxProcess.HasExited)
+            {
+
+                TimeSpan proccessRuningTime = DateTime.Now - process.StartTime;
+                double executionPorcentage = (totalProccessorTime.TotalMilliseconds / proccessRuningTime.TotalMilliseconds) * 100;
+                executionPorcentage = Math.Max(0, Math.Min(executionPorcentage, 100));
+                //float cpuUsage = cpuCounter.NextValue();
+                Debug.WriteLine("Porcentaje {0}%", 100 - executionPorcentage);
+                if (i <= 100) i++;
+                progress.Dispatcher.Invoke(new Action(() =>
+                {
+                    progress.Value = 100 - executionPorcentage;
+
+                }));
+                cancellationToken.ThrowIfCancellationRequested();
+
+
+
+                await Task.Delay(100);
+
+            }
             Sintax sin = new Sintax();
+
+            progress.Dispatcher.Invoke(new Action(() =>
+            {
+                progress.Value = 100;
+
+            }));
+            await Task.Delay(100);
+            msgCompila.Dispatcher.Invoke(new Action(() => {
+                msgCompila.Visibility = Visibility.Collapsed;
+                this.isProcessRuning = false;
+            }));
+
 
             sin.Show();
             await Task.Delay(500);

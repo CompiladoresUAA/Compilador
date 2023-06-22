@@ -16,11 +16,11 @@ namespace IDE.phases
         {
             this.fileTokens = this.pathArch + "\\Archivo_Tokens2.txt";
         }
-        public void doAnalisis()
+        public Process doAnalisis()
         {
             string pathArch = Directory.GetCurrentDirectory(),
-               pathError = pathArch + "\\Archivo_Errores.txt",
-               pathToken = pathArch + "\\Archivo_Tokens.txt";
+            pathError = pathArch + "\\Archivo_Errores.txt",
+            pathToken = pathArch + "\\Archivo_Tokens.txt";
             string path = Directory.GetCurrentDirectory();
             Process process;
 
@@ -39,6 +39,7 @@ namespace IDE.phases
             };
             process.Start();
 
+            return process;
         }
 
     }

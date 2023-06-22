@@ -38,38 +38,17 @@ namespace IDE.phases
 
             // Agregar el nodo raíz al TreeView
             treeView.Items.Add(rootItem);
-        }
-        public void startTree()
-        {
-            string filePath = "tree_data.dat";
-
-            if (File.Exists(filePath))
+            foreach (object item in treeView.Items)
             {
-                // Leer el contenido del archivo
-                byte[] serializedTree = File.ReadAllBytes(filePath);
-
-                // Deserializar el árbol
-                MemoryStream memoryStream = new MemoryStream(serializedTree);
-                BinaryFormatter formatter = new BinaryFormatter();
-                object deserializedObject = formatter.Deserialize(memoryStream);
-                //Tree tree = (Tree)deserializedObject;
-
-
-                // Hacer algo con el árbol en C#
-                Console.WriteLine("Árbol recibido:");
-                // Console.WriteLine(tree.ToString());
-
-                // Eliminar el archivo después de su uso
-                File.Delete(filePath);
-            }
-            else
-            {
-                Console.WriteLine("Archivo no encontrado: " + filePath);
+                if (item is TreeViewItem treeViewItem)
+                {
+                    ExpandAllTreeViewItems(treeViewItem);
+                }
             }
 
-            Console.WriteLine("Presione cualquier tecla para salir.");
-            Console.ReadKey();
+
         }
+
         private TreeViewItem BuildTreeViewItem(JToken node)
         {
 
@@ -84,5 +63,22 @@ namespace IDE.phases
 
             return item;
         }
+
+        private void ExpandAllTreeViewItems(TreeViewItem item)
+        {
+            item.IsExpanded = true;
+            foreach (object childItem in item.Items)
+            {
+                if (childItem is TreeViewItem childTreeViewItem)
+                {
+                    ExpandAllTreeViewItems(childTreeViewItem);
+                }
+            }
+        }
+
+// Uso: Llamar a este método para expandir todos los nodos del árbol
+
+        // Uso: Llamar a este método para expandir todos los nodos del árbol
+
     }
 }
