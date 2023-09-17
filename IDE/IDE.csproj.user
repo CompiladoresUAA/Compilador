@@ -7,7 +7,13 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="phases\LexicoView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="phases\Sintax.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="phases\SintaxView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -15,7 +21,13 @@
     <Page Update="MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="phases\LexicoView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="phases\Sintax.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="phases\SintaxView.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

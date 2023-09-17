@@ -24,6 +24,7 @@ using ICSharpCode.AvalonEdit.Document;
 using System.ComponentModel;
 using System.Threading;
 using IDE.phases;
+using System.Xml.Linq;
 //using System.Windows.Forms;
 
 enum LNG{LEXICO,SINTACTICO,SEMANTICO,CDGOINTERMEDIO };
@@ -105,7 +106,7 @@ namespace IDE
             //this.avalonstyles = (Style)Application.Current.FindResource("avalonstyles");
             this.codigo.FontSize = 12;
             this.feedback.FontSize = 12;
-            this.trans.FontSize = 12;
+            //this.trans.FontSize = 12;
             codigo.TextArea.Caret.PositionChanged += onCursorPositionChanged;
 
         }
@@ -344,6 +345,7 @@ namespace IDE
                 // progress.Value= 100;
                 //string output = process.StandardOutput.ReadToEnd();
                 Debug.WriteLine("saliiiiii");
+                this.myFrame.Navigate(new System.Uri("./phases/LexicoView.xaml", UriKind.RelativeOrAbsolute));
                 //               process.WaitForExit();
                 //progress.Visibility = Visibility.Collapsed;
             }
@@ -395,7 +397,8 @@ namespace IDE
             }));
 
 
-            sin.Show();
+            //sin.Show();
+           
             await Task.Delay(500);
 
         }
@@ -407,7 +410,7 @@ namespace IDE
                 return;
             }
            // this.iscomp = false;
-            this.trans.Text = "";
+            //this.trans.Text = "";
             this.feedback.Text ="Error\tFila\tColumna\n";
             this.options = LNG.LEXICO;
 
@@ -419,8 +422,9 @@ namespace IDE
 
            
  //           MessageBox.Show(pathToken+"\n"+pathError);
-            this.trans.Text += this.lecturaArchivo(pathToken);
+            //this.trans.Text += this.lecturaArchivo(pathToken);
             this.feedback.Text += this.lecturaArchivo(pathError);
+            this.myFrame.Navigate(new System.Uri("./phases/LexicoView.xaml", UriKind.RelativeOrAbsolute));
         }
        
         private void removeBorder()
@@ -462,7 +466,8 @@ namespace IDE
         private void eventoSintactico(object sender, RoutedEventArgs e)
         {
             this.options = LNG.SINTACTICO;
-            this.trans.Text = "Sintactico";
+            //this.trans.Text = "Sintactico";
+            this.myFrame.Navigate(new System.Uri("./phases/SintaxView.xaml", UriKind.RelativeOrAbsolute));
         }
 
         private void saveCode(object sender, RoutedEventArgs e)
@@ -559,20 +564,20 @@ namespace IDE
         private void eventoSemantico(object sender, RoutedEventArgs e)
         {
             this.options = LNG.SEMANTICO;
-            this.trans.Text = "Semantico";
+            //this.trans.Text = "Semantico";
         }
 
         private void eventoInter(object sender, RoutedEventArgs e)
         {
             this.options = LNG.CDGOINTERMEDIO;
-            this.trans.Text = "Código intermedio";
+            //this.trans.Text = "Código intermedio";
         }
 
         private void lightTheme(object sender, RoutedEventArgs e)
         {
             // avalonstyles.Setters.Remove(avalonstyles.Setters.First(s => s.Equals(TextEditor.BackgroundProperty) ));
-            this.trans.Background = Brushes.White;
-            this.trans.Foreground = Brushes.Black;
+            //this.trans.Background = Brushes.White;
+            //this.trans.Foreground = Brushes.Black;
             this.feedback.Background= Brushes.White;
             this.feedback.Foreground = Brushes.Black;
             this.codigo.Background = Brushes.White;
@@ -590,8 +595,8 @@ namespace IDE
 
         private void darkTheme(object sender, RoutedEventArgs e)
         {
-            this.trans.Background = new BrushConverter().ConvertFromString("#2E2E2E") as Brush; 
-            this.trans.Foreground = Brushes.White;
+            //this.trans.Background = new BrushConverter().ConvertFromString("#2E2E2E") as Brush; 
+            //this.trans.Foreground = Brushes.White;
             this.feedback.Background = new BrushConverter().ConvertFromString("#2E2E2E") as Brush;
             this.feedback.Foreground = Brushes.White;
             this.codigo.Background = new BrushConverter().ConvertFromString("#2E2E2E") as Brush;
@@ -610,21 +615,21 @@ namespace IDE
         {
             this.codigo.FontSize = 12;
             this.feedback.FontSize = 12;
-            this.trans.FontSize = 12;
+            //this.trans.FontSize = 12;
         }
 
         private void tamMediana(object sender, RoutedEventArgs e)
         {
             this.codigo.FontSize = 20;
             this.feedback.FontSize = 20;
-            this.trans.FontSize = 20;
+            //this.trans.FontSize = 20;
         }
 
         private void tamGrande(object sender, RoutedEventArgs e)
         {
             this.codigo.FontSize = 30;
             this.feedback.FontSize = 30;
-            this.trans.FontSize = 30;
+            //this.trans.FontSize = 30;
         }
 
         private void updatePosition(object sender, KeyEventArgs e)

@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\App.xaml
-22103649947
+4-2047757895
 
-5-186085970
+7-1626832926
 205-1442546529
-MainWindow.xaml;phases\Sintax.xaml;
+MainWindow.xaml;phases\LexicoView.xaml;phases\Sintax.xaml;phases\SintaxView.xaml;
 
 False
 

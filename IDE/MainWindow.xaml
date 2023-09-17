@@ -215,8 +215,9 @@
                          TextWrapping="Wrap" Name="trans">
                     
                 </TextBox>-->
-                <avalonedit:TextEditor Style="{StaticResource avalonstyles}" DockPanel.Dock="Bottom"  IsReadOnly="True" x:Name="trans" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" ShowLineNumbers="False" Margin="0"/>
-
+                <Frame NavigationUIVisibility="Hidden" x:Name="myFrame"></Frame>
+                <!--<avalonedit:TextEditor Style="{StaticResource avalonstyles}" DockPanel.Dock="Bottom"  IsReadOnly="True" x:Name="trans" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" ShowLineNumbers="False" Margin="0"/>
+                -->
             </DockPanel>
             
         </Grid>
