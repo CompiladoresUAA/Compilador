@@ -1,5 +1,5 @@
 ﻿IDE
-
+1.0.0.0
 
 winexe
 C#
@@ -12,9 +12,9 @@ TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 C:\Users\jucaa\OneDrive\Documentos\Proyecto\Compilador\IDE\App.xaml
 4-2047757895
 
-7-1626832926
+9-2019635348
 205-660840755
 MainWindow.xaml;phases\LexicoView.xaml;phases\Sintax.xaml;phases\SintaxView.xaml;
 
-False
+True
 

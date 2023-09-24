@@ -27,7 +27,8 @@ def match(expected:TokenType):
     else:
         caller = inspect.currentframe().f_back.f_code.co_name
         sintaxError("Unexpected token -> " + tokenString + "   match "+caller)
-    
+        recoverySintax()
+        
 def list_dec()->Tree:
     global token
     t = Tree('lista de dec',[])
@@ -80,7 +81,8 @@ def dec_var()->Tree:
         match(TokenType.REAL.value)
     else:
         sintaxError('Date Type Unknown')
-        token = getTokenSintax()
+        #token = getTokenSintax()
+        recoverySintax()
     
     e.append(lista_ids())
     #if( token == TokenType.ID.value ):
@@ -97,6 +99,7 @@ def dec_var()->Tree:
         match(TokenType.SEMMICOL.value)
     else:
         sintaxError('unexpectd token')
+        recoverySintax()
     t.append(e)    
     return t
 
@@ -136,8 +139,8 @@ def lista_stmt()->Tree: #Aqui debería de haber un opcionalidad de un nodo vacio
         t = Tree('',[])
         print("Unexpected Token "+ str(token))
         sintaxError("Unexpected Token "+' '+ tokenString)
-        token = getTokenSintax()
-
+        #token = getTokenSintax()
+        recoverySintax()
         
     return t
 
@@ -163,7 +166,8 @@ def statement()->Tree:
         t = assign_stmt()
     else:
         sintaxError('Unexpected Token ->')
-        token = getTokenSintax() 
+        #token = getTokenSintax()
+        recoverySintax() 
     return t
 def main_stmt()->Tree:
     print("main")
@@ -218,7 +222,9 @@ def assign_pre()->Tree:
            
     else:
         sintaxError("Unexpected Token "+ tokenString)
-        token = getTokenSintax()
+        #token = getTokenSintax()
+        recoverySintax()
+
     return t
 def assign_post()->Tree:
     global token
@@ -233,7 +239,9 @@ def assign_post()->Tree:
            
     else:
         sintaxError("Unexpected Token "+ tokenString)
-        token = getTokenSintax()
+        #token = getTokenSintax()
+        recoverySintax()
+
     return t
 def stmt_exp()->Tree:
     global token 
@@ -388,7 +396,9 @@ def factor()->Tree:
         sintaxError('Unexpected token -> '+tokenString)
         
         #printToken(token,tokenString)
-        token = getTokenSintax()
+        #token = getTokenSintax()
+        recoverySintax()
+
     return t        
 def parse()->Tree:
     global token
@@ -431,6 +441,25 @@ r = parse()
 convert_to_json(r)
 fileSintax.close()
 
+def recoverySintax():
+    while(token == TokenType.ENDFILE.value or 
+          token == TokenType.IF.value or 
+          token == TokenType.CIN.value or
+          token == TokenType.COUT.value or
+          token == TokenType.DO.value or
+          token == TokenType.END.value or
+          token == TokenType.MAIN.value or
+          token == TokenType.THEN.value or
+          token == TokenType.ELSE.value or
+          token == TokenType.WHILE.value or
+          token == TokenType.UNTIL.value or
+          token == TokenType.REAL.value or
+          token == TokenType.INT.value or
+          token == TokenType.BOOLEAN.value or
+          token == TokenType.REPEAT.value or
+          token == TokenType.RBPAREN.value or
+          token == TokenType.SEMMICOL.value):
+        token = getTokenSintax()
 
 
 

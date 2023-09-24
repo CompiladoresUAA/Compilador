@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "0duzm0fUHosj8P9ueeRSWulqVOvQN2/XB1cnT3FNtsuNUHbsOpBi0DfDh1wZWQkkxWF5YTgXPmp3JA0QrCRBwA==",
+  "dgSpecHash": "ZnVkIk2LKSAUwnRhxYIzbs1mLglmJ1k+hOT/KVHnw979rB5ACVNm+rAS01VWvRKO22NdgdQLA9WpP1KoUKhRYw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\kris_\\OneDrive\\Documentos\\Compiladores\\IDE\\IDE.csproj",
+  "projectFilePath": "C:\\Users\\jucaa\\OneDrive\\Documentos\\Proyecto\\Compilador\\IDE\\IDE.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\kris_\\.nuget\\packages\\avalonedit\\6.2.0.78\\avalonedit.6.2.0.78.nupkg.sha512",
-    "C:\\Users\\kris_\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+    "C:\\Users\\jucaa\\.nuget\\packages\\avalonedit\\6.2.0.78\\avalonedit.6.2.0.78.nupkg.sha512",
+    "C:\\Users\\jucaa\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
   ],
   "logs": []
 }
