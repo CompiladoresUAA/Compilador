@@ -94,7 +94,7 @@ def printToken(token,tokenString):
 
     elif ( tp.ENDFILE == token ):
         print( "EOF" )
-        write( "EOF\t EOF","\t  {}\t  {}".format(globall.lineno,globall.colpos))
+        #write( "EOF\t EOF","\t  {}\t  {}".format(globall.lineno,globall.colpos))
     elif ( tp.ERROR == token ):
         print( "  {}\t  {}\t  {}".format(tokenString,globall.lineno,globall.colpos) )
         writeErrores("  {}  \t  {}\t  {}".format(tokenString,globall.lineno,globall.colpos))

@@ -190,7 +190,7 @@ def assign_simple()->Tree:
     global token
     global tokenString
     print("assign")
-    
+    variable = tokenString
     t = Tree('Assign',[])
     if( token == TokenType.ID.value):
         t.append(Tree(tokenString,[]))
@@ -200,7 +200,7 @@ def assign_simple()->Tree:
         t.extend(stmt_exp()) #Por que t[0] ?? y falta un if --------------------------------------------------------------
         
     elif( token == TokenType.LESSL.value or token == TokenType.PLUSP.value ):
-        t.extend(assign_post())
+        t.extend(assign_post(variable))
     else:
         t.append(Tree('',[]))
         
@@ -208,11 +208,19 @@ def assign_simple()->Tree:
 def assign_pre()->Tree:
     global token
     global tokenString
+    variable = tokenString
     t = Tree('Assign',[])
-    t.append(Tree(tokenString,[]))
+    op = token
+    #t.append(Tree(tokenString,[]))
     match(token)
     if ( token == TokenType.ID.value ):
-        t[0].append(Tree(tokenString,[]))
+        t.append(Tree(tokenString,[]))
+        if (op == TokenType.PLUSP.value):  
+            t.append(Tree('+',[]))
+        else:
+            t.append(Tree('-',[]))
+        t[1].append(Tree(tokenString,[]))
+        t[1].append(Tree('1',[]))
         match(TokenType.ID.value)
         match(TokenType.SEMMICOL.value)
            
@@ -220,14 +228,19 @@ def assign_pre()->Tree:
         sintaxError("Unexpected Token "+ tokenString)
         token = getTokenSintax()
     return t
-def assign_post()->Tree:
+def assign_post(variable:str)->Tree:
     global token
     global tokenString
     t = Tree('Assign',[])
-    t.append(Tree(tokenString,[]))
-    match(token)
+    """t.append(Tree(tokenString,[]))
+    match(token)"""
     if( token == TokenType.PLUSP.value or token == TokenType.LESSL.value):
-        t[0].append(Tree(tokenString,[]))
+        if( token == TokenType.PLUSP.value ):
+            t.append(Tree('+',[]))
+        else:
+            t.append(Tree('-',[]))
+        t[0].append(Tree(variable,[]))
+        t[0].append(Tree('1',[]))
         match(token)
         match(TokenType.SEMMICOL.value)
            
