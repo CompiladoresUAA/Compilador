@@ -8,9 +8,57 @@
         Title="Jucs=" Height="450" Width="800"  Icon="/icon-512x512.png">
     <!--.FocusedElement="{Binding ElementName=mnulexico}"
     -->
+    
     <Grid>
+        
+        
+        
         <Grid.Resources>
-            <Style x:Key="options" TargetType="MenuItem">
+
+            <!--<Style TargetType="{x:Type Thumb}"  x:Key="ScrollBarThumb">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Thumb}">
+                            <Border CornerRadius="2"
+                            Background="Black"
+                            BorderBrush="Red"
+                            BorderThickness="1" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style TargetType="ScrollBar" >
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ScrollBar}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition MaxHeight="18" />
+                                    <RowDefinition Height="0.00001*" />
+                                    <RowDefinition MaxHeight="18" />
+                                </Grid.RowDefinitions>
+                                <Border Grid.RowSpan="3" />
+                                <RepeatButton Grid.Row="0"
+                                      Command="ScrollBar.LineUpCommand"
+                                      Content="" />
+                                <Track x:Name="PART_Track" Grid.Row="1" IsDirectionReversed="true">
+                                    <Track.Thumb>
+                                        <Thumb Style="{StaticResource ScrollBarThumb}" Margin="1,0,1,0"/>
+                                    </Track.Thumb>
+                                </Track>
+                                <RepeatButton Grid.Row="3"
+                                      Command="ScrollBar.LineDownCommand"
+                                      Content="" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                
+            </Style>-->
+
+
+            <Style x:Key="options" TargetType="MenuItem" >
                 <Style.Triggers>
                     <Trigger Property="IsFocused" Value="True">
                         <Setter Property="Background" Value="LightPink"/>
@@ -22,10 +70,10 @@
                 </Style.Triggers>
             </Style>
 
-
+            
             <Style x:Key="avalonstyles" TargetType="avalonedit:TextEditor">
-                <Setter Property="Background" Value="#2E2E2E"/>
-                <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Background" Value="#2E2E2E"/>
+                        <Setter Property="Foreground" Value="White"/>
             </Style>
 
 
@@ -33,17 +81,17 @@
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-
+            
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="15*"/>
+            <RowDefinition Height="20*"/>
 
         </Grid.RowDefinitions>
-        <StackPanel Height="Auto" Background="LightBlue" Grid.Row="0">
-            <Menu VerticalAlignment="Top">
-                <Menu.Height>20</Menu.Height>
-                <MenuItem Header="_Archivo">
+    <!--<StackPanel Height="Auto" Background="LightBlue" Grid.Row="0">-->
+        <Menu VerticalAlignment="Stretch" x:Name="upbar_menu" Grid.Row="0" BorderBrush="LightGray" BorderThickness="0 0 0 4">
+            <Menu.Height>Auto</Menu.Height>
+                <MenuItem Header="_Archivo" >
                     <MenuItem Header="_Abrir" Click="openFile"  >
                         <MenuItem.Icon>
                             <Image Source="/open-folder.png" />
@@ -77,32 +125,34 @@
 
                     <MenuItem Header="_Claro" Click="lightTheme" >
                         <MenuItem.Icon>
-                            <Image Source="/light-mode.png" Width="20" Height="20"/>
-                        </MenuItem.Icon>
+                            <Image Source="/light-mode.png" />
+                        </MenuItem.Icon> 
                     </MenuItem>
-                    <MenuItem Header="_Obscuro" Click="darkTheme"  >
+                    <MenuItem Header="_Obscuro" Click="darkTheme" >
                         <MenuItem.Icon>
-                            <Image Source="/night-mode.png" Width="20" Height="20"/>
-                        </MenuItem.Icon>
+                            <Image  Source="/night-mode.png" />
+                        </MenuItem.Icon> 
                     </MenuItem>
 
 
 
                 </MenuItem>
-                <MenuItem Header="Compilar" Click="compilarFileSource"/>
-                <MenuItem Header="Ayuda"/>
+            <MenuItem Header="Compilar" Click="compilarFileSource">
+                
+                
+            </MenuItem>
+            <MenuItem Header="Ayuda"/>
 
 
 
-            </Menu>
+        </Menu>
 
-
-        </StackPanel>
+        
+    <!--</StackPanel>-->
         <Grid Background="LightGray" Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="171*"/>
-                <ColumnDefinition Width="69*"/>
-                <ColumnDefinition Width="160*"/>
+                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition/>
 
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -110,14 +160,33 @@
                 <RowDefinition/>
 
             </Grid.RowDefinitions>
+            <StackPanel x:Name="msgCompila" Visibility="Collapsed" Height="100" Width="200" VerticalAlignment="Center"  Panel.ZIndex="99">
+                <Label Background="LightGray">Compilando...</Label>
+                <ProgressBar Width="200" Height="20" Visibility="Visible" Name="progress"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Button Width="200" Click="cancelaCompila" >Cancelar</Button>
+            </StackPanel>
+            <avalonedit:TextEditor HorizontalScrollBarVisibility="Auto" Style="{StaticResource avalonstyles}" Background="#2E2E2E" x:Name="codigo" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" Grid.Row="0" ShowLineNumbers="True" Margin="0,0,0,0" KeyUp="updatePosition" 
+                                   >
+           
+            </avalonedit:TextEditor>
 
-            <avalonedit:TextEditor Style="{StaticResource avalonstyles}" Background="#2E2E2E" x:Name="codigo" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" ShowLineNumbers="True" Grid.ColumnSpan="2"/>
-
-            <DockPanel Grid.ColumnSpan="3" Background="Gray"  Margin="2,271,2,2" Grid.RowSpan="2">
-
-                <Menu DockPanel.Dock="Top">
+            <!--<DockPanel Grid.Row="1" Grid.ColumnSpan="2" Background="Gray"  Margin="2,0,2,2"  >-->
+            <DockPanel Grid.Row="2" Grid.ColumnSpan="3" Background="Gray"  Margin="2,2,2,2" >
+                <Menu DockPanel.Dock="Top" Name="downbar_menu">
                     <MenuItem Style="{StaticResource options}" Header="Errores" />
                     <MenuItem Style="{StaticResource options}" Header="Resultados"/>
+                    <MenuItem  >
+                        <MenuItem.Header>
+                            <TextBlock>
+                                 <Run Text="Linea: " />
+                                 <Run Text="{Binding Linea}" />
+                                 <Run Text="    Columna: " />
+                                 <Run Text="{Binding Columna}" />
+
+                            </TextBlock>
+                        </MenuItem.Header>
+                    </MenuItem>
+
                 </Menu>
 
                 <!--<TextBox DockPanel.Dock="Bottom" IsReadOnly="True" Margin="5,5,5,10" 
@@ -130,27 +199,28 @@
 
             </DockPanel>
 
-            <DockPanel Grid.Row="0" Grid.Column="2" Background="Gray"
+            <DockPanel Grid.Row="0" Grid.Column="1" Background="Gray"  Margin="0"
                             >
-
-                <Menu DockPanel.Dock="Top">
+                    
+                <Menu DockPanel.Dock="Top" Name="opt_menu">
                     <MenuItem Header="Lexico" Style="{StaticResource options}" Click="eventoLexico" Name="mnulexico" />
                     <MenuItem Header="Sintactico" Style="{StaticResource options}" Name="mnusintactico" Click="eventoSintactico"/>
 
                     <MenuItem Style="{StaticResource options}" Header="Semantico" Name="mnuSemantico" Click="eventoSemantico" />
                     <MenuItem Style="{StaticResource options}" Header="Codigo Intermedio" Name="mnuInter" Click="eventoInter" />
                 </Menu>
-
+                
                 <!--<TextBox DockPanel.Dock="Bottom" IsReadOnly="True" Margin="5,5,5,10" 
                          AcceptsReturn="True" VerticalScrollBarVisibility="Visible"
                          TextWrapping="Wrap" Name="trans">
                     
                 </TextBox>-->
-                <avalonedit:TextEditor Style="{StaticResource avalonstyles}" DockPanel.Dock="Bottom"  IsReadOnly="True" x:Name="trans" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" ShowLineNumbers="False" Margin="0"/>
-
+                <Frame NavigationUIVisibility="Hidden" x:Name="myFrame"></Frame>
+                <!--<avalonedit:TextEditor Style="{StaticResource avalonstyles}" DockPanel.Dock="Bottom"  IsReadOnly="True" x:Name="trans" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" ShowLineNumbers="False" Margin="0"/>
+                -->
             </DockPanel>
-
+            
         </Grid>
     </Grid>
-
+    
 </Window>

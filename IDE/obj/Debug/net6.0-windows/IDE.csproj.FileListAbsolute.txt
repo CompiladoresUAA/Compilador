@@ -67,3 +67,10 @@ C:\Users\jucaa\OneDrive\Documentos\Proyecto\Compilador\IDE\obj\Debug\net6.0-wind
 C:\Users\jucaa\OneDrive\Documentos\Proyecto\Compilador\IDE\obj\Debug\net6.0-windows\IDE.pdb
 C:\Users\jucaa\OneDrive\Documentos\Proyecto\Compilador\IDE\obj\Debug\net6.0-windows\IDE.genruntimeconfig.cache
 C:\Users\jucaa\OneDrive\Documentos\Proyecto\Compilador\IDE\obj\Debug\net6.0-windows\ref\IDE.dll
+C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\bin\Debug\net6.0-windows\Newtonsoft.Json.dll
+C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\obj\Debug\net6.0-windows\phases\Sintax.g.cs
+C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\obj\Debug\net6.0-windows\phases\Sintax.baml
+C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\obj\Debug\net6.0-windows\phases\SintaxView.g.cs
+C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\obj\Debug\net6.0-windows\phases\SintaxView.baml
+C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\obj\Debug\net6.0-windows\phases\LexicoView.g.cs
+C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\obj\Debug\net6.0-windows\phases\LexicoView.baml
