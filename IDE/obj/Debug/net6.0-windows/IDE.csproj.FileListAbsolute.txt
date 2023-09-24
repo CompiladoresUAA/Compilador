@@ -74,3 +74,10 @@ C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\obj\Debug\net6.0-windows\pha
 C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\obj\Debug\net6.0-windows\phases\SintaxView.baml
 C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\obj\Debug\net6.0-windows\phases\LexicoView.g.cs
 C:\Users\kris_\OneDrive\Documentos\Compiladores\IDE\obj\Debug\net6.0-windows\phases\LexicoView.baml
+C:\Users\jucaa\OneDrive\Documentos\Proyecto\Compilador\IDE\bin\Debug\net6.0-windows\Newtonsoft.Json.dll
+C:\Users\jucaa\OneDrive\Documentos\Proyecto\Compilador\IDE\obj\Debug\net6.0-windows\phases\LexicoView.g.cs
+C:\Users\jucaa\OneDrive\Documentos\Proyecto\Compilador\IDE\obj\Debug\net6.0-windows\phases\Sintax.g.cs
+C:\Users\jucaa\OneDrive\Documentos\Proyecto\Compilador\IDE\obj\Debug\net6.0-windows\phases\SintaxView.g.cs
+C:\Users\jucaa\OneDrive\Documentos\Proyecto\Compilador\IDE\obj\Debug\net6.0-windows\phases\LexicoView.baml
+C:\Users\jucaa\OneDrive\Documentos\Proyecto\Compilador\IDE\obj\Debug\net6.0-windows\phases\Sintax.baml
+C:\Users\jucaa\OneDrive\Documentos\Proyecto\Compilador\IDE\obj\Debug\net6.0-windows\phases\SintaxView.baml
