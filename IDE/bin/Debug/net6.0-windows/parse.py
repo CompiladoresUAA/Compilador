@@ -442,7 +442,7 @@ convert_to_json(r)
 fileSintax.close()
 
 def recoverySintax():
-    while(token == TokenType.ENDFILE.value or 
+    while(not(token == TokenType.ENDFILE.value or 
           token == TokenType.IF.value or 
           token == TokenType.CIN.value or
           token == TokenType.COUT.value or
@@ -458,7 +458,7 @@ def recoverySintax():
           token == TokenType.BOOLEAN.value or
           token == TokenType.REPEAT.value or
           token == TokenType.RBPAREN.value or
-          token == TokenType.SEMMICOL.value):
+          token == TokenType.SEMMICOL.value)):
         token = getTokenSintax()
 
 
