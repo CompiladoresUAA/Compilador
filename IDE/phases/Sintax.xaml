@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="Sintax" Height="450" Width="800">
     <Grid>
-        <TreeView x:Name="treeView" FontSize="20" FontFamily="Arial Black" Background="AliceBlue"/>
+        <TreeView x:Name="treeView" FontSize="20" FontFamily="Arial Black" Background="#2E2E2E" Foreground="#00F4B5"/>
     </Grid>
 </Window>
