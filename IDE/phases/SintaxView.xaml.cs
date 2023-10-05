@@ -39,6 +39,7 @@ namespace IDE.phases
 
             // Agregar el nodo raíz al TreeView
             treeView.Items.Add(rootItem);
+            
             foreach (object item in treeView.Items)
             {
                 if (item is TreeViewItem treeViewItem)
@@ -47,15 +48,24 @@ namespace IDE.phases
                 }
             }
         }
+        public static string readErrors()
+        {
+            int a=1,b=2;
+            
+            string errors = File.ReadAllText("Errores_Sintaxis.txt");
+            return errors;
+        }
         private TreeViewItem BuildTreeViewItem(JToken node)
         {
 
             TreeViewItem item = new TreeViewItem();
+            item.Foreground = new SolidColorBrush(Colors.White);
             item.Header = node["name"].ToString();
 
             foreach (JToken childNode in node["children"])
             {
                 TreeViewItem childItem = BuildTreeViewItem(childNode);
+                childItem.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#20fa8d")); 
                 item.Items.Add(childItem);
             }
 

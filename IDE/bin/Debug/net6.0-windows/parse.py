@@ -2,6 +2,7 @@ from nltk.tree import Tree
 from globall import TokenType
 from globall import TreeNode
 import sys
+from globall import diccionario
 import os
 from parseH import *
 token = -1
@@ -16,7 +17,8 @@ import inspect
 def sintaxError(msg:str):
     global lineno
     #caller = inspect.currentframe().f_back.f_code.co_name
-    fileSintax.write("Sintax error at line: {} message:{}\n".format(lineno,msg))
+    fileSintax.write("Sintax error at line: {0} message: {1}\n".format(lineno,msg))
+    recoverySintax()
 
 
 def match(expected:TokenType):
@@ -26,8 +28,8 @@ def match(expected:TokenType):
         token = getTokenSintax()
     else:
         caller = inspect.currentframe().f_back.f_code.co_name
-        sintaxError("Unexpected token -> " + tokenString + "   match "+caller)
-        recoverySintax()
+        sintaxError("Unexpected token -> " + tokenString + " expected " + diccionario[expected])
+        
         
 def list_dec()->Tree:
     global token
@@ -38,7 +40,7 @@ def list_dec()->Tree:
     while( token != TokenType.ENDFILE.value  and token != TokenType.END.value
           and token != TokenType.UNTIL.value and token != TokenType.ELSE.value
           and token != TokenType.RBPAREN.value):
-        print(f"lst {caller}")
+        #print(f"lst {caller}")
         
         
         q = dec()
@@ -51,7 +53,7 @@ def list_dec()->Tree:
 def dec()->Tree:
     global token
     t = Tree('',[])
-    print("dec")
+    #print("dec")
     
     if ( token == TokenType.INT.value or token == TokenType.REAL.value or token == TokenType.BOOLEAN.value):
        
@@ -98,7 +100,8 @@ def dec_var()->Tree:
         
         match(TokenType.SEMMICOL.value)
     else:
-        sintaxError('unexpectd token')
+        sintaxError('unexpected token ' + tokenString + ' Token expected '+
+                    (',' if token == TokenType.ID.value else ';'))
         recoverySintax()
     t.append(e)    
     return t
@@ -127,7 +130,7 @@ def lista_stmt()->Tree: #Aqui debería de haber un opcionalidad de un nodo vacio
     global token 
     global tokenString
     caller = inspect.currentframe().f_back.f_code.co_name
-    print("lista_stmt "+ str(TokenType(token).name)+' '+caller)
+    #print("lista_stmt "+ str(TokenType(token).name)+' '+caller)
     
     t = Tree('Lista de stmt',[])
     if(token == TokenType.MAIN.value or token == TokenType.IF.value or token==TokenType.DO.value or token == TokenType.WHILE.value or token == TokenType.CIN.value or token == TokenType.COUT.value or token == TokenType.ID.value or token == TokenType.LESSL.value or token == TokenType.PLUSP.value):
@@ -137,8 +140,8 @@ def lista_stmt()->Tree: #Aqui debería de haber un opcionalidad de un nodo vacio
     
     else:
         t = Tree('',[])
-        print("Unexpected Token "+ str(token))
-        sintaxError("Unexpected Token "+' '+ tokenString)
+        #print("Unexpected Token "+ str(token))
+        sintaxError("lst stmt Unexpected Token "+' '+ tokenString)
         #token = getTokenSintax()
         recoverySintax()
         
@@ -194,7 +197,7 @@ def assign_simple()->Tree:
     global token
     global tokenString
     print("assign")
-    
+    variable = tokenString
     t = Tree('Assign',[])
     if( token == TokenType.ID.value):
         t.append(Tree(tokenString,[]))
@@ -204,7 +207,7 @@ def assign_simple()->Tree:
         t.extend(stmt_exp()) #Por que t[0] ?? y falta un if --------------------------------------------------------------
         
     elif( token == TokenType.LESSL.value or token == TokenType.PLUSP.value ):
-        t.extend(assign_post())
+        t.extend(assign_post(variable))
     else:
         t.append(Tree('',[]))
         
@@ -212,33 +215,46 @@ def assign_simple()->Tree:
 def assign_pre()->Tree:
     global token
     global tokenString
+    variable = tokenString
     t = Tree('Assign',[])
-    t.append(Tree(tokenString,[]))
+    op = token
+    #t.append(Tree(tokenString,[]))
     match(token)
     if ( token == TokenType.ID.value ):
-        t[0].append(Tree(tokenString,[]))
+        t.append(Tree(tokenString,[]))
+        if (op == TokenType.PLUSP.value):  
+            t.append(Tree('+',[]))
+        else:
+            t.append(Tree('-',[]))
+        t[1].append(Tree(tokenString,[]))
+        t[1].append(Tree('1',[]))
         match(TokenType.ID.value)
         match(TokenType.SEMMICOL.value)
            
     else:
-        sintaxError("Unexpected Token "+ tokenString)
+        sintaxError("pre assign Unexpected Token "+ tokenString)
         #token = getTokenSintax()
         recoverySintax()
 
     return t
-def assign_post()->Tree:
+def assign_post(variable:str)->Tree:
     global token
     global tokenString
     t = Tree('Assign',[])
-    t.append(Tree(tokenString,[]))
-    match(token)
+    """t.append(Tree(tokenString,[]))
+    match(token)"""
     if( token == TokenType.PLUSP.value or token == TokenType.LESSL.value):
-        t[0].append(Tree(tokenString,[]))
+        if( token == TokenType.PLUSP.value ):
+            t.append(Tree('+',[]))
+        else:
+            t.append(Tree('-',[]))
+        t[0].append(Tree(variable,[]))
+        t[0].append(Tree('1',[]))
         match(token)
         match(TokenType.SEMMICOL.value)
            
     else:
-        sintaxError("Unexpected Token "+ tokenString)
+        sintaxError("post assign Unexpected Token "+ tokenString)
         #token = getTokenSintax()
         recoverySintax()
 
@@ -434,32 +450,35 @@ def getTokenSintax():
         return aux   
     else:
         return TokenType.ENDFILE.value    
-
+def recoverySintax():
+    global token
+    while(not(token == TokenType.ENDFILE.value or 
+              token == TokenType.IF.value or 
+              token == TokenType.CIN.value or
+              token == TokenType.COUT.value or
+              token == TokenType.DO.value or
+              token == TokenType.END.value or
+              token == TokenType.MAIN.value or
+              token == TokenType.THEN.value or
+              token == TokenType.ELSE.value or
+              token == TokenType.WHILE.value or
+              token == TokenType.UNTIL.value or
+              token == TokenType.REAL.value or
+              token == TokenType.INT.value or
+              token == TokenType.BOOLEAN.value or
+              token == TokenType.REPEAT.value or
+              token == TokenType.RBPAREN.value or
+              token == TokenType.SEMMICOL.value)):
+        print('-*-*-*-**-*-*-*-*-*-*-*-*-*-**-*--**-*-*-**-\n')
+        token = getTokenSintax()
+    if( token == TokenType.SEMMICOL.value ):
+        token = getTokenSintax()
 
 r = parse()
 #print(r.pretty_print())
 convert_to_json(r)
 fileSintax.close()
 
-def recoverySintax():
-    while(token == TokenType.ENDFILE.value or 
-          token == TokenType.IF.value or 
-          token == TokenType.CIN.value or
-          token == TokenType.COUT.value or
-          token == TokenType.DO.value or
-          token == TokenType.END.value or
-          token == TokenType.MAIN.value or
-          token == TokenType.THEN.value or
-          token == TokenType.ELSE.value or
-          token == TokenType.WHILE.value or
-          token == TokenType.UNTIL.value or
-          token == TokenType.REAL.value or
-          token == TokenType.INT.value or
-          token == TokenType.BOOLEAN.value or
-          token == TokenType.REPEAT.value or
-          token == TokenType.RBPAREN.value or
-          token == TokenType.SEMMICOL.value):
-        token = getTokenSintax()
 
 
 

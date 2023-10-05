@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -37,21 +38,26 @@ namespace IDE.phases
             this.fillDataGrid();
 
         }
-        public void fillDataGrid()
+        
+        public async void fillDataGrid()
         {
-            using(StreamReader readerObj = new StreamReader(this.fileToRead))
-            {
-                string line;
-                char[] spearator = { '\t', ' ' };
-                while ((line = readerObj.ReadLine())!=null)
-                {
-                    string[] lines = line.Split(spearator);
-                    Debug.WriteLine(lines[0]);
-                    Debug.WriteLine(lines[1]);
-                    this.dataGrid.Items.Add(new Item() {Token = lines[0],Lexema = lines[1] });
+            
+                    using (StreamReader readerObj = new StreamReader(this.fileToRead))
+                    {
+                        string line;
+                        char[] spearator = { '\t', ' ' };
+                        while ((line = readerObj.ReadLine()) != null)
+                        {
+                            string[] lines = line.Split(spearator);
+                            Debug.WriteLine(lines[0]);
+                            Debug.WriteLine(lines[1]);
+                            this.dataGrid.Items.Add(new Item() { Token = lines[0], Lexema = lines[1] });
+                            await Task.Delay(10);
 
-                }
-            }
-        }
+                        }
+                    }
+
+                
+         }
     }
 }

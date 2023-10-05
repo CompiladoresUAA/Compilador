@@ -7,8 +7,14 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="SintaxView">
+    <Page.Resources>
+        <SolidColorBrush x:Key="ListBorder" Color="#828790"/>
+        
 
+    </Page.Resources>
+    
+   
     <Grid>
-        <TreeView x:Name="treeView" FontSize="20" FontFamily="Arial Black" Background="AliceBlue"/>
+        <TreeView Style="{DynamicResource TreeViewStyle1}" x:Name="treeView" FontSize="20" FontFamily="Arial Black" Background="#2E2E2E" Foreground="Aqua" />
     </Grid>
 </Page>
