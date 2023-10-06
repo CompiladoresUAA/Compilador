@@ -8,9 +8,33 @@ with open(os.path.join(os.getcwd(),'Archivo_Errores.txt'), "a") as archivo:
         pass  # No se realiza ninguna operación, simplemente se crea el archivo
 with open(os.path.join(os.getcwd(),'Archivo_Tokens2.txt'), "a") as archivo:
         pass  # No se realiza ninguna operación, simplemente se crea el archivo
-
+MAXCHILDREN = 3
 MAXRESERVEDWORDS = 14
-
+diccionario = {
+     3 : 'id',
+     4: 'integer',
+     5: 'real',
+     6: '+',
+     7: '-',
+     8: '*',
+     9: '/',
+     40: '%',
+     11: '<',
+     12: '<=',
+     13: '>',
+     14: '>=',
+     15: '=',
+     16: '!=',
+     17: '=',
+     18: '(',
+     19: ')',
+     20: '++',
+     21: '--',
+     22: ',',
+     23: ';',
+     24: '{',
+     25: '}'
+}
 class TokenType(Enum):
     ENDFILE = 1
     ERROR = 2
@@ -65,39 +89,71 @@ colpos = 0
 #################### Analisis Sintactico ####################################
 ####################                     ####################################
 #############################################################################
-class NodeKind:
+class NodeKind(Enum):
     STMTK = 1
     EXPK = 2
     DECK = 3
 
-class StmtKind:
+class StmtKind(Enum):
     IFK = 1
     WHILEK = 2
     DOK = 3
     UNTILK = 4
     CINK = 5
     COUTK = 6
+    ASSIGNS = 7
+    ASSIGNPR = 8
+    ASSIGNPOST = 9
+    MAINK = 10
+    DECK = 11
+    TYPEDEF = 12
+    LISTAIDS = 13
+    ELSEK = 14
 
-class ExpKind:
+class ExpKind(Enum):
     OPK = 1
-    CONSTK = 2
-    IDK = 3
+    CONSTIK = 2
+    CONSTFK = 2
+    IDK = 4
 
-class DecKind:
+class DecKind(Enum):
     INTK = 1
     REALK = 2
     VOIDK = 3
     BOOLEANK = 4
 
 class TreeNode:
-    def __init__(self):
-        self.child:list = []
-        self.sibling:list = []
-        self.lineno:int = 0
-        self.nodekind:NodeKind = 0
-        self.kind:Union[StmtKind, ExpKind, DecKind] = -1
-        self.attr:Union[TokenType,int,str] = -1
-
+    def __init__(self,lineno,nodekind,kind):
+        self.child:list = [None]*MAXCHILDREN
+        self.sibling:TreeNode = None
+        self.lineno:int = lineno
+        self.nodekind:NodeKind = nodekind
+        self.kind:Union[StmtKind, ExpKind] = kind
+        self.attr:Union[TokenType,int,float,str] = ""
+        self.type:DecKind = -1
+    def __str__(self):
+        return f'Node: {self.nodekind.name}, {self.lineno}, {self.attr}'
+    def getChild(self,pos)->list:
+        return self.child[pos]
+    
+    def setChild(self,child,pos)->None:
+         self.child.insert(pos,child)
+    def getSibling(self):
+         return self.sibling
+    def setSibling(self,sibling)->None:
+         self.sibling = sibling
+    def getType(self)->DecKind:
+         return self.type
+    def setType(self,type:DecKind)->None:
+         self.type = type
+    def getAttr(self):
+         return self.attr
+    def setAttr(self,attr)->None:
+         self.attr = attr
+    def getNodeKind(self)->NodeKind:
+         return self.nodekind
+    def getKind(self):
+         return self.kind
     #def __init__(self,child,sibling,lineno,nodekind,kind,attr):
     #    self.child:list = child
     #    self.sibling:list = sibling
