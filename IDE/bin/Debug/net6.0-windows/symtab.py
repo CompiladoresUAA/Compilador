@@ -15,16 +15,16 @@ def hash(key)->int:
     return temp
 
 class LineList:
-    def __init__(self, lineno, next) -> None:
+    def __init__(self, lineno) -> None:
         self.lineno:int = lineno
         self.next:LineList = [None]
     
-    def getLineno(self):
+    def getLineno(self)->None:
         return self.lineno
     def setLineno(self,lineno):
         self.lineno = lineno
 
-    def getNext(self):
+    def getNext(self)->None:
         return self.next
     def setNext(self,next):
         self.next = next
@@ -59,14 +59,15 @@ class BucketList:
 hashTable:BucketList = [None]*SIZE
 
 def st_insert(name:str, lineno:int, loc:int):
-    h:int = hash(name)
+    #h:int = hash(name)
+    h:int=100
     l:BucketList = hashTable[h]
     while ((l != None) and not(name == l.name)):
         l = l.next
     if(l == None):
-        l = BucketList()
+        l = BucketList(name,loc)
         l.setName(name)
-        l.lines = LineList()
+        l.lines = LineList(lineno)
         l.lines.setLineno(lineno)
         l.setMeloc(loc)
         l.lines.setNext(None)
@@ -76,8 +77,18 @@ def st_insert(name:str, lineno:int, loc:int):
         t:LineList = l.getLines()
         while (t.next != None):
             t = t.getNext()
-        t.next = LineList()
+        t.next = LineList(lineno)
         t.next.setLineno(lineno)
         t.next.setNext(None)
 
-
+####  PRUEBAS  ####
+""" 
+j=0
+st_insert("hola",10,0)
+for r in hashTable:
+    print(str(r)+" -> "+str(j))
+    
+    j+=1 
+lin:LineList = hashTable[100].getLines()
+print(str(hashTable[100].getName()))
+print(str(lin.getLineno())) """
