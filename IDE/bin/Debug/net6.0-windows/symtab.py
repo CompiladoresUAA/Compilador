@@ -59,8 +59,8 @@ class BucketList:
 hashTable:BucketList = [None]*SIZE
 
 def st_insert(name:str, lineno:int, loc:int):
-    #h:int = hash(name)
-    h:int=100
+    h:int = hash(name)
+    #h:int=100
     l:BucketList = hashTable[h]
     while ((l != None) and not(name == l.name)):
         l = l.next
@@ -80,6 +80,20 @@ def st_insert(name:str, lineno:int, loc:int):
         t.next = LineList(lineno)
         t.next.setLineno(lineno)
         t.next.setNext(None)
+
+def st_lookup(name:str)->int:
+    h:int = hash(name)
+    l:BucketList = hashTable[h]
+    while((l != None) and not(name==l.name)):
+        l = l.next
+    if(l == None):
+        return -1
+    else:
+        return l.meloc
+
+def printSymtab()->None:
+    #Definir la funcion de manadar a imprimir a un archivo de texto
+    pass
 
 ####  PRUEBAS  ####
 """ 
