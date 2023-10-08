@@ -8,6 +8,10 @@ with open(os.path.join(os.getcwd(),'Archivo_Errores.txt'), "a") as archivo:
         pass  # No se realiza ninguna operación, simplemente se crea el archivo
 with open(os.path.join(os.getcwd(),'Archivo_Tokens2.txt'), "a") as archivo:
         pass  # No se realiza ninguna operación, simplemente se crea el archivo
+with open(os.path.join(os.getcwd(),'Archivo_TabSym.txt'), "a") as archivo:
+        pass  # No se realiza ninguna operación, simplemente se crea el archivo
+with open(os.path.join(os.getcwd(),'Archivo_ErrorSem.txt'), "a") as archivo:
+        pass  # No se realiza ninguna operación, simplemente se crea el archivo
 MAXCHILDREN = 3
 MAXRESERVEDWORDS = 14
 diccionario = {
@@ -23,8 +27,8 @@ diccionario = {
      12: '<=',
      13: '>',
      14: '>=',
-     15: '=',
-     16: '!=',
+     15: ':=',
+     16: '<>',
      17: '=',
      18: '(',
      19: ')',
@@ -113,7 +117,7 @@ class StmtKind(Enum):
 class ExpKind(Enum):
     OPK = 1
     CONSTIK = 2
-    CONSTFK = 2
+    CONSTFK = 3
     IDK = 4
 
 class DecKind(Enum):

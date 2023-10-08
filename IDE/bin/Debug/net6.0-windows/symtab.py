@@ -1,6 +1,8 @@
+import os
+
 SIZE = 211
 SHIFT = 4
-
+TabSym = open(os.path.join(os.getcwd(),'Archivo_TabSym.txt'),'a')
 
 @staticmethod
 def hash(key)->int:
@@ -63,13 +65,13 @@ def st_insert(name:str, lineno:int, loc:int):
     #h:int=100
     l:BucketList = hashTable[h]
     while ((l != None) and not(name == l.name)):
-        l = l.next
+        l = l.getNext()
     if(l == None):
         l = BucketList(name,loc)
-        l.setName(name)
+        #l.setName(name)
         l.lines = LineList(lineno)
-        l.lines.setLineno(lineno)
-        l.setMeloc(loc)
+        #l.lines.setLineno(lineno)
+        #l.setMeloc(loc)
         l.lines.setNext(None)
         l.setNext(hashTable[h])
         hashTable[h] = l
@@ -78,22 +80,38 @@ def st_insert(name:str, lineno:int, loc:int):
         while (t.next != None):
             t = t.getNext()
         t.next = LineList(lineno)
-        t.next.setLineno(lineno)
+        #t.next.setLineno(lineno)
         t.next.setNext(None)
 
 def st_lookup(name:str)->int:
     h:int = hash(name)
     l:BucketList = hashTable[h]
-    while((l != None) and not(name==l.name)):
-        l = l.next
+    while((l != None) and not(name==l.getName())):
+        l = l.getNext()
     if(l == None):
         return -1
     else:
-        return l.meloc
+        return l.getMeloc()
 
 def printSymtab()->None:
     #Definir la funcion de manadar a imprimir a un archivo de texto
-    pass
+    i = 0
+    TabSym.write("Variable_Name\tLocation\tLine_Numbers\n")
+    for i in range(SIZE):
+        if hashTable[i] is not None:
+            l:BucketList = hashTable[i]
+            while l is not None:
+                t:LineList = l.getLines()
+                TabSym.write(str(l.getName())+"\t")
+                TabSym.write(str(l.getMeloc())+"\t")
+                
+                while t is not None:
+                    TabSym.write(str(t.getLineno())+"-")
+                    t = t.getNext()
+                
+                TabSym.write("\n")
+                l = l.getNext()
+
 
 ####  PRUEBAS  ####
 """ 
