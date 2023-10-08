@@ -61,12 +61,15 @@
             <Style x:Key="options" TargetType="MenuItem" >
                 <Style.Triggers>
                     <Trigger Property="IsFocused" Value="True">
-                        <Setter Property="Background" Value="LightPink"/>
+                        <Setter Property="Background" Value="#2e2e2e"/>
+                        <Setter Property="Foreground" Value="#2e2"/>
+
                         <Setter Property="FontWeight" Value="Bold"/>
                         <Setter Property="Margin" Value="-2"/>
                         <Setter Property="BorderBrush" Value="Black"/>
                         <Setter Property="BorderThickness" Value="2"/>
                     </Trigger>
+                  
                 </Style.Triggers>
             </Style>
 
@@ -173,8 +176,8 @@
             <!--<DockPanel Grid.Row="1" Grid.ColumnSpan="2" Background="Gray"  Margin="2,0,2,2"  >-->
             <DockPanel Grid.Row="2" Grid.ColumnSpan="3" Background="Gray"  Margin="2,2,2,2" >
                 <Menu DockPanel.Dock="Top" Name="downbar_menu">
-                    <MenuItem Style="{StaticResource options}" Header="Errores" />
-                    <MenuItem Style="{StaticResource options}" Header="Resultados"/>
+                    <MenuItem x:Name="feedbackErr" Style="{StaticResource options}" Header="Errores" />
+                    <MenuItem x:Name="feedbackRes" Style="{StaticResource options}" Header="Resultados"/>
                     <MenuItem  >
                         <MenuItem.Header>
                             <TextBlock>
@@ -195,8 +198,8 @@
                          Style="{StaticResource avalonstyles}">
                     aaa
                 </TextBox>-->
-                <avalonedit:TextEditor Style="{StaticResource avalonstyles}" DockPanel.Dock="Bottom"  IsReadOnly="True" x:Name="feedback" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" ShowLineNumbers="False" Margin="0"/>
-
+                <!--<avalonedit:TextEditor Style="{StaticResource avalonstyles}" DockPanel.Dock="Bottom"  IsReadOnly="True" x:Name="feedback" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" ShowLineNumbers="False" Margin="0"/>-->
+                <Frame NavigationUIVisibility="Hidden" Margin="5,5,5,5" x:Name="errorsFrame"  Background="#2e2e2e"></Frame>
             </DockPanel>
 
             <DockPanel Grid.Row="0" Grid.Column="1" Background="Gray"  Margin="0"
@@ -215,7 +218,7 @@
                          TextWrapping="Wrap" Name="trans">
                     
                 </TextBox>-->
-                <Frame NavigationUIVisibility="Hidden" x:Name="myFrame"></Frame>
+                <Frame NavigationUIVisibility="Hidden" x:Name="myFrame" Background="#2e2e2e"></Frame>
                 <!--<avalonedit:TextEditor Style="{StaticResource avalonstyles}" DockPanel.Dock="Bottom"  IsReadOnly="True" x:Name="trans" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" ShowLineNumbers="False" Margin="0"/>
                 -->
             </DockPanel>

@@ -12,8 +12,8 @@ MAXCHILDREN = 3
 MAXRESERVEDWORDS = 14
 diccionario = {
      3 : 'id',
-     4: 'integer',
-     5: 'real',
+     38: 'integer',
+     37: 'real',
      6: '+',
      7: '-',
      8: '*',
@@ -24,8 +24,8 @@ diccionario = {
      13: '>',
      14: '>=',
      15: '=',
-     16: '!=',
-     17: '=',
+     16: '<>',
+     17: ':=',
      18: '(',
      19: ')',
      20: '++',
@@ -102,18 +102,15 @@ class StmtKind(Enum):
     CINK = 5
     COUTK = 6
     ASSIGNS = 7
-    ASSIGNPR = 8
-    ASSIGNPOST = 9
-    MAINK = 10
-    DECK = 11
-    TYPEDEF = 12
-    LISTAIDS = 13
-    ELSEK = 14
+    MAINK = 8
+    DECK = 9
+    TYPEDEF = 10
+    ELSEK = 11
 
 class ExpKind(Enum):
     OPK = 1
     CONSTIK = 2
-    CONSTFK = 2
+    CONSTFK = 3
     IDK = 4
 
 class DecKind(Enum):
@@ -154,13 +151,7 @@ class TreeNode:
          return self.nodekind
     def getKind(self):
          return self.kind
-    #def __init__(self,child,sibling,lineno,nodekind,kind,attr):
-    #    self.child:list = child
-    #    self.sibling:list = sibling
-    #    self.lineno:int = lineno
-    #    self.nodekind:NodeKind = nodekind
-    #    self.kind:Union[StmtKind, ExpKind, DecKind] = kind
-    #    self.attr:Union[TokenType,int,str] = attr
+   
     def toString(self)->str:
         return ''+str(self.lineno)+' '+str(self.nodekind)+' '+str(self.kind)+' '+str(self.attr)
 
