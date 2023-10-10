@@ -53,26 +53,77 @@ def insertNode(t:TreeNode):
 
 def buildSymtab(syntaxTree:TreeNode)->None:
     traverse(syntaxTree,insertNode,nullProc)
-    if(TracerAnalizer):
-        TabSymA.write("\nSymbo Table:\n\n")
-        printSymtab()
-
+    TabSymA.write("\nSymbo Table:\n\n")
+    printSymtab()
+    closeFiles()
     #TabSymA.close()
 
 def typeError(t:TreeNode, message:str):
     #imprimir errores Semanticos en un archivo de texto
     ErrorSem.write("Type error at line: {0} message: {1}\n".format(t.lineno,message))
 
+#####################################################################
+## AUN NO TERMINADA EL CHECKNODE ####################################
+#####################################################################
 def checkNode(t:TreeNode):
     if t.getNodeKind() == NodeKind.EXPK.value:
-        pass
+        if t.getKind() == ExpKind.OPK.value:
+            h0:TreeNode = t.getChild(0)
+            h1:TreeNode = t.getChild(1)
+            if (( h0.getType() is not DecKind.INTK.value ) or 
+                (h1.getType() is not DecKind.INTK.value)):
+                typeError(t,"Op applied to non-int")
+            elif (( h0.getType() is not DecKind.REALK.value ) or 
+                (h1.getType() is not DecKind.REALK.value)):
+                pass
+
+
+
     elif t.getNodeKind() == NodeKind.STMTK.value:
-        pass
-    elif t.getNodeKind() == NodeKind.EXPK.value: 
-        pass
-    elif t.getNodeKind() == NodeKind.EXPK.value:
-        pass
+        if t.getKind() == StmtKind.IFK.value:
+            pass
 
 
 def typeCheck(syntaxTree:TreeNode):
     traverse(syntaxTree,nullProc,checkNode)
+
+def postEval(t:TreeNode):
+    temp=0
+    if(t.getKind() == ExpKind.OPK):
+        postEval(t.getChild(0)) #izq
+        postEval(t.getChild(1)) #der
+        if(t.getAttr()==TokenType.PLUS):
+            lchild:TreeNode = t.getChild(0)
+            rchild:TreeNode = t.getChild(1)
+            t.setAttr(lchild.getAttr() + rchild.getAttr())
+        elif(t.getAttr()==TokenType.MINUS):
+            lchild:TreeNode = t.getChild(0)
+            rchild:TreeNode = t.getChild(1)
+            t.setAttr(lchild.getAttr() - rchild.getAttr())
+        elif(t.getAttr()==TokenType.TIMES):
+            lchild:TreeNode = t.getChild(0)
+            rchild:TreeNode = t.getChild(1)
+            t.setAttr(lchild.getAttr() * rchild.getAttr())
+        elif(t.getAttr()==TokenType.OVER):
+            lchild:TreeNode = t.getChild(0)
+            rchild:TreeNode = t.getChild(1)
+            t.setAttr(lchild.getAttr() / rchild.getAttr())
+        elif(t.getAttr()==TokenType.RES):
+            lchild:TreeNode = t.getChild(0)
+            rchild:TreeNode = t.getChild(1)
+            t.setAttr(lchild.getAttr() % rchild.getAttr())
+    
+def evalType(t:TreeNode):
+    if(t.getNodeKind() == NodeKind.STMTK.value):
+        lchild:TreeNode = t.getChild(0)
+        rchild:TreeNode = t.getChild(1)
+        evalType(lchild)
+        rchild.setType(lchild.getType)
+        evalType(rchild)
+
+    elif(t.getNodeKind()): # type
+        pass
+
+    elif(t.getNodeKind()): # id
+        
+        pass

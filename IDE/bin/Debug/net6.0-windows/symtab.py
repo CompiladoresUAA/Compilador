@@ -1,5 +1,5 @@
 import os
-
+from globall import TreeNode
 SIZE = 211
 SHIFT = 4
 TabSym = open(os.path.join(os.getcwd(),'Archivo_TabSym.txt'),'a')
@@ -96,15 +96,17 @@ def st_lookup(name:str)->int:
 def printSymtab()->None:
     #Definir la funcion de manadar a imprimir a un archivo de texto
     i = 0
-    TabSym.write("Variable_Name\tLocation\tLine_Numbers\n")
+    TabSym.write("Variable_Name\tType\tValue\tLocation\tLine_Numbers\n")
     for i in range(SIZE):
         if hashTable[i] is not None:
             l:BucketList = hashTable[i]
             while l is not None:
                 t:LineList = l.getLines()
                 TabSym.write(str(l.getName())+"\t")
+                # Falta el Type
+                # Falta el Value
                 TabSym.write(str(l.getMeloc())+"\t")
-                
+                TabSym.write(str(l))
                 while t is not None:
                     TabSym.write(str(t.getLineno())+"-")
                     t = t.getNext()
