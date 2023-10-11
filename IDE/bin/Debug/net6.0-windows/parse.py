@@ -8,6 +8,7 @@ from globall import diccionario
 import os
 from util import newExpNode,newStmtNode,printTree
 from parseH import *
+from analyze import buildSymtab
 #### Global Variables #####
 token = -1
 source = open('Archivo_Tokens2.txt','r')
@@ -362,3 +363,4 @@ with open('arbol.json', 'w') as archivo:
     json.dump(arbol_diccionario, archivo)
 
 fileSintax.close()
+buildSymtab(r)
