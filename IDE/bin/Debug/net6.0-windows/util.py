@@ -3,6 +3,7 @@ import globall
 #from scan import reservedWords as rw
 from globall import TreeNode,ExpKind,StmtKind,DecKind,NodeKind
 import os
+import json
 fileoutput = open(os.path.join(os.getcwd(),'Archivo_Tokens.txt'),'r+')
 #fileoutput.truncate()
 fileoutputError = open(os.path.join(os.getcwd(),'Archivo_Errores.txt'),'r+')
@@ -10,7 +11,6 @@ fileoutputError = open(os.path.join(os.getcwd(),'Archivo_Errores.txt'),'r+')
 fileoutput2 = open(os.path.join(os.getcwd(),'Archivo_Tokens2.txt'),'r+')
 #fileoutput2.truncate()
 def printToken(token,tokenString):
-   
  
     if (token in [tp.MAIN , tp.IF , tp.THEN , tp.ELSE
     , tp.END , tp.DO , tp.WHILE , tp.REPEAT
@@ -96,7 +96,7 @@ def printToken(token,tokenString):
         #write( "EOF\t EOF","\t  {}\t  {}".format(globall.lineno,globall.colpos))
     elif ( tp.ERROR == token ):
         print( "  {}\t  {}\t  {}".format(tokenString,globall.lineno,globall.colpos) )
-        writeErrores("  {}  \t  {}\t  {}".format(tokenString,globall.lineno,globall.colpos))
+        writeErrores("Lexical Error:  {}  \t at line: {}\t and column: {}".format(tokenString,globall.lineno,globall.colpos))
 
     else:
         print("UNKNOWN TOKEN\t{}".format(tokenString))
@@ -171,12 +171,12 @@ def printTree( tree:TreeNode ):
             elif tree.getKind() == StmtKind.MAINK.value:
                 print(f"Main :")
             elif tree.getKind() == StmtKind.TYPEDEF.value:
-                print(f"Type :{ DecKind(tree.getType()).name }")    
+                print(f"Type : { globall.diccionario[tree.getAttr()]}")    
             else:
                 print(f"Unknown Stmt Node ... {tree.getKind()}")
         elif tree.getNodeKind().value == NodeKind.EXPK.value:
             if tree.getKind() == ExpKind.OPK.value:
-                print(f"Op: {tp(tree.getAttr()).name}")
+                print(f"Op: {globall.diccionario[tree.getAttr()]}")
             elif tree.getKind() == ExpKind.CONSTIK.value:
                 print(f"Const Int: {tree.getAttr()}")
             elif tree.getKind() == ExpKind.CONSTFK.value:
@@ -192,3 +192,17 @@ def printTree( tree:TreeNode ):
             printTree(tree.getChild(i))
         tree = tree.getSibling()
     decreaseIn()
+
+def serialice(root:TreeNode)->dict:
+    if root is None:
+        return None
+    return {
+        "valor":root.getAttr(),
+        "nodeKind":root.getNodeKind().value,
+        "kind":root.getKind(),
+        "type":root.getType(),
+        "firstChild": serialice(root.getChild(0)),
+        "secondChild":serialice(root.getChild(1)),
+        "thirdChild": serialice(root.getChild(2)),
+        "sibling"   : serialice(root.getSibling()) 
+    }

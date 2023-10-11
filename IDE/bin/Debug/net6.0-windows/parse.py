@@ -20,7 +20,7 @@ fileSintax = open(os.path.join(os.getcwd(),'Errores_Sintaxis.txt'),'w')
 ### Functions ###
 def sintaxError(msg:str):
     #global lineno
-    fileSintax.write("Sintax error at line: {0} message: {1}\n".format(globall.lineno,msg))
+    fileSintax.write("Syntax error at line: {0} message: {1}\n".format(globall.lineno,msg))
     recoverySintax()
 
 def match(expected:TokenType):
@@ -357,5 +357,10 @@ def recoverySintax():
 r = parse()
 print("###################")
 printTree(r)
+from util import serialice
+with open('arbol.json', 'w') as archivo:
+    arbol_diccionario = serialice(r)
+    json.dump(arbol_diccionario, archivo)
+
 fileSintax.close()
 buildSymtab(r)
