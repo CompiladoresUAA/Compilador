@@ -52,7 +52,7 @@ def convert_to_json(tree):
 ##################################
 #      Example    ###############
 ##################################
-from globall import TreeNode
+""" from globall import TreeNode
 t = TreeNode()
 t.attr = 5
 tree = Tree('root',[])
@@ -60,4 +60,4 @@ tree.append(Tree(t.toString(),[]))
 tree.append(Tree('dog',[]))
 tree[1].append(Tree('pug',[]))
 print(tree.pretty_print())
-
+ """

@@ -1,0 +1,4 @@
+
+Symbo Table:
+
+Variable_Name	Type	Value	Location	Line_Numbers
