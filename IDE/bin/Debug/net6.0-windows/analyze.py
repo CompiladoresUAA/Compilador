@@ -20,7 +20,7 @@ def traverse(t:TreeNode, preProc:TreeNode, postProc:TreeNode):
         i=0
         for i in range(MAXCHILDREN):
             traverse(t.child[i],preProc,postProc)
-        
+       
         postProc(t)
         traverse(t.getSibling(),preProc,postProc)
 
@@ -34,29 +34,37 @@ def nullProc(t:TreeNode):
 @staticmethod
 def insertNode(t:TreeNode):
     global location
-    if(t.getNodeKind() == NodeKind.STMTK.value):
-        if(t.getKind() == StmtKind.ASSIGNS or 
-           t.getKind() == StmtKind.CINK.value):
-            
-            if(st_lookup(t.getAttr()) == -1):
-                st_insert(t.getAttr(),t.lineno,location=+1)
-            else:
-                st_insert(t.getAttr(),t.lineno,0)
+    if(t.getNodeKind().value == NodeKind.STMTK.value):
         
-    elif (t.getNodeKind() == NodeKind.EXPK.value):
-        if(t.getNodeKind() == ExpKind.IDK):
+        if ( t.getKind() == StmtKind.DECK.value ):
             
-            if(st_lookup(t.getAttr()) == -1):
-                st_insert(t.getAttr(),t.lineno,location=+1)
+            child:TreeNode = t.getChild(1)
+            while child != None:
+               
+                st_insert(child.getAttr(),t.getChild(0).getType(),"",t.lineno,location)
+                location+=1
+                child = child.getSibling()
+        elif(t.getKind() == StmtKind.ASSIGNS.value or 
+           t.getKind() == StmtKind.CINK.value):
+    
+            if(st_lookup(t.getAttr()) != -1):
+                st_insert(t.getAttr(),t.getType(),"",t.lineno,location)
+                location+=1
             else:
-                st_insert(t.getAttr(),t.lineno,0)
-
+                ErrorSem.write(f"Undeclared variable {t.getAttr()}\n")
+        
+    elif (t.getNodeKind().value == NodeKind.EXPK.value):
+        if(t.getKind() == ExpKind.IDK):
+            
+            if(st_lookup(t.getAttr()) != -1):
+                st_insert(t.getAttr(),t.getType(),"",t.lineno,location)
+                
 def buildSymtab(syntaxTree:TreeNode)->None:
     traverse(syntaxTree,insertNode,nullProc)
     TabSymA.write("\nSymbo Table:\n\n")
     printSymtab()
     closeFiles()
-    #TabSymA.close()
+    TabSymA.close()
 
 def typeError(t:TreeNode, message:str):
     #imprimir errores Semanticos en un archivo de texto
@@ -66,30 +74,67 @@ def typeError(t:TreeNode, message:str):
 ## AUN NO TERMINADA EL CHECKNODE ####################################
 #####################################################################
 def checkNode(t:TreeNode):
-    if t.getNodeKind() == NodeKind.EXPK.value:
+    if t.getNodeKind().value == NodeKind.EXPK.value:
         if t.getKind() == ExpKind.OPK.value:
             h0:TreeNode = t.getChild(0)
             h1:TreeNode = t.getChild(1)
-            if (( h0.getType() is not DecKind.INTK.value ) or 
-                (h1.getType() is not DecKind.INTK.value)):
-                typeError(t,"Op applied to non-int")
-            elif (( h0.getType() is not DecKind.REALK.value ) or 
-                (h1.getType() is not DecKind.REALK.value)):
-                pass
+            if h0.getType().value != DecKind.INTK.value or h0.getType().value != DecKind.REALK.value or h1.getType().value != DecKind.INTK.value or h1.getType().value != DecKind.REALK.value:
+                ErrorSem.write(f"Op applied to non-int or non-real")
+            if t.getAttr() == TokenType.DIFF.value or t.getAttr() == TokenType.EQ.value or t.getAttr() == TokenType.LESST.value or t.getAttr() == TokenType.LESSET.value or t.getAttr() == TokenType.GREATERT.value or t.getAttr() == TokenType.GREATERET.value:
+                t.setType(DecKind.BOOLEANK.value)
+            else:
+                if h0.getType().value == DecKind.REALK.value or h1.getType() == DecKind.REALK.value:
+                    t.setType(DecKind.REALK.value)
+                else:
+                    t.setType(DecKind.INTK.value)
+        elif t.getKind() == ExpKind.CONSTIK.value:
+            t.setType(DecKind.INTK.value)
+        elif t.getKind() == ExpKind.CONSTFK.value:
+            t.setType(DecKind.REALK.value)
+        elif t.getKind() == ExpKind.IDK.value:
+            hashKey = hash(t.getAttr())
+            bList:BucketList = hashTable[hashKey]
+            while bList != None and not(t.getAttr() == bList.name):
+                bList = bList.getNext()
+            if bList != None:
+                t.setType(bList.getTipo())
 
 
 
-    elif t.getNodeKind() == NodeKind.STMTK.value:
+    elif t.getNodeKind().value == NodeKind.STMTK.value:
+        print( f"Assign : {t.getKind()}" )
+        h0:TreeNode = t.getChild(0)
+        h1:TreeNode = t.getChild(1)    
         if t.getKind() == StmtKind.IFK.value:
-            pass
-
+            if h0.getType().value == DecKind.INTK.value or h0.getType().value == DecKind.REALK.value:
+                ErrorSem.write(f"If test is not Boolean")
+        elif t.getKind() == StmtKind.ASSIGNS.value:
+            hashKey = hash(h0.getAttr())
+            bList:BucketList = hashTable[hashKey]
+            while bList != None and not(h0.getAttr() == bList.name):
+                bList = bList.getNext()
+            if bList != None:
+                if bList.getTipo() == DecKind.INTK.value:
+                    if h0.getType().value == DecKind.REALK.value:
+                        ErrorSem.write(f"Assign of non-int to int")
+                    
+        elif t.getKind() == StmtKind.COUTK.value:
+            if h0.getType().value != DecKind.INTK.value or h0.getType().value != DecKind.REALK.value:
+                ErrorSem.write(f"Write of non-int or non-real value")
+        elif t.getKind() == StmtKind.UNTILK.value:
+            if h1.getType().value == DecKind.INTK.value or h1.getType().value == DecKind.REALK.value:
+                ErrorSem.write(f"Until Test is not Boolean")
+        elif t.getKind() == StmtKind.WHILEK.value:
+            if h0.getType().value == DecKind.INTK.value or h0.getType().value == DecKind.REALK.value:
+                ErrorSem.write(f"While Test is not Boolean")
+        
 
 def typeCheck(syntaxTree:TreeNode):
     traverse(syntaxTree,nullProc,checkNode)
 
 def postEval(t:TreeNode):
     temp=0
-    if(t.getKind() == ExpKind.OPK):
+    if(t.getKind() == ExpKind.OPK.value):
         postEval(t.getChild(0)) #izq
         postEval(t.getChild(1)) #der
         if(t.getAttr()==TokenType.PLUS):

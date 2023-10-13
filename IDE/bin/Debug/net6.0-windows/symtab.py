@@ -21,7 +21,7 @@ class LineList:
         self.lineno:int = lineno
         self.next:LineList = [None]
     
-    def getLineno(self)->None:
+    def getLineno(self)->int:
         return self.lineno
     def setLineno(self,lineno):
         self.lineno = lineno
@@ -32,12 +32,17 @@ class LineList:
         self.next = next
     
 class BucketList:
-    def __init__(self,name,meloc) -> None:
+    def __init__(self,tipo,name,meloc) -> None:
         self.name:str = name
+        self.tipo:int = tipo
+        self.valor:int|float = 0
         self.lines:LineList = [None]
         self.meloc:int = meloc
         self.next:BucketList = [None]
-    
+    def getTipo(self)->int:
+        return self.tipo
+    def setValor(self,valor)->None:
+        self.valor = valor
     def setName(self,name):
         self.name = name
     def getName(self):
@@ -60,14 +65,15 @@ class BucketList:
 
 hashTable:BucketList = [None]*SIZE
 
-def st_insert(name:str, lineno:int, loc:int):
+def st_insert(name:str,tipo:int,valor:int|float|str, lineno:int, loc:int):
+    
     h:int = hash(name)
     #h:int=100
     l:BucketList = hashTable[h]
     while ((l != None) and not(name == l.name)):
         l = l.getNext()
     if(l == None):
-        l = BucketList(name,loc)
+        l = BucketList(tipo,name,loc)
         #l.setName(name)
         l.lines = LineList(lineno)
         #l.lines.setLineno(lineno)
@@ -75,6 +81,7 @@ def st_insert(name:str, lineno:int, loc:int):
         l.lines.setNext(None)
         l.setNext(hashTable[h])
         hashTable[h] = l
+        
     else:
         t:LineList = l.getLines()
         while (t.next != None):
@@ -102,11 +109,14 @@ def printSymtab()->None:
             l:BucketList = hashTable[i]
             while l is not None:
                 t:LineList = l.getLines()
-                TabSym.write(str(l.getName())+"\t")
+                TabSym.write(str(l.getName())+"\t\t\t\t")
                 # Falta el Type
+                TabSym.write(str(l.getTipo())+"\t")
                 # Falta el Value
+                TabSym.write("defined value"+"\t")
+
                 TabSym.write(str(l.getMeloc())+"\t")
-                TabSym.write(str(l))
+                #TabSym.write(str(l))
                 while t is not None:
                     TabSym.write(str(t.getLineno())+"-")
                     t = t.getNext()

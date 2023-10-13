@@ -8,7 +8,8 @@ from globall import diccionario
 import os
 from util import newExpNode,newStmtNode,printTree
 from parseH import *
-from analyze import buildSymtab
+from analyze import buildSymtab,checkNode
+
 #### Global Variables #####
 token = -1
 source = open('Archivo_Tokens2.txt','r')
@@ -155,7 +156,7 @@ def assign_pre()->TreeNode:
     global token
     global tokenString
     t = newExpNode(ExpKind.OPK.value)
-    t.setAttr(token)
+    t.setAttr(TokenType.PLUSP.value) if token == TokenType.PLUS.value else t.setAttr(TokenType.LESSL.value)
     match(token)
     id = newExpNode(ExpKind.IDK.value)
     id.setAttr(tokenString)
@@ -169,7 +170,7 @@ def assign_post(variable:str)->TreeNode:
     global token
     global tokenString
     t = newExpNode(ExpKind.OPK.value)
-    t.setAttr(token)
+    t.setAttr(TokenType.PLUSP.value) if token == TokenType.PLUS.value else t.setAttr(TokenType.LESSL.value)
     id = newExpNode(ExpKind.IDK.value)
     id.setAttr(variable)
     add = newExpNode(ExpKind.CONSTIK.value)
@@ -364,3 +365,4 @@ with open('arbol.json', 'w') as archivo:
 
 fileSintax.close()
 buildSymtab(r)
+checkNode(r)
