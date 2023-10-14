@@ -193,6 +193,54 @@ def printTree( tree:TreeNode ):
         tree = tree.getSibling()
     decreaseIn()
 
+def printTreeSemantic( tree:TreeNode ):
+    i:int
+    increaseIn()
+    while tree != None:
+        printSpaces()
+        if tree.getNodeKind().value == NodeKind.STMTK.value:
+            if tree.getKind() == StmtKind.IFK.value:
+                print("If: ") 
+            elif tree.getKind() == StmtKind.ELSEK.value:
+                print("Else: ")    
+            elif tree.getKind() == StmtKind.UNTILK.value:
+                print("Do until: ")
+            elif tree.getKind() == StmtKind.WHILEK.value:
+                print("While: ")
+            elif tree.getKind() == StmtKind.ASSIGNS.value:
+                print(f"Assign to: {tree.getAttr()} {tree.valueCalc}")
+            elif tree.getKind() == StmtKind.CINK.value:
+                print(f"Read: {tree.getAttr()}")
+            elif tree.getKind() == StmtKind.COUTK.value:
+                print(f"Write: ")
+            elif tree.getKind() == StmtKind.DECK.value:
+                print(f"Dec :")
+            elif tree.getKind() == StmtKind.MAINK.value:
+                print(f"Main :")
+            elif tree.getKind() == StmtKind.TYPEDEF.value:
+                print(f"Type : { globall.diccionario[tree.getAttr()]}")    
+            else:
+                print(f"Unknown Stmt Node ... {tree.getKind()}")
+        elif tree.getNodeKind().value == NodeKind.EXPK.value:
+            if tree.getKind() == ExpKind.OPK.value:
+                print(f"Op: {globall.diccionario[tree.getAttr()]} - {tree.valueCalc}" )
+            elif tree.getKind() == ExpKind.CONSTIK.value:
+                print(f"Const Int: {tree.getAttr()} {tree.valueCalc}")
+            elif tree.getKind() == ExpKind.CONSTFK.value:
+                print(f"Const Float: {tree.getAttr()} {tree.valueCalc}")
+            elif tree.getKind() == ExpKind.IDK.value:
+                print(f"Id: {tree.getAttr()} ")
+            else:
+                print(f"Unknown ExpNode kind....")
+        else:
+            print("Unknown node kind...")
+        for i in range(0,3):
+            
+            printTreeSemantic(tree.getChild(i))
+        tree = tree.getSibling()
+    decreaseIn()
+
+
 def serialice(root:TreeNode)->dict:
     if root is None:
         return None

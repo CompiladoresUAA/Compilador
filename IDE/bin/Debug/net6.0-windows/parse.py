@@ -6,9 +6,9 @@ from globall import StmtKind,ExpKind,DecKind,NodeKind
 import sys
 from globall import diccionario
 import os
-from util import newExpNode,newStmtNode,printTree
+from util import newExpNode,newStmtNode,printTree,printTreeSemantic,indentno
 from parseH import *
-from analyze import buildSymtab,checkNode
+from analyze import buildSymtab,checkNode,typeCheck,postEval,calcExp,printSymtab
 
 #### Global Variables #####
 token = -1
@@ -281,10 +281,12 @@ def factor()->TreeNode:
     if ( token == TokenType.ENTERO.value ):
         t = newExpNode(ExpKind.CONSTIK.value)
         t.setAttr(int(tokenString))
+        t.valueCalc = int(tokenString)
         match(TokenType.ENTERO.value)
     elif ( token == TokenType.NUMREAL.value ):
         t = newExpNode(ExpKind.CONSTFK.value)
         t.setAttr(float(tokenString))
+        t.valueCalc = float(tokenString)
         match(TokenType.NUMREAL.value)
     elif ( token == TokenType.ID.value ):
 
@@ -365,4 +367,8 @@ with open('arbol.json', 'w') as archivo:
 
 fileSintax.close()
 buildSymtab(r)
-checkNode(r)
+typeCheck(r)
+indentno = 0
+#calcExp(r)
+printTreeSemantic(r)
+printSymtab()

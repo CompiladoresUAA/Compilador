@@ -132,6 +132,7 @@ class TreeNode:
         self.kind:Union[StmtKind, ExpKind] = kind
         self.attr:Union[TokenType,int,float,str] = ""
         self.type:DecKind = -1
+        self.valueCalc = None
     def __str__(self):
         return f'Node: {self.nodekind.name}, {self.lineno}, {self.attr}'
     def getChild(self,pos)->list:

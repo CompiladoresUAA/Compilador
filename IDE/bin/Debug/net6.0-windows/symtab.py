@@ -1,5 +1,6 @@
 import os
 from globall import TreeNode
+from tabulate import tabulate
 SIZE = 211
 SHIFT = 4
 TabSym = open(os.path.join(os.getcwd(),'Archivo_TabSym.txt'),'a')
@@ -20,7 +21,13 @@ class LineList:
     def __init__(self, lineno) -> None:
         self.lineno:int = lineno
         self.next:LineList = [None]
-    
+    def __str__(self) -> str:
+        conc = []
+        t = self
+        while t is not None:
+            conc.append(str(t.lineno) + ", ")
+            t = t.getNext()
+        return "".join(conc)
     def getLineno(self)->int:
         return self.lineno
     def setLineno(self,lineno):
@@ -35,7 +42,7 @@ class BucketList:
     def __init__(self,tipo,name,meloc) -> None:
         self.name:str = name
         self.tipo:int = tipo
-        self.valor:int|float = 0
+        self.valor:int|float = None
         self.lines:LineList = [None]
         self.meloc:int = meloc
         self.next:BucketList = [None]
@@ -103,27 +110,29 @@ def st_lookup(name:str)->int:
 def printSymtab()->None:
     #Definir la funcion de manadar a imprimir a un archivo de texto
     i = 0
-    TabSym.write("Variable_Name\tType\tValue\tLocation\tLine_Numbers\n")
+    data = []
+    #TabSym.write("Variable_Name\tType\tValue\tLocation\tLine_Numbers\n")
     for i in range(SIZE):
         if hashTable[i] is not None:
             l:BucketList = hashTable[i]
             while l is not None:
                 t:LineList = l.getLines()
-                TabSym.write(str(l.getName())+"\t\t\t\t")
+                data.append([str(l.getName()),str(l.getTipo()),l.valor,l.getMeloc(),l.getLines()])
+                #TabSym.write(str(l.getName())+"\t\t\t\t")
                 # Falta el Type
-                TabSym.write(str(l.getTipo())+"\t")
+                #TabSym.write(str(l.getTipo())+"\t")
                 # Falta el Value
-                TabSym.write("defined value"+"\t")
+                #TabSym.write(f"{l.valor}"+"\t")
 
-                TabSym.write(str(l.getMeloc())+"\t")
+                #TabSym.write(str(l.getMeloc())+"\t")
                 #TabSym.write(str(l))
-                while t is not None:
+                """while t is not None:
                     TabSym.write(str(t.getLineno())+"-")
                     t = t.getNext()
+                """
                 
-                TabSym.write("\n")
                 l = l.getNext()
-
+    TabSym.write(tabulate(data, headers=["Variable", "Tipo", "Valor", "L.Memoria","# de Linea"]))
 
 ####  PRUEBAS  ####
 """ 
