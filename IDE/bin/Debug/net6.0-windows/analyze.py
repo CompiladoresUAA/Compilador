@@ -1,6 +1,6 @@
 import os
 from symtab import *
-from globall import TokenType
+from globall import TokenType,diccionario
 from globall import TreeNode
 from globall import StmtKind,ExpKind,DecKind,NodeKind
 from globall import MAXCHILDREN
@@ -44,7 +44,6 @@ def insertNode(t:TreeNode):
                     ErrorSem.write(f"Variable {child.getAttr()} was already declared as {findNode(child.getAttr()).getTipo()}\n")
                     child = child.getSibling()
                     continue
-                    
                 st_insert(child.getAttr(),t.getChild(0).getType(),"",t.lineno,location)
                 location+=1
                 child = child.getSibling()
@@ -52,14 +51,14 @@ def insertNode(t:TreeNode):
            t.getKind() == StmtKind.CINK.value):
     
             if(st_lookup(t.getAttr()) != -1):
-                st_insert(t.getAttr(),t.getType(),"",t.lineno,location)
-                location+=1
+                st_insert(t.getAttr(),t.getType(),"",t.lineno,0)
+                
             else:
                 ErrorSem.write(f"Undeclared variable {t.getAttr()}\n")
     elif (t.getNodeKind().value == NodeKind.EXPK.value):
-        if(t.getKind() == ExpKind.IDK):
+        if(t.getKind() == ExpKind.IDK.value and t.getType() == -1):
             if(st_lookup(t.getAttr()) != -1):
-                st_insert(t.getAttr(),t.getType(),"",t.lineno,location)
+                st_insert(t.getAttr(),t.getType(),"",t.lineno,0)
                 
 def buildSymtab(syntaxTree:TreeNode)->None:
     traverse(syntaxTree,insertNode,nullProc)
@@ -82,7 +81,7 @@ def checkNode(t:TreeNode):
             h0:TreeNode = t.getChild(0)
             h1:TreeNode = t.getChild(1)
             if (h0.getType() != DecKind.INTK.value and h0.getType() != DecKind.REALK.value) or (h1.getType() != DecKind.INTK.value and h1.getType() != DecKind.REALK.value):
-                ErrorSem.write(f"Op applied to non-int or non-real {t.getType()} {t.lineno} {h0.getAttr()} {h0.getType()} {h1.getAttr()} {h1.getType()}\n")
+                ErrorSem.write(f"Op applied to non-int or non-real. op:{diccionario[ t.getAttr() ]} at line:{t.lineno}\n")
             if t.getAttr() == TokenType.DIFF.value or t.getAttr() == TokenType.EQ.value or t.getAttr() == TokenType.LESST.value or t.getAttr() == TokenType.LESSET.value or t.getAttr() == TokenType.GREATERT.value or t.getAttr() == TokenType.GREATERET.value:
                 t.setType(DecKind.BOOLEANK.value)
             else:
@@ -149,17 +148,18 @@ def typeCheck(syntaxTree:TreeNode):
 def postEval(t:TreeNode):
     temp=0
     if( t.getNodeKind().value == NodeKind.EXPK.value and t.getKind() == ExpKind.OPK.value):
+        lchild:TreeNode = t.getChild(0)
+        rchild:TreeNode = t.getChild(1)
+        if lchild.getKind() == ExpKind.IDK.value:
+            node = findNode(lchild.getAttr())
+            if node != None:
+                lchild.valueCalc = node.valor
+        if rchild.getKind() == ExpKind.IDK.value:    
+            node = findNode(rchild.getAttr())
+            if node != None:
+                rchild.valueCalc = node.valor
         if(t.getAttr()==TokenType.PLUS.value):
-            lchild:TreeNode = t.getChild(0)
-            rchild:TreeNode = t.getChild(1)
-            if lchild.getKind() == ExpKind.IDK.value:
-                node = findNode(lchild.getAttr())
-                if node != None:
-                    lchild.valueCalc = node.valor
-            if rchild.getKind() == ExpKind.IDK.value:    
-                node = findNode(rchild.getAttr())
-                if node != None:
-                    rchild.valueCalc = node.valor
+            
             try:
                 t.valueCalc = lchild.valueCalc + rchild.valueCalc
             except:
