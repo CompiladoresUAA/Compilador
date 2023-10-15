@@ -371,5 +371,7 @@ typeCheck(r)
 indentno = 0
 #calcExp(r)
 printTreeSemantic(r)
-serialiceTabSym()
+with open('tabHash.json', 'w') as archivo:
+    tabHash = serialiceTabSym()
+    json.dump(tabHash, archivo)
 printSymtab()

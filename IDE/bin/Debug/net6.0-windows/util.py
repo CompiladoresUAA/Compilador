@@ -250,8 +250,9 @@ def serialice(root:TreeNode)->dict:
         "nodeKind":root.getNodeKind().value,
         "kind":root.getKind(),
         "type":root.getType(),
+        "valCalc":root.valueCalc,
         "firstChild": serialice(root.getChild(0)),
         "secondChild":serialice(root.getChild(1)),
         "thirdChild": serialice(root.getChild(2)),
-        "sibling"   : serialice(root.getSibling()) 
+        "sibling"   : serialice(root.getSibling()), 
     }

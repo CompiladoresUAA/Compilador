@@ -134,9 +134,10 @@ def printSymtab()->None:
                 l = l.getNext()
     TabSym.write(tabulate(data, headers=["Variable", "Tipo", "Valor", "L.Memoria","# de Linea"]))
 
-def serialiceTabSym()->None:
+def serialiceTabSym()->dict:
     file = open(os.path.join(os.getcwd(),'Diccionario_XD.txt'),'w')
     i = 0
+    table:list = []
     for i in range(SIZE):
         if hashTable[i] is not None:
             l:BucketList = hashTable[i]   
@@ -144,9 +145,14 @@ def serialiceTabSym()->None:
                 "indice":i,
                 "tab":serialiceBucket(l)
             }
-            file.write(str(texto)+"\n")   
+            table.append(texto)
+            file.write(str(texto))   
+    tableF:dict ={
+        "table":table
+    }
     file.close()
-
+    print(tableF)
+    return tableF
 #####
 def serialiceLine(numLineas:LineList)->dict:
     tem:str=""
