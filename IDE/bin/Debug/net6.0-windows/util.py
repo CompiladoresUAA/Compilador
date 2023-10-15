@@ -4,6 +4,7 @@ import globall
 from globall import TreeNode,ExpKind,StmtKind,DecKind,NodeKind
 import os
 import json
+from symtab import BucketList, LineList
 fileoutput = open(os.path.join(os.getcwd(),'Archivo_Tokens.txt'),'r+')
 #fileoutput.truncate()
 fileoutputError = open(os.path.join(os.getcwd(),'Archivo_Errores.txt'),'r+')
