@@ -53,7 +53,7 @@ namespace IDE.phases.StrategyPattern
                                 value = "DEC";
                                 break;
                             case (int)Global.stmtKind.TYPEDEF:
-                                value = "TYPE";
+                                value = $"TYPE {Global.decKindDic[ node.type ]}";
                                 break;
                             case (int)Global.stmtKind.ELSEK:
                                 value = "ELSE";

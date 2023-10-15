@@ -41,7 +41,7 @@ namespace IDE.phases
                 while(container != null)
                 {
                     this.dataGrid.Items.Add(new { name = container.name,
-                    valor = container.valor,type = container.type,lines = container.lines,meloc = container.meloc});
+                    valor = container.valor,type = Global.decKindDic [(int)container.type],lines = container.lines,meloc = container.meloc});
                     container = container.next;
                 }
             }
