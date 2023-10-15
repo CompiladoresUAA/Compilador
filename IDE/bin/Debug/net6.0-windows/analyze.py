@@ -167,16 +167,28 @@ def postEval(t:TreeNode):
         elif(t.getAttr()==TokenType.MINUS.value):
             lchild:TreeNode = t.getChild(0)
             rchild:TreeNode = t.getChild(1)
-            t.valueCalc = lchild.valueCalc - rchild.valueCalc
+            try:
+                t.valueCalc = lchild.valueCalc - rchild.valueCalc
+            except:
+                t.valueCalc = None
         elif(t.getAttr()==TokenType.TIMES.value):
             lchild:TreeNode = t.getChild(0)
             rchild:TreeNode = t.getChild(1)
-            t.valueCalc = lchild.valueCalc * rchild.valueCalc
+            try:
+                t.valueCalc = lchild.valueCalc * rchild.valueCalc
+            except:
+                t.valueCalc = None
         elif(t.getAttr()==TokenType.OVER.value):
             lchild:TreeNode = t.getChild(0)
             rchild:TreeNode = t.getChild(1)
-            t.valueCalc = lchild.valueCalc / rchild.valueCalc
+            try:
+                t.valueCalc = lchild.valueCalc / rchild.valueCalc
+            except:
+                t.valueCalc = None
         elif(t.getAttr()==TokenType.RES.value):
             lchild:TreeNode = t.getChild(0)
             rchild:TreeNode = t.getChild(1)
-            t.valueCalc = lchild.valueCalc % rchild.valueCalc
+            try:
+                t.valueCalc = lchild.valueCalc % rchild.valueCalc
+            except:
+                t.valueCalc = None
