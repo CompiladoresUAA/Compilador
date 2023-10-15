@@ -108,7 +108,7 @@ def st_lookup(name:str)->int:
         return l.getMeloc()
 
 def printSymtab()->None:
-    #Definir la funcion de manadar a imprimir a un archivo de texto
+    
     i = 0
     data = []
     #TabSym.write("Variable_Name\tType\tValue\tLocation\tLine_Numbers\n")
@@ -133,6 +133,44 @@ def printSymtab()->None:
                 
                 l = l.getNext()
     TabSym.write(tabulate(data, headers=["Variable", "Tipo", "Valor", "L.Memoria","# de Linea"]))
+
+def serialiceTabSym()->None:
+    file = open(os.path.join(os.getcwd(),'Diccionario_XD.txt'),'w')
+    i = 0
+    for i in range(SIZE):
+        if hashTable[i] is not None:
+            l:BucketList = hashTable[i]   
+            texto:dict ={
+                "indice":i,
+                "tab":serialiceBucket(l)
+            }
+            file.write(str(texto)+"\n")   
+    file.close()
+
+#####
+def serialiceLine(numLineas:LineList)->dict:
+    tem:str=""
+    if(numLineas is not None):
+        while numLineas is not None:
+            tem = tem + str(numLineas.getLineno())+", "
+            numLineas = numLineas.getNext()
+        return tem
+    else:
+        return None
+
+
+def serialiceBucket(ren:BucketList):
+    if(ren is not None):
+        return {
+            "name": ren.getName(),
+            "valor":ren.valor,
+            "lines":serialiceLine(ren.getLines()),
+            "meloc":ren.getMeloc(),
+            "next":serialiceBucket(ren.getNext())
+        }
+    else:
+        return None
+#####
 
 ####  PRUEBAS  ####
 """ 

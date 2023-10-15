@@ -9,7 +9,7 @@ import os
 from util import newExpNode,newStmtNode,printTree,printTreeSemantic,indentno
 from parseH import *
 from analyze import buildSymtab,checkNode,typeCheck,postEval,calcExp,printSymtab
-
+from symtab import serialiceTabSym
 #### Global Variables #####
 token = -1
 source = open('Archivo_Tokens2.txt','r')
@@ -371,4 +371,5 @@ typeCheck(r)
 indentno = 0
 #calcExp(r)
 printTreeSemantic(r)
+serialiceTabSym()
 printSymtab()
