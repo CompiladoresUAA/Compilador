@@ -136,6 +136,7 @@ def assign_stmt()->TreeNode:
     t = newStmtNode(StmtKind.ASSIGNS.value)
     if token == TokenType.LESSL.value or token == TokenType.PLUSP.value:
          t.setChild(assign_pre(),0)
+         t.setAttr(tokenString)
          match(token)
     else:
         variable = tokenString
@@ -156,12 +157,14 @@ def assign_pre()->TreeNode:
     global token
     global tokenString
     t = newExpNode(ExpKind.OPK.value)
-    t.setAttr(TokenType.PLUSP.value) if token == TokenType.PLUS.value else t.setAttr(TokenType.LESSL.value)
+    t.setAttr(TokenType.PLUS.value) if token == TokenType.PLUSP.value else t.setAttr(TokenType.MINUS.value)
     match(token)
     id = newExpNode(ExpKind.IDK.value)
     id.setAttr(tokenString)
     add = newExpNode(ExpKind.CONSTIK.value)
     add.setAttr(1)
+    add.valueCalc = 1
+    
     t.setChild(id,0)
     t.setChild(add,1)
     return t
@@ -170,11 +173,13 @@ def assign_post(variable:str)->TreeNode:
     global token
     global tokenString
     t = newExpNode(ExpKind.OPK.value)
-    t.setAttr(TokenType.PLUSP.value) if token == TokenType.PLUS.value else t.setAttr(TokenType.LESSL.value)
+    t.setAttr(TokenType.PLUS.value) if token == TokenType.PLUSP.value else t.setAttr(TokenType.MINUS.value)
     id = newExpNode(ExpKind.IDK.value)
     id.setAttr(variable)
     add = newExpNode(ExpKind.CONSTIK.value)
     add.setAttr(1)
+    add.valueCalc = 1
+   
     t.setChild(id,0)
     t.setChild(add,1)
     return t
@@ -361,9 +366,7 @@ r = parse()
 print("###################")
 printTree(r)
 from util import serialice
-with open('arbol.json', 'w') as archivo:
-    arbol_diccionario = serialice(r)
-    json.dump(arbol_diccionario, archivo)
+
 
 fileSintax.close()
 buildSymtab(r)
@@ -371,6 +374,9 @@ typeCheck(r)
 indentno = 0
 #calcExp(r)
 printTreeSemantic(r)
+with open('arbol.json', 'w') as archivo:
+    arbol_diccionario = serialice(r)
+    json.dump(arbol_diccionario, archivo)
 with open('tabHash.json', 'w') as archivo:
     tabHash = serialiceTabSym()
     json.dump(tabHash, archivo)

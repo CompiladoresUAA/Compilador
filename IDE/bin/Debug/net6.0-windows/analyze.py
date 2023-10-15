@@ -116,18 +116,24 @@ def checkNode(t:TreeNode):
                         ErrorSem.write(f"Assign of non-int to int {t.getAttr()} line {t.lineno}\n")
                     else:
                         bList.setValor(h0.valueCalc)
+                        t.type = bList.tipo
                         t.valueCalc = h0.valueCalc
                 elif bList.getTipo() == DecKind.REALK.value:
                     if h0.getType() != DecKind.INTK.value and h0.getType() != DecKind.REALK.value:
                         ErrorSem.write(f"Assign of non-int or non-real to real {t.getAttr()} line {t.lineno}\n")
                     else:
                         bList.setValor(h0.valueCalc)
+                        t.type = bList.tipo
                         t.valueCalc = h0.valueCalc
         elif t.getKind() == StmtKind.COUTK.value:
             #Falta consultar tabla...
             if h0.getKind() == ExpKind.IDK.value:
                 node = findNode( h0.getAttr() )
-                h0.setType(node.getTipo()) if node != None else h0.setType(-1)
+                if node != None:
+                    h0.setType(node.getTipo())
+                    h0.valueCalc = node.valor
+                else:
+                    h0.setType(-1)
             
             if h0.getType() != DecKind.INTK.value and h0.getType() != DecKind.REALK.value:
                 ErrorSem.write(f"Write of non-int or non-real value\n")
@@ -154,7 +160,10 @@ def postEval(t:TreeNode):
                 node = findNode(rchild.getAttr())
                 if node != None:
                     rchild.valueCalc = node.valor
-            t.valueCalc = lchild.valueCalc + rchild.valueCalc
+            try:
+                t.valueCalc = lchild.valueCalc + rchild.valueCalc
+            except:
+                t.valueCalc = None
         elif(t.getAttr()==TokenType.MINUS.value):
             lchild:TreeNode = t.getChild(0)
             rchild:TreeNode = t.getChild(1)

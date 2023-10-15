@@ -151,7 +151,7 @@ def serialiceTabSym()->dict:
         "table":table
     }
     file.close()
-    print(tableF)
+    
     return tableF
 #####
 def serialiceLine(numLineas:LineList)->dict:
@@ -170,6 +170,7 @@ def serialiceBucket(ren:BucketList):
         return {
             "name": ren.getName(),
             "valor":ren.valor,
+            "type":ren.getTipo(),
             "lines":serialiceLine(ren.getLines()),
             "meloc":ren.getMeloc(),
             "next":serialiceBucket(ren.getNext())
