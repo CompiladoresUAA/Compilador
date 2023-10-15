@@ -473,6 +473,8 @@ namespace IDE
             this.options = LNG.SINTACTICO;
             //this.trans.Text = "Sintactico";
             this.myFrame.Navigate(new System.Uri("./phases/SintaxView.xaml", UriKind.RelativeOrAbsolute));
+            this.myFrame.Navigate(new System.Uri("./phases/SintaxView.xaml", UriKind.Relative));
+
             //this.feedback.Text = SintaxView.readErrors();
             this.errorsFrame.Navigate(new System.Uri("./ErrorViews/ErrorsView.xaml", UriKind.RelativeOrAbsolute));
         }
@@ -571,6 +573,8 @@ namespace IDE
         private void eventoSemantico(object sender, RoutedEventArgs e)
         {
             this.options = LNG.SEMANTICO;
+            this.myFrame.Navigate(new SemanticView());
+
             //this.trans.Text = "Semantico";
         }
 
@@ -656,5 +660,9 @@ namespace IDE
             Debug.WriteLine("boton...");
         }
 
+        private void feedbackTabHash_Click(object sender, RoutedEventArgs e)
+        {
+            this.errorsFrame.Navigate(new TabHashView());
+        }
     }
 }

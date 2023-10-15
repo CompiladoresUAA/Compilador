@@ -178,6 +178,7 @@
                 <Menu DockPanel.Dock="Top" Name="downbar_menu">
                     <MenuItem x:Name="feedbackErr" Style="{StaticResource options}" Header="Errores" />
                     <MenuItem x:Name="feedbackRes" Style="{StaticResource options}" Header="Resultados"/>
+                    <MenuItem x:Name="feedbackTabHash" Style="{StaticResource options}" Header="Tabla Hash" Click="feedbackTabHash_Click"/>
                     <MenuItem  >
                         <MenuItem.Header>
                             <TextBlock>
