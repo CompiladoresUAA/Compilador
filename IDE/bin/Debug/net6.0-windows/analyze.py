@@ -139,8 +139,7 @@ def checkNode(t:TreeNode):
                 ErrorSem.write(f"While Test is not Boolean\n")
 def typeCheck(syntaxTree:TreeNode):
     traverse(syntaxTree,nullProc,checkNode)
-def calcExp(sintaxTree:TreeNode):
-    traverse(sintaxTree,nullProc,postEval)
+
 def postEval(t:TreeNode):
     temp=0
     if( t.getNodeKind().value == NodeKind.EXPK.value and t.getKind() == ExpKind.OPK.value):

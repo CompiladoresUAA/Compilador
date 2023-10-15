@@ -8,7 +8,7 @@ from globall import diccionario
 import os
 from util import newExpNode,newStmtNode,printTree,printTreeSemantic,indentno
 from parseH import *
-from analyze import buildSymtab,checkNode,typeCheck,postEval,calcExp,printSymtab
+from analyze import buildSymtab,checkNode,typeCheck,postEval,printSymtab
 
 #### Global Variables #####
 token = -1
