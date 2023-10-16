@@ -1,17 +1,17 @@
-from globall import TokenType as tp
+from globall import TokenType as tp,MAXCHILDREN
 import globall
 #from scan import reservedWords as rw
-
+from globall import TreeNode,ExpKind,StmtKind,DecKind,NodeKind
 import os
+import json
+from symtab import BucketList, LineList
 fileoutput = open(os.path.join(os.getcwd(),'Archivo_Tokens.txt'),'r+')
 #fileoutput.truncate()
 fileoutputError = open(os.path.join(os.getcwd(),'Archivo_Errores.txt'),'r+')
 #fileoutputError.truncate()
 fileoutput2 = open(os.path.join(os.getcwd(),'Archivo_Tokens2.txt'),'r+')
 #fileoutput2.truncate()
-
 def printToken(token,tokenString):
-   
  
     if (token in [tp.MAIN , tp.IF , tp.THEN , tp.ELSE
     , tp.END , tp.DO , tp.WHILE , tp.REPEAT
@@ -97,7 +97,7 @@ def printToken(token,tokenString):
         #write( "EOF\t EOF","\t  {}\t  {}".format(globall.lineno,globall.colpos))
     elif ( tp.ERROR == token ):
         print( "  {}\t  {}\t  {}".format(tokenString,globall.lineno,globall.colpos) )
-        writeErrores("  {}  \t  {}\t  {}".format(tokenString,globall.lineno,globall.colpos))
+        writeErrores("Lexical Error:  {}  \t at line: {}\t and column: {}".format(tokenString,globall.lineno,globall.colpos))
 
     else:
         print("UNKNOWN TOKEN\t{}".format(tokenString))
@@ -124,3 +124,135 @@ def writeErrores(text):
         pass
     finally:
         pass  
+
+def newStmtNode(kind:StmtKind)->TreeNode:
+ 
+    t = TreeNode(globall.lineno,NodeKind.STMTK,kind)
+    return t
+def newExpNode(kind:ExpKind)->TreeNode:
+    
+    t = TreeNode(globall.lineno,NodeKind.EXPK,kind)
+    return t
+
+indentno = 0
+def increaseIn():
+    global indentno
+    indentno += 2
+def decreaseIn():
+    global indentno
+    indentno -= 2
+def printSpaces():
+    global indentno
+    i:int
+    for i in range(0,indentno):
+        print(f" ",end="")
+
+def printTree( tree:TreeNode ):
+    i:int
+    increaseIn()
+    while tree != None:
+        printSpaces()
+        if tree.getNodeKind().value == NodeKind.STMTK.value:
+            if tree.getKind() == StmtKind.IFK.value:
+                print("If: ") 
+            elif tree.getKind() == StmtKind.ELSEK.value:
+                print("Else: ")    
+            elif tree.getKind() == StmtKind.UNTILK.value:
+                print("Do until: ")
+            elif tree.getKind() == StmtKind.WHILEK.value:
+                print("While: ")
+            elif tree.getKind() == StmtKind.ASSIGNS.value:
+                print(f"Assign to: {tree.getAttr()}")
+            elif tree.getKind() == StmtKind.CINK.value:
+                print(f"Read: {tree.getAttr()}")
+            elif tree.getKind() == StmtKind.COUTK.value:
+                print(f"Write: ")
+            elif tree.getKind() == StmtKind.DECK.value:
+                print(f"Dec :")
+            elif tree.getKind() == StmtKind.MAINK.value:
+                print(f"Main :")
+            elif tree.getKind() == StmtKind.TYPEDEF.value:
+                print(f"Type : { globall.diccionario[tree.getAttr()]}")    
+            else:
+                print(f"Unknown Stmt Node ... {tree.getKind()}")
+        elif tree.getNodeKind().value == NodeKind.EXPK.value:
+            if tree.getKind() == ExpKind.OPK.value:
+                print(f"Op: {globall.diccionario[tree.getAttr()]}")
+            elif tree.getKind() == ExpKind.CONSTIK.value:
+                print(f"Const Int: {tree.getAttr()}")
+            elif tree.getKind() == ExpKind.CONSTFK.value:
+                print(f"Const Float: {tree.getAttr()}")
+            elif tree.getKind() == ExpKind.IDK.value:
+                print(f"Id: {tree.getAttr()} ")
+            else:
+                print(f"Unknown ExpNode kind....")
+        else:
+            print("Unknown node kind...")
+        for i in range(0,3):
+            
+            printTree(tree.getChild(i))
+        tree = tree.getSibling()
+    decreaseIn()
+
+def printTreeSemantic( tree:TreeNode ):
+    i:int
+    increaseIn()
+    while tree != None:
+        printSpaces()
+        if tree.getNodeKind().value == NodeKind.STMTK.value:
+            if tree.getKind() == StmtKind.IFK.value:
+                print("If: ") 
+            elif tree.getKind() == StmtKind.ELSEK.value:
+                print("Else: ")    
+            elif tree.getKind() == StmtKind.UNTILK.value:
+                print("Do until: ")
+            elif tree.getKind() == StmtKind.WHILEK.value:
+                print("While: ")
+            elif tree.getKind() == StmtKind.ASSIGNS.value:
+                print(f"Assign to: {tree.getAttr()} {tree.valueCalc}")
+            elif tree.getKind() == StmtKind.CINK.value:
+                print(f"Read: {tree.getAttr()}")
+            elif tree.getKind() == StmtKind.COUTK.value:
+                print(f"Write: ")
+            elif tree.getKind() == StmtKind.DECK.value:
+                print(f"Dec :")
+            elif tree.getKind() == StmtKind.MAINK.value:
+                print(f"Main :")
+            elif tree.getKind() == StmtKind.TYPEDEF.value:
+                print(f"Type : { globall.diccionario[tree.getAttr()]}")    
+            else:
+                print(f"Unknown Stmt Node ... {tree.getKind()}")
+        elif tree.getNodeKind().value == NodeKind.EXPK.value:
+            if tree.getKind() == ExpKind.OPK.value:
+                print(f"Op: {globall.diccionario[tree.getAttr()]} - {tree.valueCalc}" )
+            elif tree.getKind() == ExpKind.CONSTIK.value:
+                print(f"Const Int: {tree.getAttr()} {tree.valueCalc}")
+            elif tree.getKind() == ExpKind.CONSTFK.value:
+                print(f"Const Float: {tree.getAttr()} {tree.valueCalc}")
+            elif tree.getKind() == ExpKind.IDK.value:
+                print(f"Id: {tree.getAttr()} ")
+            else:
+                print(f"Unknown ExpNode kind....")
+        else:
+            print("Unknown node kind...")
+        for i in range(0,3):
+            
+            printTreeSemantic(tree.getChild(i))
+        tree = tree.getSibling()
+    decreaseIn()
+
+
+def serialice(root:TreeNode)->dict:
+    if root is None:
+        return None
+    return {
+        "valor":root.getAttr(),
+        "nodeKind":root.getNodeKind().value,
+        "kind":root.getKind(),
+        "type":root.getType(),
+        "valCalc":root.valueCalc,
+        "firstChild": serialice(root.getChild(0)),
+        "secondChild":serialice(root.getChild(1)),
+        "thirdChild": serialice(root.getChild(2)),
+        "sibling"   : serialice(root.getSibling()), 
+    }

@@ -1,25 +1,28 @@
 from nltk.tree import Tree
 from globall import TokenType
 from globall import TreeNode
+import globall
+from globall import StmtKind,ExpKind,DecKind,NodeKind
 import sys
 from globall import diccionario
 import os
+from util import newExpNode,newStmtNode,printTree,printTreeSemantic,indentno
 from parseH import *
+from analyze import buildSymtab,checkNode,typeCheck,postEval,printSymtab
+from symtab import serialiceTabSym
+#### Global Variables #####
 token = -1
 source = open('Archivo_Tokens2.txt','r')
 tokenString = ''
-root = Tree('program',[])
-lineno = 0
+root:TreeNode = None
 colpos = 0
 fileSintax = open(os.path.join(os.getcwd(),'Errores_Sintaxis.txt'),'w')
-import inspect
 
+### Functions ###
 def sintaxError(msg:str):
-    global lineno
-    #caller = inspect.currentframe().f_back.f_code.co_name
-    fileSintax.write("Sintax error at line: {0} message: {1}\n".format(lineno,msg))
+    #global lineno
+    fileSintax.write("Syntax error at line: {0} message: {1}\n".format(globall.lineno,msg))
     recoverySintax()
-
 
 def match(expected:TokenType):
     global token
@@ -27,132 +30,75 @@ def match(expected:TokenType):
     if( token == expected):
         token = getTokenSintax()
     else:
-        caller = inspect.currentframe().f_back.f_code.co_name
         sintaxError("Unexpected token -> " + tokenString + " expected " + diccionario[expected])
-        
-        
-def list_dec()->Tree:
+         
+def list_dec()->TreeNode:
     global token
-    t = Tree('lista de dec',[])
-    p = t.extend(dec())
-    caller = inspect.currentframe().f_back.f_code.co_name
-    print(f"list_dec {caller}")
+    t = statement()
+    p  = t
     while( token != TokenType.ENDFILE.value  and token != TokenType.END.value
           and token != TokenType.UNTIL.value and token != TokenType.ELSE.value
           and token != TokenType.RBPAREN.value):
-        #print(f"lst {caller}")
         
-        
-        q = dec()
-        t.extend(q)   
-    if(len(t) == 0):
-        t = Tree('',[])
-    #sintaxError('aaaa '+caller)
+        q = statement()
+        if q != None:
+            if t == None:
+                t = p = q
+            else:
+                p.setSibling(q)
+                p = q
+     
     return t
 
-def dec()->Tree:
-    global token
-    t = Tree('',[])
-    #print("dec")
-    
-    if ( token == TokenType.INT.value or token == TokenType.REAL.value or token == TokenType.BOOLEAN.value):
-       
-        t = dec_var()
-    else:
-       
-        t = lista_stmt()
-    return t
-
-def dec_var()->Tree:
+def dec_var()->TreeNode:
     global token 
-    t = Tree('Declaracion',[])
-    e = Tree('Declaracion',[])
     global tokenString
-    print("dec_var")
-    
+    t = newStmtNode(StmtKind.DECK.value)
+    e = newStmtNode(StmtKind.TYPEDEF.value)
+        
     if( token == TokenType.INT.value ):
-       
-        e.append(Tree(str(TokenType.INT.name),[]))
+        e.setType(DecKind.INTK.value)
+        e.setAttr(TokenType.INT.value)
         match(TokenType.INT.value)
     elif ( token == TokenType.BOOLEAN.value ):
-        e.append(Tree(str(TokenType.BOOLEAN.name),[]))
+        e.setType(DecKind.BOOLEANK.value)
+        e.setAttr(TokenType.BOOLEAN.value)
         match(TokenType.BOOLEAN.value)
     elif( token == TokenType.REAL.value ):
-       
-        e.append(Tree(str(TokenType.REAL.name),[]))
+        e.setType(DecKind.REALK.value)
+        e.setAttr(TokenType.REAL.value)
         match(TokenType.REAL.value)
     else:
         sintaxError('Date Type Unknown')
-        #token = getTokenSintax()
         recoverySintax()
-    
-    e.append(lista_ids())
-    #if( token == TokenType.ID.value ):
-    #    t.append(Tree(tokenString,[]))   
-    #match(TokenType.ID.value)
-    #while ( token == TokenType.COMMA.value ):
-    #    match(TokenType.COMMA.value)
-    #    if( token == TokenType.ID.value ):
-    #        t.append(Tree(tokenString,[]))
-    #        match(TokenType.ID.value)   
-        
+        return t
+    t.setChild(e,0)
+    id = newExpNode(ExpKind.IDK.value)
+    if token == TokenType.ID.value:
+        id.setAttr(tokenString)
+        id.setType(e.getType())
+        t.setChild(id,1)
+        match(TokenType.ID.value)     
+        while token == TokenType.COMMA.value:
+            match(TokenType.COMMA.value)
+            idAux = newExpNode(ExpKind.IDK.value)
+            idAux.setAttr(tokenString)
+            idAux.setType(e.getType())
+         
+            id.setSibling(idAux)
+            id = idAux
+            match(TokenType.ID.value) 
     if( token == TokenType.SEMMICOL.value ):
-        
         match(TokenType.SEMMICOL.value)
     else:
         sintaxError('unexpected token ' + tokenString + ' Token expected '+
                     (',' if token == TokenType.ID.value else ';'))
         recoverySintax()
-    t.append(e)    
     return t
 
-def lista_ids()->Tree:
-    global token
-    global tokenString
-    print("list_ids")
-    
-    t = Tree('',[])
-    if( token == TokenType.ID.value ):
-        t = Tree('Variable',[])
-        t.append(Tree(tokenString,[]))
-        match(TokenType.ID.value)
-        while( token == TokenType.COMMA.value ):
-           
-            match(TokenType.COMMA.value)
-            if( token == TokenType.ID.value ):
-                t.append(Tree(tokenString,[]))
-                match(TokenType.ID.value)
-
-    return t
-
-import inspect
-def lista_stmt()->Tree: #Aqui debería de haber un opcionalidad de un nodo vacio
+def statement()->TreeNode|None:
     global token 
-    global tokenString
-    caller = inspect.currentframe().f_back.f_code.co_name
-    #print("lista_stmt "+ str(TokenType(token).name)+' '+caller)
-    
-    t = Tree('Lista de stmt',[])
-    if(token == TokenType.MAIN.value or token == TokenType.IF.value or token==TokenType.DO.value or token == TokenType.WHILE.value or token == TokenType.CIN.value or token == TokenType.COUT.value or token == TokenType.ID.value or token == TokenType.LESSL.value or token == TokenType.PLUSP.value):
-        t = Tree('Lista de stmt',[])
-        while( token == TokenType.MAIN.value or token == TokenType.IF.value or token==TokenType.DO.value or token == TokenType.WHILE.value or token == TokenType.CIN.value or token == TokenType.COUT.value or token == TokenType.ID.value or token == TokenType.LESSL.value or token == TokenType.PLUSP.value):
-            t.append(statement())
-    
-    else:
-        t = Tree('',[])
-        #print("Unexpected Token "+ str(token))
-        sintaxError("lst stmt Unexpected Token "+' '+ tokenString)
-        #token = getTokenSintax()
-        recoverySintax()
-        
-    return t
-
-
-def statement()->Tree:
-    global token 
-    t = Tree('',[])
-    print("stmt")
-    
+    t = None
     if ( token == TokenType.MAIN.value ):
         t = main_stmt()
     elif( token == TokenType.IF.value ):
@@ -167,240 +113,190 @@ def statement()->Tree:
         t = cout_stmt()
     elif( token == TokenType.ID.value or token == TokenType.LESSL.value or token == TokenType.PLUSP.value ): 
         t = assign_stmt()
+    elif( token == TokenType.INT.value or token == TokenType.BOOLEAN.value or token == TokenType.REAL.value ):
+        t = dec_var()
     else:
-        sintaxError('Unexpected Token ->')
-        #token = getTokenSintax()
-        recoverySintax() 
+        sintaxError(f'Unexpected Token -> {tokenString}')
+       
     return t
-def main_stmt()->Tree:
-    print("main")
+
+def main_stmt()->TreeNode:
     
-    t  = Tree('Main',[])
+    t = newStmtNode(StmtKind.MAINK.value)
     match(TokenType.MAIN.value)
     match(TokenType.LBPAREN.value)
-    t.extend(list_dec())
+    t.setChild(list_dec(),0)
     match(TokenType.RBPAREN.value)
    
     return t
-def assign_stmt()->Tree:
+
+def assign_stmt()->TreeNode:
     global token
     global tokenString
-    t = Tree('Assign',[])
-    if( token == TokenType.PLUSP.value or token == TokenType.LESSL.value):
-        t.extend(assign_pre())
-    elif( token == TokenType.ID.value ):
-        t.extend(assign_simple())
-    #match(TokenType.SEMMICOL.value)
-    return t
-    
-def assign_simple()->Tree:
-    global token
-    global tokenString
-    print("assign")
-    variable = tokenString
-    t = Tree('Assign',[])
-    if( token == TokenType.ID.value):
-        t.append(Tree(tokenString,[]))
-    match(TokenType.ID.value)
-    if( token == TokenType.ASSIGN.value ):
-        match(TokenType.ASSIGN.value)
-        t.extend(stmt_exp()) #Por que t[0] ?? y falta un if --------------------------------------------------------------
-        
-    elif( token == TokenType.LESSL.value or token == TokenType.PLUSP.value ):
-        t.extend(assign_post(variable))
+    t = newStmtNode(StmtKind.ASSIGNS.value)
+    if token == TokenType.LESSL.value or token == TokenType.PLUSP.value:
+         t.setChild(assign_pre(),0)
+         t.setAttr(tokenString)
+         match(token)
     else:
-        t.append(Tree('',[]))
-        
-    return t
-def assign_pre()->Tree:
-    global token
-    global tokenString
-    variable = tokenString
-    t = Tree('Assign',[])
-    op = token
-    #t.append(Tree(tokenString,[]))
-    match(token)
-    if ( token == TokenType.ID.value ):
-        t.append(Tree(tokenString,[]))
-        if (op == TokenType.PLUSP.value):  
-            t.append(Tree('+',[]))
-        else:
-            t.append(Tree('-',[]))
-        t[1].append(Tree(tokenString,[]))
-        t[1].append(Tree('1',[]))
+        variable = tokenString
+        t.setAttr(tokenString)
         match(TokenType.ID.value)
-        match(TokenType.SEMMICOL.value)
-           
-    else:
-        sintaxError("pre assign Unexpected Token "+ tokenString)
-        #token = getTokenSintax()
-        recoverySintax()
-
+        if( token == TokenType.ASSIGN.value ):
+            match(TokenType.ASSIGN.value)
+            t.setChild(exp(),0)    
+        elif( token == TokenType.LESSL.value or token == TokenType.PLUSP.value ):
+            t.setChild(assign_post(variable),0)
+            match(token)
+        else:
+            sintaxError(f"Unexpected Token {tokenString} ... ")
+    match(TokenType.SEMMICOL.value)
     return t
-def assign_post(variable:str)->Tree:
+
+def assign_pre()->TreeNode:
     global token
     global tokenString
-    t = Tree('Assign',[])
-    """t.append(Tree(tokenString,[]))
-    match(token)"""
-    if( token == TokenType.PLUSP.value or token == TokenType.LESSL.value):
-        if( token == TokenType.PLUSP.value ):
-            t.append(Tree('+',[]))
-        else:
-            t.append(Tree('-',[]))
-        t[0].append(Tree(variable,[]))
-        t[0].append(Tree('1',[]))
-        match(token)
-        match(TokenType.SEMMICOL.value)
-           
-    else:
-        sintaxError("post assign Unexpected Token "+ tokenString)
-        #token = getTokenSintax()
-        recoverySintax()
-
-    return t
-def stmt_exp()->Tree:
-    global token 
-    t = Tree('sent_expresion',[])
-  
-    print("stmt_exp")
+    t = newExpNode(ExpKind.OPK.value)
+    t.setAttr(TokenType.PLUS.value) if token == TokenType.PLUSP.value else t.setAttr(TokenType.MINUS.value)
+    match(token)
+    id = newExpNode(ExpKind.IDK.value)
+    id.setAttr(tokenString)
+    add = newExpNode(ExpKind.CONSTIK.value)
+    add.setAttr(1)
+    add.valueCalc = 1
     
-    if( token == TokenType.SEMMICOL.value ):
-        t.append(Tree(';',[]))
-        match(TokenType.SEMMICOL.value)
-    else:
-        t.append(exp())
-        match(TokenType.SEMMICOL.value)
+    t.setChild(id,0)
+    t.setChild(add,1)
     return t
 
-def if_stmt()->Tree:
+def assign_post(variable:str)->TreeNode:
+    global token
+    global tokenString
+    t = newExpNode(ExpKind.OPK.value)
+    t.setAttr(TokenType.PLUS.value) if token == TokenType.PLUSP.value else t.setAttr(TokenType.MINUS.value)
+    id = newExpNode(ExpKind.IDK.value)
+    id.setAttr(variable)
+    add = newExpNode(ExpKind.CONSTIK.value)
+    add.setAttr(1)
+    add.valueCalc = 1
+   
+    t.setChild(id,0)
+    t.setChild(add,1)
+    return t
+
+
+def if_stmt()->TreeNode:
     global token 
-    print("if")
-    
-    t = Tree('If',[])
+    t = newStmtNode(StmtKind.IFK.value)
     match(TokenType.IF.value)
-    t.append(exp())
-    t.extend(list_dec())
+    t.setChild(exp(),0)
+    t.setChild(list_dec(),1)
     if ( token == TokenType.ELSE.value ):
         match(TokenType.ELSE.value)
-        e = Tree('Else',[])
-        e.extend(list_dec())
-        t.append(e)
+        e = newStmtNode(StmtKind.ELSEK.value)
+        e.setChild(list_dec(),0)
+        t.setChild(e,2)
     match(TokenType.END.value)
     return t
 
-def it_stmt()->Tree:
+def it_stmt()->TreeNode:
     global token
-    print("while")
-     
-    t = Tree('Iteracion while',[])
+    t = newStmtNode(StmtKind.WHILEK.value)
     match(TokenType.WHILE.value)
-    t.append(exp())
+    t.setChild(exp(),0)
     match(TokenType.LBPAREN.value)
-    t.extend(list_dec())
+    t.setChild(list_dec(),1)
     match(TokenType.RBPAREN.value)
     return t
 
-def rep_stmt()->Tree:
+def rep_stmt()->TreeNode:
     global token
     global tokenString
-    print("do")
-     
-    t = Tree('Repeticion do',[])
+    t = newStmtNode(StmtKind.UNTILK.value)
     match(TokenType.DO.value)
-    t.append(list_dec())
+    t.setChild(list_dec(),0)
     match(TokenType.UNTIL.value)
-    t.append(exp())
-    
+    t.setChild(exp(),1)
     match(TokenType.SEMMICOL.value)
     return t
 
 
-def cin_stmt()->Tree:
+def cin_stmt()->TreeNode:
     global token
-    t = Tree('Cin',[])
     global tokenString
+    t = newStmtNode(StmtKind.CINK.value)
     match(TokenType.CIN.value)
     if( token == TokenType.ID.value ):
-        t.append(Tree(tokenString,[]))
+        t.setAttr(tokenString)
     match(TokenType.ID.value)
     match(TokenType.SEMMICOL.value)
     return t
 
-def cout_stmt()->Tree:
+def cout_stmt()->TreeNode:
     global token 
-    t = Tree('Cout',[])
+    t = newStmtNode(StmtKind.COUTK.value) 
     match(TokenType.COUT.value)
-    t.append(exp())
+    t.setChild(exp(),0)
     match(TokenType.SEMMICOL.value)
     return t
 
-def exp()->Tree:
+def exp()->TreeNode:
     global token
     t = simp_exp()
-    print("exp "+str(token))
-    
     if( ( token == TokenType.LESSET.value ) or ( token == TokenType.LESST.value )  or
         ( token == TokenType.GREATERT.value ) or ( token == TokenType.GREATERET.value ) 
         or ( token == TokenType.EQ.value ) or (token == TokenType.DIFF.value)):
-        p = Tree(tokenString,[])
-        p.append(t)
-     
+        p = newExpNode(ExpKind.OPK.value)
+        p.setChild( t , 0 )
+        p.setAttr( token )
         t = p
         match(token)
-        t.append(simp_exp())
-        
-        
-        
+        t.setChild(simp_exp(),1)
     return t        
 
-def simp_exp()->Tree:
+def simp_exp()->TreeNode:
     global token 
     t = term()
-    print("simp_exp")
-    
     while( ( token == TokenType.PLUS.value) or ( token == TokenType.MINUS.value ) 
           or ( token == TokenType.PLUSP.value ) or ( token == TokenType.LESSL.value ) ):
-        p = Tree(tokenString,[])
-        p.append(t)
+        p = newExpNode(ExpKind.OPK.value)
+        p.setChild(t,0)
+        p.setAttr(token)
         t = p 
         match(token)
-        p.append(term())
+        p.setChild(term(),1)
     return t
 
-def term()->Tree:
+def term()->TreeNode:
     global token
     t = factor()
-    print("term")
-    
     while( (token == TokenType.TIMES.value) or (token==TokenType.OVER.value)or(token == TokenType.REMAINDER.value)):
-        p = Tree(tokenString,[])
-        p.append(t)
+        p = newExpNode(ExpKind.OPK.value)
+        p.setChild(t,0)
+        p.setAttr(token)
         t = p        
         match(token)
-        p.append(factor())
-        
+        p.setChild(factor(),1)
     return t
 
-def factor()->Tree:
+def factor()->TreeNode:
     global token 
-    global lineno
-    t = Tree('',[])
-    print("factor")
-    
+    t = None
     global tokenString
     if ( token == TokenType.ENTERO.value ):
-        t = Tree('Entero',[])
-        t.append(Tree(tokenString,[]))
+        t = newExpNode(ExpKind.CONSTIK.value)
+        t.setAttr(int(tokenString))
+        t.valueCalc = int(tokenString)
         match(TokenType.ENTERO.value)
     elif ( token == TokenType.NUMREAL.value ):
-        t = Tree('Decimal',[])
-        t.append(Tree(tokenString,[]))
+        t = newExpNode(ExpKind.CONSTFK.value)
+        t.setAttr(float(tokenString))
+        t.valueCalc = float(tokenString)
         match(TokenType.NUMREAL.value)
     elif ( token == TokenType.ID.value ):
-      
-        t = Tree('Identificador',[])
-        t.append(Tree(tokenString,[]))
+
+        t = newExpNode(ExpKind.IDK.value)
+        t.setAttr(str(tokenString))
         match(TokenType.ID.value)
     elif ( token == TokenType.LPAREN.value ):
         
@@ -408,22 +304,16 @@ def factor()->Tree:
          t = exp()
          match(TokenType.RPAREN.value)
     else:
-        print("unexpected token "+ str(token))
         sintaxError('Unexpected token -> '+tokenString)
         
-        #printToken(token,tokenString)
-        #token = getTokenSintax()
-        recoverySintax()
-
     return t        
-def parse()->Tree:
+def parse()->TreeNode:
     global token
     global root
     global tokenString
-    root = Tree('program',[])
+    root = None
     token = getTokenSintax()
-    root.append(list_dec())
-   
+    root = list_dec()
     if( token != TokenType.ENDFILE.value ):
         sintaxError(f'Code ends before file {token}\n')
     return root
@@ -432,7 +322,7 @@ def getTokenSintax():
     global source
     linea = source.readline()
     global tokenString
-    global lineno
+    #global lineno
     global colpos
     if  linea:
         elementos = linea.split('\t')
@@ -441,7 +331,7 @@ def getTokenSintax():
         aux = elementos[0]
         if len(elementos)>=2:
             tokenString = elementos[1]
-            lineno = elementos[2]
+            globall.lineno = elementos[2]
             colpos = elementos[3]
         if(elementos[0] == 'RESERVED-WORD'):
            aux = TokenType[elementos[1].upper()].value 
@@ -468,55 +358,27 @@ def recoverySintax():
               token == TokenType.BOOLEAN.value or
               token == TokenType.REPEAT.value or
               token == TokenType.RBPAREN.value or
-              token == TokenType.SEMMICOL.value)):
-        print('-*-*-*-**-*-*-*-*-*-*-*-*-*-**-*--**-*-*-**-\n')
+              token == TokenType.SEMMICOL.value) or
+              token == TokenType.THEN.value):
         token = getTokenSintax()
     if( token == TokenType.SEMMICOL.value ):
         token = getTokenSintax()
-
 r = parse()
-#print(r.pretty_print())
-convert_to_json(r)
+print("###################")
+printTree(r)
+from util import serialice
+
+
 fileSintax.close()
-
-
-
-
-
-""""
-
-import tkinter as tk
-from tkinter import ttk
-from nltk import Tree
-
-# Ejemplo de un árbol de NLTK
-tree_nltk = Tree('S', [Tree('NP', ['John']), Tree('VP', ['sleeps'])])
-
-window = tk.Tk()
-window.title("Árbol de NLTK")
-
-treeview = ttk.Treeview(window)
-treeview["columns"] = ("Label", "Parent")
-treeview.heading("#0", text="ID")
-treeview.heading("Label", text="Label")
-treeview.heading("Parent", text="Parent")
-
-def add_tree_node(tree, parent_node=""):
-    node_id = str(id(tree))  # Generar un identificador único para el nodo
-    label = tree.label()
-    treeview.insert(parent_node, tk.END, node_id, text=node_id, values=(label, parent_node))
-    if isinstance(tree, Tree):
-        for child in tree:
-            add_tree_node(child, parent_node=node_id)
-
-add_tree_node(r)
-
-treeview.pack()
-window.mainloop()"""
-
-
-
-
-
-
-
+buildSymtab(r)
+typeCheck(r)
+indentno = 0
+#calcExp(r)
+printTreeSemantic(r)
+with open('arbol.json', 'w') as archivo:
+    arbol_diccionario = serialice(r)
+    json.dump(arbol_diccionario, archivo)
+with open('tabHash.json', 'w') as archivo:
+    tabHash = serialiceTabSym()
+    json.dump(tabHash, archivo)
+printSymtab()

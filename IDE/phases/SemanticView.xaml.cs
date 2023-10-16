@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using IDE.Common;
+using IDE.phases.StrategyPattern;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -16,36 +18,30 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using IDE.Common;
-using IDE.phases.StrategyPattern;
 
 namespace IDE.phases
 {
-    
     /// <summary>
-    /// Lógica de interacción para SintaxView.xaml
+    /// Lógica de interacción para SemanticView.xaml
     /// </summary>
-    public partial class SintaxView : Page
+    public partial class SemanticView : Page
     {
-        private TreeContext treeContext;     
-        public SintaxView()
+        private TreeContext treeContext;
+        public SemanticView()
         {
             InitializeComponent();
-            this.treeContext = new TreeContext(new SintaxStrategy());
-            string currentDirectory = Environment.CurrentDirectory;
-            Debug.WriteLine("Current Directory: " + currentDirectory);
-
-            string json = File.ReadAllText("arbol.json");
-            // Analizar el contenido JSON
-            JToken rootNode = JToken.Parse(json);
-            Global.TreeNode root = JsonConvert.DeserializeObject<Global.TreeNode>(json) ?? new Global.TreeNode();
+            this.treeContext = new TreeContext(new SemanticStrategy());
             
-            // Construir el árbol
+            string jsonTree = File.ReadAllText("arbol.json");
+            // Analizar el contenido JSON
+            Global.TreeNode root = JsonConvert.DeserializeObject<Global.TreeNode>(jsonTree) ?? new Global.TreeNode();
+
+           
             TreeViewItem rootItem = this.treeContext.BuildTree(root);
 
             // Agregar el nodo raíz al TreeView
             treeView.Items.Add(rootItem);
-            
+
             foreach (object item in treeView.Items)
             {
                 if (item is TreeViewItem treeViewItem)
@@ -53,14 +49,7 @@ namespace IDE.phases
                     this.treeContext.ExpandAllTreeViewItems(treeViewItem);
                 }
             }
+
         }
-        public static string readErrors()
-        {
-            int a=1,b=2;
-            
-            string errors = File.ReadAllText("Errores_Sintaxis.txt");
-            return errors;
-        }
-     
     }
 }

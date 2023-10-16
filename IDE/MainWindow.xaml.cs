@@ -25,6 +25,8 @@ using System.ComponentModel;
 using System.Threading;
 using IDE.phases;
 using System.Xml.Linq;
+using IDE.ErrorViews;
+using System.Reflection;
 //using System.Windows.Forms;
 
 enum LNG{LEXICO,SINTACTICO,SEMANTICO,CDGOINTERMEDIO };
@@ -105,7 +107,7 @@ namespace IDE
             codigo.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
             //this.avalonstyles = (Style)Application.Current.FindResource("avalonstyles");
             this.codigo.FontSize = 12;
-            this.feedback.FontSize = 12;
+            //this.feedback.FontSize = 12;
             //this.trans.FontSize = 12;
             codigo.TextArea.Caret.PositionChanged += onCursorPositionChanged;
 
@@ -342,12 +344,11 @@ namespace IDE
                 }
 
 
-                // progress.Value= 100;
-                //string output = process.StandardOutput.ReadToEnd();
-                Debug.WriteLine("saliiiiii");
                 this.myFrame.Navigate(new System.Uri("./phases/LexicoView.xaml", UriKind.RelativeOrAbsolute));
-                //               process.WaitForExit();
-                //progress.Visibility = Visibility.Collapsed;
+                ErrorsView eView = new ErrorsView();
+                this.errorsFrame.Navigate(eView);
+               
+
             }
         }
         private async Task doSintax(CancellationToken cancellationToken)
@@ -383,7 +384,7 @@ namespace IDE
                 await Task.Delay(100);
 
             }
-            Sintax sin = new Sintax();
+            //Sintax sin = new Sintax();
 
             progress.Dispatcher.Invoke(new Action(() =>
             {
@@ -411,7 +412,7 @@ namespace IDE
             }
            // this.iscomp = false;
             //this.trans.Text = "";
-            this.feedback.Text ="Error\tFila\tColumna\n";
+            //this.feedback.Text ="Error\tFila\tColumna\n";
             this.options = LNG.LEXICO;
 
 
@@ -420,13 +421,17 @@ namespace IDE
             pathError = pathArch + "\\Archivo_Errores.txt",
             pathToken = pathArch + "\\Archivo_Tokens.txt";
 
-           
- //           MessageBox.Show(pathToken+"\n"+pathError);
+           // this.errorsFrame.Navigate(new System.Uri("./phases/LexicoView.xaml", UriKind.RelativeOrAbsolute));
+
+            //           MessageBox.Show(pathToken+"\n"+pathError);
             //this.trans.Text += this.lecturaArchivo(pathToken);
-            this.feedback.Text += this.lecturaArchivo(pathError);
+            //this.feedback.Text += this.lecturaArchivo(pathError);
             this.myFrame.Navigate(new System.Uri("./phases/LexicoView.xaml", UriKind.RelativeOrAbsolute));
+            ErrorsView eView = new ErrorsView();
+            this.errorsFrame.Navigate(eView);
+
         }
-       
+
         private void removeBorder()
         {
             MenuItem mnu = new MenuItem();
@@ -468,6 +473,10 @@ namespace IDE
             this.options = LNG.SINTACTICO;
             //this.trans.Text = "Sintactico";
             this.myFrame.Navigate(new System.Uri("./phases/SintaxView.xaml", UriKind.RelativeOrAbsolute));
+            this.myFrame.Navigate(new System.Uri("./phases/SintaxView.xaml", UriKind.Relative));
+
+            //this.feedback.Text = SintaxView.readErrors();
+            this.errorsFrame.Navigate(new System.Uri("./ErrorViews/ErrorsView.xaml", UriKind.RelativeOrAbsolute));
         }
 
         private void saveCode(object sender, RoutedEventArgs e)
@@ -561,9 +570,17 @@ namespace IDE
             }
         }
 
-        private void eventoSemantico(object sender, RoutedEventArgs e)
+        private async void eventoSemantico(object sender, RoutedEventArgs e)
         {
             this.options = LNG.SEMANTICO;
+
+            await Task.Run(() =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    this.myFrame.Navigate(new SemanticView());
+                });
+            });
             //this.trans.Text = "Semantico";
         }
 
@@ -578,8 +595,8 @@ namespace IDE
             // avalonstyles.Setters.Remove(avalonstyles.Setters.First(s => s.Equals(TextEditor.BackgroundProperty) ));
             //this.trans.Background = Brushes.White;
             //this.trans.Foreground = Brushes.Black;
-            this.feedback.Background= Brushes.White;
-            this.feedback.Foreground = Brushes.Black;
+            //this.feedback.Background= Brushes.White;
+            //this.feedback.Foreground = Brushes.Black;
             this.codigo.Background = Brushes.White;
             this.codigo.Foreground = Brushes.Black;
             XmlReader reader = XmlReader.Create("../../../avalonfiles/keywords2.xml");
@@ -597,8 +614,8 @@ namespace IDE
         {
             //this.trans.Background = new BrushConverter().ConvertFromString("#2E2E2E") as Brush; 
             //this.trans.Foreground = Brushes.White;
-            this.feedback.Background = new BrushConverter().ConvertFromString("#2E2E2E") as Brush;
-            this.feedback.Foreground = Brushes.White;
+            //this.feedback.Background = new BrushConverter().ConvertFromString("#2E2E2E") as Brush;
+            //this.feedback.Foreground = Brushes.White;
             this.codigo.Background = new BrushConverter().ConvertFromString("#2E2E2E") as Brush;
             this.codigo.Foreground = Brushes.White;
 
@@ -614,21 +631,21 @@ namespace IDE
         private void tamPequenio(object sender, RoutedEventArgs e)
         {
             this.codigo.FontSize = 12;
-            this.feedback.FontSize = 12;
+            //this.feedback.FontSize = 12;
             //this.trans.FontSize = 12;
         }
 
         private void tamMediana(object sender, RoutedEventArgs e)
         {
             this.codigo.FontSize = 20;
-            this.feedback.FontSize = 20;
+            //this.feedback.FontSize = 20;
             //this.trans.FontSize = 20;
         }
 
         private void tamGrande(object sender, RoutedEventArgs e)
         {
             this.codigo.FontSize = 30;
-            this.feedback.FontSize = 30;
+            //this.feedback.FontSize = 30;
             //this.trans.FontSize = 30;
         }
 
@@ -647,6 +664,16 @@ namespace IDE
             //this.worker.CancelAsync();
             this.isProcessRuning = false;
             Debug.WriteLine("boton...");
+        }
+
+        private void feedbackTabHash_Click(object sender, RoutedEventArgs e)
+        {
+            this.errorsFrame.Navigate(new TabHashView());
+        }
+
+        private void feedbackErr_Click(object sender, RoutedEventArgs e)
+        {
+            this.errorsFrame.Navigate(new ErrorsView());
         }
     }
 }
