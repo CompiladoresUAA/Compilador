@@ -4,6 +4,7 @@ from globall import TokenType,diccionario
 from globall import TreeNode
 from globall import StmtKind,ExpKind,DecKind,NodeKind
 from globall import MAXCHILDREN
+import math 
 location = 0
 TracerAnalizer = True
 ErrorSem = open(os.path.join(os.getcwd(),'Archivo_ErrorSem.txt'),'w')
@@ -183,6 +184,8 @@ def postEval(t:TreeNode):
             rchild:TreeNode = t.getChild(1)
             try:
                 t.valueCalc = lchild.valueCalc / rchild.valueCalc
+                if(t.getType() == DecKind.INTK.value):
+                    t.valueCalc = math.floor(t.valueCalc)
             except:
                 t.valueCalc = None
         elif(t.getAttr()==TokenType.RES.value):
