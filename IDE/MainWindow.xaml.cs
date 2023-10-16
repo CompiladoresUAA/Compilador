@@ -570,11 +570,17 @@ namespace IDE
             }
         }
 
-        private void eventoSemantico(object sender, RoutedEventArgs e)
+        private async void eventoSemantico(object sender, RoutedEventArgs e)
         {
             this.options = LNG.SEMANTICO;
-            this.myFrame.Navigate(new SemanticView());
 
+            await Task.Run(() =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    this.myFrame.Navigate(new SemanticView());
+                });
+            });
             //this.trans.Text = "Semantico";
         }
 
@@ -663,6 +669,11 @@ namespace IDE
         private void feedbackTabHash_Click(object sender, RoutedEventArgs e)
         {
             this.errorsFrame.Navigate(new TabHashView());
+        }
+
+        private void feedbackErr_Click(object sender, RoutedEventArgs e)
+        {
+            this.errorsFrame.Navigate(new ErrorsView());
         }
     }
 }

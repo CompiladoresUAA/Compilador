@@ -105,14 +105,14 @@ def checkNode(t:TreeNode):
         h1:TreeNode = t.getChild(1)    
         if t.getKind() == StmtKind.IFK.value:
             if h0.getType() == DecKind.INTK.value or h0.getType() == DecKind.REALK.value:
-                ErrorSem.write(f"If test is not Boolean\n")
+                ErrorSem.write(f"If test is not Boolean at line:{t.lineno}\n")
         elif t.getKind() == StmtKind.ASSIGNS.value:
            
             bList:BucketList = findNode(t.getAttr())
             if bList != None:
                 if bList.getTipo() == DecKind.INTK.value:
                     if h0.getType() != DecKind.INTK.value:
-                        ErrorSem.write(f"Assign of non-int to int {t.getAttr()} line {t.lineno}\n")
+                        ErrorSem.write(f"Assign of non-int to int {t.getAttr()} at line {t.lineno}\n")
                     else:
                         bList.setValor(h0.valueCalc)
                         t.type = bList.tipo
@@ -135,13 +135,13 @@ def checkNode(t:TreeNode):
                     h0.setType(-1)
             
             if h0.getType() != DecKind.INTK.value and h0.getType() != DecKind.REALK.value:
-                ErrorSem.write(f"Write of non-int or non-real value\n")
+                ErrorSem.write(f"Write of non-int or non-real value at line {t.lineno}\n")
         elif t.getKind() == StmtKind.UNTILK.value:
             if h1.getType() == DecKind.INTK.value or h1.getType() == DecKind.REALK.value:
-                ErrorSem.write(f"Until Test is not Boolean\n")
+                ErrorSem.write(f"Until Test is not Boolean at line {t.lineno}\n")
         elif t.getKind() == StmtKind.WHILEK.value:
             if h0.getType() == DecKind.INTK.value or h0.getType() == DecKind.REALK.value:
-                ErrorSem.write(f"While Test is not Boolean\n")
+                ErrorSem.write(f"While Test is not Boolean at line {t.lineno}\n")
 def typeCheck(syntaxTree:TreeNode):
     traverse(syntaxTree,nullProc,checkNode)
 
