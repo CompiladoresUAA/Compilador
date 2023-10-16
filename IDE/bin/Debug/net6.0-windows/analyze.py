@@ -54,7 +54,7 @@ def insertNode(t:TreeNode):
                 st_insert(t.getAttr(),t.getType(),"",t.lineno,0)
                 
             else:
-                ErrorSem.write(f"Undeclared variable {t.getAttr()}\n")
+                ErrorSem.write(f"Undeclared variable {t.getAttr()} at line: {t.lineno}\n")
     elif (t.getNodeKind().value == NodeKind.EXPK.value):
         if(t.getKind() == ExpKind.IDK.value and t.getType() == -1):
             if(st_lookup(t.getAttr()) != -1):

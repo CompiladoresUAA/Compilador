@@ -117,7 +117,7 @@ def statement()->TreeNode|None:
         t = dec_var()
     else:
         sintaxError(f'Unexpected Token -> {tokenString}')
-        recoverySintax() 
+       
     return t
 
 def main_stmt()->TreeNode:
@@ -149,7 +149,7 @@ def assign_stmt()->TreeNode:
             t.setChild(assign_post(variable),0)
             match(token)
         else:
-            sintaxError("Unexpected Token... ")
+            sintaxError(f"Unexpected Token {tokenString} ... ")
     match(TokenType.SEMMICOL.value)
     return t
 
@@ -305,7 +305,7 @@ def factor()->TreeNode:
          match(TokenType.RPAREN.value)
     else:
         sintaxError('Unexpected token -> '+tokenString)
-        recoverySintax()
+        
     return t        
 def parse()->TreeNode:
     global token
@@ -358,7 +358,8 @@ def recoverySintax():
               token == TokenType.BOOLEAN.value or
               token == TokenType.REPEAT.value or
               token == TokenType.RBPAREN.value or
-              token == TokenType.SEMMICOL.value)):
+              token == TokenType.SEMMICOL.value) or
+              token == TokenType.THEN.value):
         token = getTokenSintax()
     if( token == TokenType.SEMMICOL.value ):
         token = getTokenSintax()

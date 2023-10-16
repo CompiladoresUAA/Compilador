@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IDE.ErrorViews.DecoratorPattern;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,7 +27,14 @@ namespace IDE.ErrorViews
         {
             _errors = "";
             InitializeComponent();
-            fillTextBox();
+            //fillTextBox();
+            ErrorsComponent erros = new ErrorsComponent();
+
+            LexErrorDec lexDec = new LexErrorDec(erros);
+            SintaxErrorDec sintaxDec = new SintaxErrorDec(lexDec);
+           
+            SemErrorDec semDec = new SemErrorDec(sintaxDec);
+            textBox.Text = semDec.GetErrors();
         }
         public string readSintaxFile()
         {
@@ -38,7 +46,7 @@ namespace IDE.ErrorViews
         }
         public void fillTextBox()
         {
-            _errors += readLexFile() + readSintaxFile();
+            _errors += readLexFile() + readSintaxFile() +"\n";
             textBox.Text = _errors;
         }
     }
