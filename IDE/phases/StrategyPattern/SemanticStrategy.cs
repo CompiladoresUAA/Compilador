@@ -44,7 +44,7 @@ namespace IDE.phases.StrategyPattern
                                 value = $"WRITE {node.valor}";
                                 break;
                             case (int)Global.stmtKind.ASSIGNS:
-                                value = "ASSIGN TO: " + node.valor + $" type: {Global.decKindDic[node.type]} "+$" value: {node.valCalc}";
+                                value = "ASSIGN TO: " + node.valor + $" type: {Global.decKindDic[node.type]} "+$" value: {(node.valCalc != null ? (node.type == 2 ? String.Format("{0,10:f1}", (float)node.valCalc) : node.valCalc) : "")}";
                                 break;
                             case (int)Global.stmtKind.MAINK:
                                 value = "MAIN";
@@ -70,7 +70,7 @@ namespace IDE.phases.StrategyPattern
                         switch (node.kind)
                         {
                             case (int)Global.expKind.OPK:
-                                value = Global.tokens[int.Parse(node.valor)] + $" type: {Global.decKindDic[node.type]} value: {node.valCalc}";
+                                value = Global.tokens[int.Parse(node.valor)] + $" type: {Global.decKindDic[node.type]} value: {(node.valCalc != null ? (node.type == 2 ? String.Format("{0,10:f1}", (float)node.valCalc) : node.valCalc) : "")}";
                                 break;
                             case (int)Global.expKind.CONSTIK:
                                 value = node.valor;
@@ -79,7 +79,7 @@ namespace IDE.phases.StrategyPattern
                                 value = node.valor;
                                 break;
                             case (int)Global.expKind.IDK:
-                                value = node.valor + $" type: {Global.decKindDic[node.type]} value: {node.valCalc}";
+                                value = node.valor + $" type: {Global.decKindDic[node.type]} value: {(node.valCalc != null ? (node.type == 2 ? String.Format("{0,10:f1}", (float)node.valCalc) : node.valCalc) : "")}";
                                 break;
                         }
                         break;
