@@ -41,7 +41,7 @@ def insertNode(t:TreeNode):
             child:TreeNode = t.getChild(1)
             while child != None:
                 if findNode(child.getAttr()) != None:
-                    ErrorSem.write(f"Variable {child.getAttr()} was already declared as {findNode(child.getAttr()).getTipo()}\n")
+                    ErrorSem.write(f"Variable {child.getAttr()} was already declared as {DecKind(findNode(child.getAttr()).getTipo()).name}\n")
                     child = child.getSibling()
                     continue
                 st_insert(child.getAttr(),t.getChild(0).getType(),"",t.lineno,location)

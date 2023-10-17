@@ -204,6 +204,9 @@ def it_stmt()->TreeNode:
     t = newStmtNode(StmtKind.WHILEK.value)
     match(TokenType.WHILE.value)
     t.setChild(exp(),0)
+    if token == TokenType.SEMMICOL.value:
+        match(TokenType.SEMMICOL.value)
+        return t
     match(TokenType.LBPAREN.value)
     t.setChild(list_dec(),1)
     match(TokenType.RBPAREN.value)
