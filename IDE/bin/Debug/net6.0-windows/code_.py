@@ -15,12 +15,15 @@ code = None
 TraceCode = True
 emitLoc = 0
 highEmitLoc = 0
-
 def emitComment(c):
+        
+    global emitLoc,highEmitLoc,TraceCode,code
     if TraceCode:
         code.write("* %s\n" % c)
 
 def emitRO(op, r, s, t, c):
+        
+    global emitLoc,highEmitLoc,TraceCode,code
     code.write("%3d:  %5s  %d,%d,%d " % (emitLoc, op, r, s, t))
     emitLoc += 1
     if TraceCode:
@@ -30,6 +33,8 @@ def emitRO(op, r, s, t, c):
         highEmitLoc = emitLoc
 
 def emitRM(op, r, d, s, c):
+        
+    global emitLoc,highEmitLoc,TraceCode,code
     code.write("%3d:  %5s  %d,%d(%d) " % (emitLoc, op, r, d, s))
     emitLoc += 1
     if TraceCode:
@@ -39,6 +44,8 @@ def emitRM(op, r, d, s, c):
         highEmitLoc = emitLoc
 
 def emitSkip(howMany):
+        
+    global emitLoc,highEmitLoc,TraceCode,code
     i = emitLoc
     emitLoc += howMany
     if highEmitLoc < emitLoc:
@@ -46,14 +53,20 @@ def emitSkip(howMany):
     return i
 
 def emitBackup(loc):
+        
+    global emitLoc,highEmitLoc,TraceCode,code
     if loc > highEmitLoc:
         emitComment("BUG in emitBackup")
     emitLoc = loc
 
 def emitRestore():
+        
+    global emitLoc,highEmitLoc,TraceCode,code
     emitLoc = highEmitLoc
 
 def emitRM_Abs(op, r, a, c):
+        
+    global emitLoc,highEmitLoc,TraceCode,code
     code.write("%3d:  %5s  %d,%d(%d) " % (emitLoc, op, r, a-(emitLoc+1), pc))
     emitLoc += 1
     if TraceCode:

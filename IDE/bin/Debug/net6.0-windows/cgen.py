@@ -4,6 +4,7 @@ from symtab import st_lookup
 tmpOffset = 0
 
 def genStmt(tree:TreeNode):
+    global ac,ac1,pc,mp,gp
     p1, p2, p3 = None, None, None
     savedLoc1, savedLoc2, currentLoc = 0, 0, 0
     loc = 0
@@ -33,7 +34,49 @@ def genStmt(tree:TreeNode):
         emitRestore()
         if TraceCode:
             emitComment("<- if")
-        if tree.kind == StmtKind.ASSIGNS.value:
+        elif tree.kind == StmtKind.UNTILK.value:
+            if TraceCode:
+                emitComment("-> do until")
+            p1 = tree.child[0]
+            p2 = tree.child[1]
+            savedLoc1 = emitSkip(0)
+            emitComment("repeat: jump after body comes back here")
+            cGen(p1)
+            cGen(p2)
+            emitRM_Abs("JEQ", ac, savedLoc1, "repeat: jmp back to body")
+            if TraceCode:
+                emitComment("<- do until")
+
+        elif tree.kind == StmtKind.WHILEK.value:
+            if TraceCode:
+                emitComment("-> while")
+            p1 = tree.child[0]
+            p2 = tree.child[1]
+            savedLoc1 = emitSkip(0)
+            emitComment("while: jump after body comes back here")
+            cGen(p1)
+            saveLoc2 = emitSkip(1)
+            cGen(p2)
+            emitRM_Abs("JEQ", ac, savedLoc1, "while: jmp back to exp")
+            currentLoc = emitSkip(0)
+            emitBackup(saveLoc2)
+            emitRM_Abs("JEQ", ac, currentLoc, "while: false")
+            emitRestore()
+
+
+            
+            if TraceCode:
+                emitComment("<- while")
+        elif tree.kind == StmtKind.CINK.value:
+            emitRO("IN",ac,0,0,"read integer value");
+            loc = st_lookup(tree.attr);
+            emitRM("ST",ac,loc,gp,"read: store value");
+        elif tree.kind == StmtKind.COUTK.value:
+            #generate code for expression to write */
+            cGen(tree.child[0]);
+            #now output it */
+            emitRO("OUT",ac,0,0,"write ac");    
+        elif tree.kind == StmtKind.ASSIGNS.value:
             if TraceCode:
                 emitComment("-> assign")
             
@@ -54,6 +97,7 @@ def genExp(tree:TreeNode):
 
 
 def codeGen(syntaxTree, codefile):
+    global mp,ac,pc
     s = "File: " + codefile
     openFile(codefile)
     emitComment("TINY Compilation to TM Code")
