@@ -4,10 +4,11 @@ from symtab import st_lookup
 tmpOffset = 0
 
 def genStmt(tree:TreeNode):
-    global ac,ac1,pc,mp,gp
+    global ac,ac1,pc,mp,gp,TraceCode
     p1, p2, p3 = None, None, None
     savedLoc1, savedLoc2, currentLoc = 0, 0, 0
     loc = 0
+    print(tree.kind)
     if tree.kind == StmtKind.IFK.value:
         if TraceCode:
             emitComment("-> if")
@@ -34,65 +35,66 @@ def genStmt(tree:TreeNode):
         emitRestore()
         if TraceCode:
             emitComment("<- if")
-        elif tree.kind == StmtKind.UNTILK.value:
-            if TraceCode:
-                emitComment("-> do until")
-            p1 = tree.child[0]
-            p2 = tree.child[1]
-            savedLoc1 = emitSkip(0)
-            emitComment("repeat: jump after body comes back here")
-            cGen(p1)
-            cGen(p2)
-            emitRM_Abs("JEQ", ac, savedLoc1, "repeat: jmp back to body")
-            if TraceCode:
-                emitComment("<- do until")
+    elif tree.kind == StmtKind.UNTILK.value:
+        if TraceCode:
+            emitComment("-> do until")
+        p1 = tree.child[0]
+        p2 = tree.child[1]
+        savedLoc1 = emitSkip(0)
+        emitComment("repeat: jump after body comes back here")
+        cGen(p1)
+        cGen(p2)
+        emitRM_Abs("JEQ", ac, savedLoc1, "repeat: jmp back to body")
+        if TraceCode:
+            emitComment("<- do until")
 
-        elif tree.kind == StmtKind.WHILEK.value:
-            if TraceCode:
-                emitComment("-> while")
-            p1 = tree.child[0]
-            p2 = tree.child[1]
-            savedLoc1 = emitSkip(0)
-            emitComment("while: jump after body comes back here")
-            cGen(p1)
-            saveLoc2 = emitSkip(1)
-            cGen(p2)
-            emitRM_Abs("JEQ", ac, savedLoc1, "while: jmp back to exp")
-            currentLoc = emitSkip(0)
-            emitBackup(saveLoc2)
-            emitRM_Abs("JEQ", ac, currentLoc, "while: false")
-            emitRestore()
+    elif tree.kind == StmtKind.WHILEK.value:
+        if TraceCode:
+            emitComment("-> while")
+        p1 = tree.child[0]
+        p2 = tree.child[1]
+        savedLoc1 = emitSkip(0)
+        emitComment("while: jump after body comes back here")
+        cGen(p1)
+        saveLoc2 = emitSkip(1)
+        cGen(p2)
+        emitRM_Abs("JEQ", ac, savedLoc1, "while: jmp back to exp")
+        currentLoc = emitSkip(0)
+        emitBackup(saveLoc2)
+        emitRM_Abs("JEQ", ac, currentLoc, "while: false")
+        emitRestore()
 
 
             
-            if TraceCode:
-                emitComment("<- while")
-        elif tree.kind == StmtKind.CINK.value:
-            emitRO("IN",ac,0,0,"read integer value");
-            loc = st_lookup(tree.attr);
-            emitRM("ST",ac,loc,gp,"read: store value");
-        elif tree.kind == StmtKind.COUTK.value:
-            #generate code for expression to write */
-            cGen(tree.child[0]);
-            #now output it */
-            emitRO("OUT",ac,0,0,"write ac");    
-        elif tree.kind == StmtKind.ASSIGNS.value:
-            if TraceCode:
-                emitComment("-> assign")
-            
-            cGen(tree.child[0])
-            
-            loc = st_lookup(tree.attr)
-            emitRM("ST", ac, loc, gp, "assign: store value")
-            
-            if TraceCode:
-                emitComment("<- assign")
-
+        if TraceCode:
+            emitComment("<- while")
+    elif tree.kind == StmtKind.CINK.value:
+        emitRO("IN",ac,0,0,"read integer value");
+        loc = st_lookup(tree.attr);
+        emitRM("ST",ac,loc,gp,"read: store value");
+    elif tree.kind == StmtKind.COUTK.value:
+        #generate code for expression to write */
+        cGen(tree.child[0]);
+        #now output it */
+        emitRO("OUT",ac,0,0,"write ac");    
+    elif tree.kind == StmtKind.ASSIGNS.value:
+        if TraceCode:
+            emitComment("-> assign")
+        
+        cGen(tree.child[0])
+        
+        loc = st_lookup(tree.attr)
+        emitRM("ST", ac, loc, gp, "assign: store value")
+        
+        if TraceCode:
+            emitComment("<- assign")
+    elif tree.kind == StmtKind.MAINK.value:
+        cGen(tree.child[0])
 
 
 
 def genExp(tree:TreeNode):
-    global tmpOffset
+    global tmpOffset,TraceCode,ac,ac1,pc,mp,gp
     loc = 0
     p1, p2 = None, None
     if tree.kind == ExpKind.CONSTFK.value:
@@ -203,8 +205,9 @@ def genExp(tree:TreeNode):
 
 
 
-def codeGen(syntaxTree, codefile):
+def codeGen(syntaxTree:TreeNode, codefile):
     global mp,ac,pc
+    
     s = "File: " + codefile
     openFile(codefile)
     emitComment("TINY Compilation to TM Code")
@@ -214,20 +217,20 @@ def codeGen(syntaxTree, codefile):
     emitRM("LD", mp, 0, ac, "load maxaddress from location 0")
     emitRM("ST", ac, 0, ac, "clear location 0")
     emitComment("End of standard prelude.")
-    
     cGen(syntaxTree)
-    
     emitComment("End of execution.")
     emitRO("HALT", 0, 0, 0, "")
-    closeFile(codefile)
+    closeFile()
 
 
 
-def cGen(tree):
+def cGen(tree:TreeNode):
     if tree is not None:
-        if tree.nodekind == NodeKind.STMTK.value:
+        if tree.nodekind.value == NodeKind.STMTK.value:
+            print("s")
             genStmt(tree)
-        elif tree.nodekind == NodeKind.EXPK.value:
+        elif tree.nodekind.value == NodeKind.EXPK.value:
+            print("n")
             genExp(tree)
         cGen(tree.sibling)
 

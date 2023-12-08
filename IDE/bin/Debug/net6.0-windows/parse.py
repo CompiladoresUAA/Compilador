@@ -10,6 +10,7 @@ from util import newExpNode,newStmtNode,printTree,printTreeSemantic,indentno
 from parseH import *
 from analyze import buildSymtab,checkNode,typeCheck,postEval,printSymtab
 from symtab import serialiceTabSym
+from cgen import codeGen
 #### Global Variables #####
 token = -1
 source = open('Archivo_Tokens2.txt','r')
@@ -385,3 +386,5 @@ with open('tabHash.json', 'w') as archivo:
     tabHash = serialiceTabSym()
     json.dump(tabHash, archivo)
 printSymtab()
+print('----')
+codeGen(r,"intermediateCode.tm")

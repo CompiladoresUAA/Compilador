@@ -74,8 +74,9 @@ def emitRM_Abs(op, r, a, c):
     code.write("\n")
     if highEmitLoc < emitLoc:
         highEmitLoc = emitLoc
-def closeFile(file):
-    file.close()
+def closeFile():
+    global code
+    code.close()
 def openFile(fileName):
     global code
     code = open(fileName,"w")
