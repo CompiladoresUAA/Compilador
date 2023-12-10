@@ -140,16 +140,16 @@ def genExp(tree:TreeNode):
             emitRO("ADD",ac,ac1,ac,"op +")
         
         elif tree.attr == TokenType.MINUS.value:
-            emitRO("SUB",ac,ac1,ac1,"op -")
+            emitRO("SUB",ac,ac1,ac,"op -")
         
         elif tree.attr == TokenType.TIMES.value:
-            emitRO("MUL",ac,ac1,ac1,"op *")
+            emitRO("MUL",ac,ac1,ac,"op *")
         
         elif tree.attr == TokenType.OVER.value:
-            emitRO("DIV",ac,ac1,ac1,"op /")
+            emitRO("DIV",ac,ac1,ac,"op /")
         
         elif tree.attr == TokenType.RES.value:
-            emitRO("RES",ac,ac1,ac1,"op %")
+            emitRO("RES",ac,ac1,ac,"op %")
 
         elif tree.attr == TokenType.LESST.value:
             emitRO("SUB",ac,ac1,ac,"op <")
