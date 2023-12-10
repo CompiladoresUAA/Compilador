@@ -8,7 +8,6 @@ def genStmt(tree:TreeNode):
     p1, p2, p3 = None, None, None
     savedLoc1, savedLoc2, currentLoc = 0, 0, 0
     loc = 0
-    print(tree.kind)
     if tree.kind == StmtKind.IFK.value:
         if TraceCode:
             emitComment("-> if")
@@ -58,7 +57,7 @@ def genStmt(tree:TreeNode):
         cGen(p1)
         saveLoc2 = emitSkip(1)
         cGen(p2)
-        emitRM_Abs("JEQ", ac, savedLoc1, "while: jmp back to exp")
+        emitRM_Abs("JNE", ac, savedLoc1, "while: jmp back to exp")
         currentLoc = emitSkip(0)
         emitBackup(saveLoc2)
         emitRM_Abs("JEQ", ac, currentLoc, "while: false")
@@ -100,7 +99,6 @@ def genExp(tree:TreeNode):
     if tree.kind == ExpKind.CONSTFK.value:
         if TraceCode: 
             emitComment("-> Const")
-
         emitRM("LDF",ac,tree.attr,0,"load const") # LDF es una carga de una constante REAL (Float)
         if TraceCode: 
             emitComment("<- Const")
@@ -227,10 +225,8 @@ def codeGen(syntaxTree:TreeNode, codefile):
 def cGen(tree:TreeNode):
     if tree is not None:
         if tree.nodekind.value == NodeKind.STMTK.value:
-            print("s")
             genStmt(tree)
         elif tree.nodekind.value == NodeKind.EXPK.value:
-            print("n")
             genExp(tree)
         cGen(tree.sibling)
 

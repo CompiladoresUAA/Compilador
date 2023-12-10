@@ -386,5 +386,5 @@ with open('tabHash.json', 'w') as archivo:
     tabHash = serialiceTabSym()
     json.dump(tabHash, archivo)
 printSymtab()
-print('----')
+
 codeGen(r,"intermediateCode.tm")

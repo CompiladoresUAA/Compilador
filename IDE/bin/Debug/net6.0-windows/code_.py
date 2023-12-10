@@ -24,7 +24,7 @@ def emitComment(c):
 def emitRO(op, r, s, t, c):
         
     global emitLoc,highEmitLoc,TraceCode,code
-    code.write("%3d:  %5s  %d,%d,%d " % (emitLoc, op, r, s, t))
+    code.write("%3d:  %5s  %s,%s,%s " % (emitLoc, op, r, s, t))
     emitLoc += 1
     if TraceCode:
         code.write("\t%s" % c)
@@ -35,7 +35,7 @@ def emitRO(op, r, s, t, c):
 def emitRM(op, r, d, s, c):
         
     global emitLoc,highEmitLoc,TraceCode,code
-    code.write("%3d:  %5s  %d,%d(%d) " % (emitLoc, op, r, d, s))
+    code.write("%3d:  %5s  %s,%s(%s) " % (emitLoc, op, r, d, s))
     emitLoc += 1
     if TraceCode:
         code.write("\t%s" % c)
