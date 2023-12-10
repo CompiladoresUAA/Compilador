@@ -42,7 +42,7 @@ def insertNode(t:TreeNode):
             child:TreeNode = t.getChild(1)
             while child != None:
                 if findNode(child.getAttr()) != None:
-                    ErrorSem.write(f"Variable {child.getAttr()} was already declared as {findNode(child.getAttr()).getTipo()}\n")
+                    ErrorSem.write(f"Variable {child.getAttr()} was already declared as {DecKind(findNode(child.getAttr()).getTipo()).name}\n")
                     child = child.getSibling()
                     continue
                 st_insert(child.getAttr(),t.getChild(0).getType(),"",t.lineno,location)
@@ -163,6 +163,8 @@ def postEval(t:TreeNode):
             
             try:
                 t.valueCalc = lchild.valueCalc + rchild.valueCalc
+                if lchild.getType() == DecKind.REALK.value or lchild.getType() == DecKind.REALK.value:
+                    t.valueCalc = float(t.valueCalc)
             except:
                 t.valueCalc = None
         elif(t.getAttr()==TokenType.MINUS.value):
@@ -170,6 +172,8 @@ def postEval(t:TreeNode):
             rchild:TreeNode = t.getChild(1)
             try:
                 t.valueCalc = lchild.valueCalc - rchild.valueCalc
+                if lchild.getType() == DecKind.REALK.value or lchild.getType() == DecKind.REALK.value:
+                    t.valueCalc = float(t.valueCalc)
             except:
                 t.valueCalc = None
         elif(t.getAttr()==TokenType.TIMES.value):
@@ -177,6 +181,8 @@ def postEval(t:TreeNode):
             rchild:TreeNode = t.getChild(1)
             try:
                 t.valueCalc = lchild.valueCalc * rchild.valueCalc
+                if lchild.getType() == DecKind.REALK.value or lchild.getType() == DecKind.REALK.value:
+                    t.valueCalc = float(t.valueCalc)
             except:
                 t.valueCalc = None
         elif(t.getAttr()==TokenType.OVER.value):
@@ -186,6 +192,8 @@ def postEval(t:TreeNode):
                 t.valueCalc = lchild.valueCalc / rchild.valueCalc
                 if(t.getType() == DecKind.INTK.value):
                     t.valueCalc = math.floor(t.valueCalc)
+                elif t.getType() == DecKind.REALK.value:
+                    t.valueCalc = float(t.valueCalc)
             except:
                 t.valueCalc = None
         elif(t.getAttr()==TokenType.RES.value):
@@ -193,5 +201,6 @@ def postEval(t:TreeNode):
             rchild:TreeNode = t.getChild(1)
             try:
                 t.valueCalc = lchild.valueCalc % rchild.valueCalc
+                
             except:
                 t.valueCalc = None

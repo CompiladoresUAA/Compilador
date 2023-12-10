@@ -10,6 +10,7 @@ from util import newExpNode,newStmtNode,printTree,printTreeSemantic,indentno
 from parseH import *
 from analyze import buildSymtab,checkNode,typeCheck,postEval,printSymtab
 from symtab import serialiceTabSym
+from cgen import codeGen
 #### Global Variables #####
 token = -1
 source = open('Archivo_Tokens2.txt','r')
@@ -204,6 +205,9 @@ def it_stmt()->TreeNode:
     t = newStmtNode(StmtKind.WHILEK.value)
     match(TokenType.WHILE.value)
     t.setChild(exp(),0)
+    if token == TokenType.SEMMICOL.value:
+        match(TokenType.SEMMICOL.value)
+        return t
     match(TokenType.LBPAREN.value)
     t.setChild(list_dec(),1)
     match(TokenType.RBPAREN.value)
@@ -382,3 +386,5 @@ with open('tabHash.json', 'w') as archivo:
     tabHash = serialiceTabSym()
     json.dump(tabHash, archivo)
 printSymtab()
+
+codeGen(r,"intermediateCode.tm")

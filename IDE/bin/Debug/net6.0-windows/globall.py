@@ -37,7 +37,8 @@ diccionario = {
      22: ',',
      23: ';',
      24: '{',
-     25: '}'
+     25: '}',
+     34:'until'
 }
 class TokenType(Enum):
     ENDFILE = 1
