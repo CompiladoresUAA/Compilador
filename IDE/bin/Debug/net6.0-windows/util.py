@@ -96,8 +96,11 @@ def printToken(token,tokenString):
         print( "EOF" )
         #write( "EOF\t EOF","\t  {}\t  {}".format(globall.lineno,globall.colpos))
     elif ( tp.ERROR == token ):
-        print( "  {}\t  {}\t  {}".format(tokenString,globall.lineno,globall.colpos) )
+        print( "Err  {}\t  {}\t  {}".format(tokenString,globall.lineno,globall.colpos) )
         writeErrores("Lexical Error:  {}  \t at line: {}\t and column: {}".format(tokenString,globall.lineno,globall.colpos))
+    elif (tp.STRING == token):
+        print( "STRING\t {0}".format(tokenString)+"\t  {}\t  {}".format(globall.lineno,globall.colpos) )
+        write( "STRING\t{0}".format(tokenString),"\t{}\t{}".format(globall.lineno,globall.colpos))
 
     else:
         print("UNKNOWN TOKEN\t{}".format(tokenString))
@@ -184,6 +187,8 @@ def printTree( tree:TreeNode ):
                 print(f"Const Float: {tree.getAttr()}")
             elif tree.getKind() == ExpKind.IDK.value:
                 print(f"Id: {tree.getAttr()} ")
+            elif tree.getKind() == ExpKind.STRINGK.value:
+                print(f"String: {tree.getAttr()} ")
             else:
                 print(f"Unknown ExpNode kind....")
         else:
@@ -231,6 +236,8 @@ def printTreeSemantic( tree:TreeNode ):
                 print(f"Const Float: {tree.getAttr()} {tree.valueCalc}")
             elif tree.getKind() == ExpKind.IDK.value:
                 print(f"Id: {tree.getAttr()} ")
+            elif tree.getKind() == ExpKind.STRINGK.value:
+                print(f"String: {tree.getAttr()} ")
             else:
                 print(f"Unknown ExpNode kind....")
         else:

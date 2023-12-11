@@ -73,9 +73,12 @@ def genStmt(tree:TreeNode):
         emitRM("ST",ac,loc,gp,"read: store value");
     elif tree.kind == StmtKind.COUTK.value:
         #generate code for expression to write */
-        cGen(tree.child[0]);
-        #now output it */
-        emitRO("OUT",ac,0,0,"write ac");    
+        if(tree.child[0].nodekind.value == NodeKind.EXPK.value and tree.child[0].kind == ExpKind.STRINGK.value):
+            emitRO("OUTS",tree.child[0].attr,0,0,"write str")    
+        else:
+            cGen(tree.child[0])
+            #now output it */
+            emitRO("OUT",ac,0,0,"write ac")  
     elif tree.kind == StmtKind.ASSIGNS.value:
         if TraceCode:
             emitComment("-> assign")
@@ -139,7 +142,7 @@ def genExp(tree:TreeNode):
         if ( tree.attr == TokenType.PLUS.value):
             emitRO("ADD",ac,ac1,ac,"op +")
         
-        
+
         elif tree.attr == TokenType.MINUS.value:
             emitRO("SUB",ac,ac1,ac,"op -")
         

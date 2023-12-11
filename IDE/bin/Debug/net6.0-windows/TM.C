@@ -24,7 +24,7 @@
 #define   PC_REG  7
 
 #define   LINESIZE  121
-#define   WORDSIZE  20
+#define   WORDSIZE  90
 
 /******* type  *******/
 union TypeData {
@@ -46,6 +46,7 @@ typedef enum {
    opHALT,    /* RR     halt, operands are ignored */
    opIN,      /* RR     read into reg(r); s and t are ignored */
    opOUT,     /* RR     write from reg(r), s and t are ignored */
+   opOUTSTR,  /* RR     write from reg(r), s and t are ignored */
    opADD,    /* RR     reg(r) = reg(s)+reg(t) */
    opSUB,    /* RR     reg(r) = reg(s)-reg(t) */
    opMUL,    /* RR     reg(r) = reg(s)*reg(t) */
@@ -98,7 +99,7 @@ Number dMem [DADDR_SIZE];
 Number reg [NO_REGS];
 
 char * opCodeTab[]
-        = {"HALT","IN","OUT","ADD","SUB","MUL","DIV","RES","????",
+        = {"HALT","IN","OUT","OUTS","ADD","SUB","MUL","DIV","RES","????",
             /* RR opcodes */
            "LD","ST","????", /* RM opcodes */
            "LDA","LDC","LDF","JLT","JLE","JGT","JGE","JEQ","JNE","????"
@@ -122,7 +123,8 @@ float regBox = 0;
 char word[WORDSIZE] ;
 char ch  ;
 int done  ;
-
+char strings[256][256];
+int stringcount = 0;
 /********************************************/
 int opClass( int c )
 { if      ( c <= opRRLim) return ( opclRR );
@@ -227,7 +229,24 @@ int getWord (void)
   }
   return temp;
 } /* getWord */
-
+int getStr(void) {
+    int temp = FALSE;
+    int length = 0;
+    int contquotes = 0;
+    getCh();
+    getCh();
+        while (isalnum(ch) || ch=='\"' || ch==' ' || ch == ':' || ch == '\\' && contquotes<2)
+        {
+            if (ch == '\"') contquotes++;
+           
+            if (length < WORDSIZE - 1 && ch != '\"') word[length++] = ch;
+            getCh();
+        }
+        word[length] = '\0';
+        temp = (length != 0);
+    
+    return temp;
+}
 /********************************************/
 int skipCh ( char c  )
 { int temp = FALSE;
@@ -277,7 +296,9 @@ int readInstructions (void)
   }
   lineNo = 0 ;
   while (! feof(pgm))
-  { fgets( in_Line, LINESIZE-2, pgm  ) ;
+  {
+     
+    fgets( in_Line, LINESIZE-2, pgm  ) ;
     inCol = 0 ; 
     lineNo++;
     lineLen = strlen(in_Line)-1 ;
@@ -293,6 +314,7 @@ int readInstructions (void)
         return error("Missing colon", lineNo,loc);
       if (! getWord ())
         return error("Missing opcode", lineNo,loc);
+     
       op = opHALT ;
       while ((op < opRALim)
           && (strncmp(opCodeTab[op], word, 4) != 0)) {
@@ -300,7 +322,16 @@ int readInstructions (void)
           temp = temp + 1;
           op = (OPCODE)temp;
       }
+      if (op == opOUTSTR) {
+          iMem[loc].iop = op;
+          iMem[loc].iarg1 = stringcount;
+          iMem[loc].iarg2 = 0;
+          iMem[loc].iarg3 = 0;
+          getStr();
+          strcpy(strings[stringcount++],word);
           
+          continue;
+      }
       if (strncmp(opCodeTab[op], word, 4) != 0)
           return error("Illegal opcode", lineNo,loc);
       switch ( opClass(op) )
@@ -382,8 +413,8 @@ STEPRESULT stepTM (void)
       r = currentinstruction.iarg1 ;
       s = currentinstruction.iarg3 ;
       m = currentinstruction.iarg2 + reg[s].num.valuei ;
-      if ( (m < 0) || (m > DADDR_SIZE))
-         return srDMEM_ERR ;
+      if ((m < 0) || (m > DADDR_SIZE)) 
+          return srDMEM_ERR;
       break;
 
     case opclRA :
@@ -405,7 +436,7 @@ STEPRESULT stepTM (void)
     case opIN :
     /***********************************/
       do
-      { printf("Enter value for IN instruction: ") ;
+      { //printf("Enter value for IN instruction: ") ;
         fflush (stdin);
         fflush (stdout);
         gets(in_Line);
@@ -431,10 +462,14 @@ STEPRESULT stepTM (void)
 
     case opOUT :
         if (reg[r].type == 'i')
-            printf("OUT instruction prints: %d\n", reg[r].num.valuei);
+            printf("%d\n", reg[r].num.valuei);
         else
-            printf ("OUT instruction prints: %.4f\n", reg[r].num.valuef ) ;
+            printf ("%.4f\n", reg[r].num.valuef ) ;
       break;
+    case opOUTSTR:
+        
+        printf("%s\n", strings[r]);
+        break;
     case opADD: if (reg[r].type == 'i' && reg[t].type == 'i') { 
                    
                     reg[r].num.valuei = reg[s].num.valuei + reg[t].num.valuei;
@@ -715,7 +750,7 @@ int doCommand (void)
         stepcnt-- ;
       }
     }
-    printf( "%s\n",stepResultTab[stepResult] );
+    printf( "--%s\n",stepResultTab[stepResult] );
   }
   return TRUE;
 } /* doCommand */

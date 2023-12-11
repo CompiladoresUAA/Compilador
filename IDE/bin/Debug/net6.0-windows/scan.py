@@ -59,6 +59,7 @@ class States(Enum):
     EMENORIGUAL = 17
     EDIFERENTE = 18
     HECHO = 19
+    ESTRING = 20
     
 def getNextChar():
     
@@ -166,6 +167,8 @@ def getToken()->tp:
             elif c == "=":
                 currentToken = tp.EQ
                 state = States.HECHO
+            elif c == "\"":
+                state = States.ESTRING
             else:
                 
                 currentToken = tp.ERROR
@@ -290,6 +293,19 @@ def getToken()->tp:
                 state = States.HECHO
             else:
                 state = States.EPCOMMMULTI  
+        elif state == States.ESTRING:
+            if c.isdigit() or c == "_" or c == ":" or c == " "  or c == "\\" or c.isalnum() and c != "EOF" : 
+                TokenString.append(c)
+            else:
+                if(c == "\""):
+                    TokenString.append(c)
+                    currentToken = tp.STRING 
+                    state = States.HECHO 
+                    consume = True
+                else:
+                    currentToken = tp.ERROR
+                    state = States.HECHO
+                    consume = True
     printToken(currentToken,"".join(TokenString))
     TokenString.clear()
     return currentToken

@@ -302,6 +302,10 @@ def factor()->TreeNode:
         t = newExpNode(ExpKind.IDK.value)
         t.setAttr(str(tokenString))
         match(TokenType.ID.value)
+    elif(token == TokenType.STRING.value):
+        t = newExpNode(ExpKind.STRINGK.value)
+        t.setAttr(str(tokenString))
+        match(TokenType.STRING.value)
     elif ( token == TokenType.LPAREN.value ):
         
          match(TokenType.LPAREN.value)

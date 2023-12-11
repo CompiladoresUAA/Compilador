@@ -38,7 +38,8 @@ diccionario = {
      23: ';',
      24: '{',
      25: '}',
-     34:'until'
+     34:'until',
+     41:'string'
 }
 class TokenType(Enum):
     ENDFILE = 1
@@ -86,6 +87,7 @@ class TokenType(Enum):
     BOOLEAN = 39
 
     REMAINDER = 40#%
+    STRING = 41
 lineno = 0
 colpos = 0
 
@@ -117,6 +119,7 @@ class ExpKind(Enum):
     CONSTIK = 2
     CONSTFK = 3
     IDK = 4
+    STRINGK = 5
 
 class DecKind(Enum):
     INTK = 1
