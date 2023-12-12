@@ -597,8 +597,19 @@ namespace IDE
 
         private void eventoInter(object sender, RoutedEventArgs e)
         {
+            if (!this.iscomp)
+            {
+                MessageBox.Show("Compila primero.", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             this.options = LNG.CDGOINTERMEDIO;
             //this.trans.Text = "Código intermedio";
+
+            this.myFrame.Navigate(new System.Uri("./phases/IntermediateCodeView.xaml", UriKind.RelativeOrAbsolute));
+            
+
+
         }
 
         private void lightTheme(object sender, RoutedEventArgs e)
