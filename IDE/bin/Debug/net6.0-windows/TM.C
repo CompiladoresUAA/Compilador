@@ -470,35 +470,42 @@ STEPRESULT stepTM (void)
         
         printf("%s\n", strings[r]);
         break;
-    case opADD: if (reg[r].type == 'i' && reg[t].type == 'i') { 
-                   
+    case opADD: if (reg[s].type == 'i' && reg[t].type == 'i') { 
+                   //printf("2ints %d + %d = %d",res[r])
                     reg[r].num.valuei = reg[s].num.valuei + reg[t].num.valuei;
                     reg[r].type = 'i';
                    
                 }else {
-                    reg[r].num.valuef = reg[s].num.valuef + reg[t].num.valuef;
+                    if (reg[s].type == 'f' && reg[t].type == 'f')reg[r].num.valuef = reg[s].num.valuef + reg[t].num.valuef;
+                    else if (reg[s].type == 'i' && reg[t].type == 'f')reg[r].num.valuef = reg[s].num.valuei + reg[t].num.valuef;
+                    else reg[r].num.valuef = reg[s].num.valuef + reg[t].num.valuei;
+                 
                     reg[r].type = 'f';
                 }
               break;
     case opSUB :  //reg[r] = reg[s] - reg[t] ;  break;
-                if (reg[r].type == 'i' && reg[t].type == 'i') {
+                if (reg[s].type == 'i' && reg[t].type == 'i') {
                     reg[r].num.valuei = reg[s].num.valuei - reg[t].num.valuei;
                     reg[r].type = 'i';
 
                 }
                 else {
-                    reg[r].num.valuef = reg[s].num.valuef - reg[t].num.valuef;
+                    if (reg[s].type == 'f' && reg[t].type == 'f')reg[r].num.valuef = reg[s].num.valuef - reg[t].num.valuef;
+                    else if (reg[s].type == 'i' && reg[t].type == 'f')reg[r].num.valuef = reg[s].num.valuei - reg[t].num.valuef;
+                    else reg[r].num.valuef = reg[s].num.valuef - reg[t].num.valuei;
                     reg[r].type = 'f';
                 }
                 break;
     case opMUL:   //reg[r] = reg[s] * reg[t];  break;
-                if (reg[r].type == 'i' && reg[t].type == 'i') {
+                if (reg[s].type == 'i' && reg[t].type == 'i') {
                     reg[r].num.valuei = reg[s].num.valuei * reg[t].num.valuei;
                     reg[r].type = 'i';
 
                 }
                 else {
-                    reg[r].num.valuef = reg[s].num.valuef * reg[t].num.valuef;
+                    if (reg[s].type == 'f' && reg[t].type == 'f')reg[r].num.valuef = reg[s].num.valuef * reg[t].num.valuef;
+                    else if (reg[s].type == 'i' && reg[t].type == 'f')reg[r].num.valuef = reg[s].num.valuei * reg[t].num.valuef;
+                    else reg[r].num.valuef = reg[s].num.valuef * reg[t].num.valuei;
                     reg[r].type = 'f';
                 }
                 break;
@@ -750,7 +757,7 @@ int doCommand (void)
         stepcnt-- ;
       }
     }
-    //printf( "--%s\n",stepResultTab[stepResult] );
+    printf( "%s\n",stepResultTab[stepResult] );
   }
   return TRUE;
 } /* doCommand */

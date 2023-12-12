@@ -396,24 +396,27 @@ with open("Archivo_Errores.txt") as file:
     file.seek(0, os.SEEK_END) # go to end of file
     if file.tell(): # if current position is truish (i.e != 0)
         file.seek(0) # rewind the file for later use 
-    else:
-        print ("file is empty")
         filesEmpty = False
     
+    else:
+        print ("file is empty")
+        
 with open("Archivo_ErrorSem.txt") as file:
     file.seek(0, os.SEEK_END) # go to end of file
     if file.tell(): # if current position is truish (i.e != 0)
         file.seek(0) # rewind the file for later use 
+        filesEmpty = False
     else:
         print ("file is empty")
-        filesEmpty = False
+        
 
 with open("Errores_Sintaxis.txt") as file:
     file.seek(0, os.SEEK_END) # go to end of file
     if file.tell(): # if current position is truish (i.e != 0)
         file.seek(0) # rewind the file for later use 
+        filesEmpty = False
     else:
         print ("file is empty")
-        filesEmpty = False
+       
 if filesEmpty:
     codeGen(r,"intermediateCode.tm")
