@@ -429,7 +429,7 @@ STEPRESULT stepTM (void)
   { /* RR instructions */
     case opHALT :
     /***********************************/
-      printf("HALT: %1d,%1d,%1d\n",r,s,t);
+      //printf("HALT: %1d,%1d,%1d\n",r,s,t);
       return srHALT ;
       /* break; */
 
@@ -750,7 +750,7 @@ int doCommand (void)
         stepcnt-- ;
       }
     }
-    printf( "--%s\n",stepResultTab[stepResult] );
+    //printf( "--%s\n",stepResultTab[stepResult] );
   }
   return TRUE;
 } /* doCommand */
@@ -780,10 +780,10 @@ main( int argc, char * argv[] )
   /* switch input file to terminal */
   /* reset( input ); */
   /* read-eval-print */
-  printf("TM  simulation (enter h for help)...\n");
+  //printf("TM  simulation (enter h for help)...\n");
   //do
   done = ! doCommand ();
   //while (! done );
-  printf("Simulation done.\n");
+  printf("The program finished successfully.");
   return 0;
 }
