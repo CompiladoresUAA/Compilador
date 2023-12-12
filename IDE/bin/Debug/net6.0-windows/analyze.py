@@ -135,7 +135,7 @@ def checkNode(t:TreeNode):
                 else:
                     h0.setType(-1)
             
-            if h0.getType() != DecKind.INTK.value and h0.getType() != DecKind.REALK.value:
+            if h0.getType() != DecKind.INTK.value and h0.getType() != DecKind.REALK.value and h0.kind != ExpKind.STRINGK.value:
                 ErrorSem.write(f"Write of non-int or non-real value at line {t.lineno}\n")
         elif t.getKind() == StmtKind.UNTILK.value:
             if h1.getType() == DecKind.INTK.value or h1.getType() == DecKind.REALK.value:
