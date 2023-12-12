@@ -8,11 +8,11 @@
         Title="Jucs=" Height="450" Width="800"  Icon="/icon-512x512.png">
     <!--.FocusedElement="{Binding ElementName=mnulexico}"
     -->
-    
+
     <Grid>
-        
-        
-        
+
+
+
         <Grid.Resources>
 
             <!--<Style TargetType="{x:Type Thumb}"  x:Key="ScrollBarThumb">
@@ -69,14 +69,14 @@
                         <Setter Property="BorderBrush" Value="Black"/>
                         <Setter Property="BorderThickness" Value="2"/>
                     </Trigger>
-                  
+
                 </Style.Triggers>
             </Style>
 
-            
+
             <Style x:Key="avalonstyles" TargetType="avalonedit:TextEditor">
-                        <Setter Property="Background" Value="#2E2E2E"/>
-                        <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Background" Value="#2E2E2E"/>
+                <Setter Property="Foreground" Value="White"/>
             </Style>
 
 
@@ -84,65 +84,72 @@
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            
+
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="20*"/>
 
         </Grid.RowDefinitions>
-    <!--<StackPanel Height="Auto" Background="LightBlue" Grid.Row="0">-->
+        <!--<StackPanel Height="Auto" Background="LightBlue" Grid.Row="0">-->
         <Menu VerticalAlignment="Stretch" x:Name="upbar_menu" Grid.Row="0" BorderBrush="LightGray" BorderThickness="0 0 0 4">
             <Menu.Height>Auto</Menu.Height>
-                <MenuItem Header="_Archivo" >
-                    <MenuItem Header="_Abrir" Click="openFile"  >
-                        <MenuItem.Icon>
-                            <Image Source="/open-folder.png" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Header="Guardar" Click="saveCode">
-                        <MenuItem.Icon>
-                            <Image Source="/save.png" Width="20"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Header="Guardar como" Click="saveAs">
-                        <MenuItem.Icon>
-                            <Image Source="/saveas.png" Width="20" Height="20"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Header="Cerrar" Click="closeFile" >
-                        <MenuItem.Icon>
-                            <Image Source="/close.png" Width="20" Height="20"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-
+            <MenuItem Header="_Archivo" >
+                <MenuItem Header="_Abrir" Click="openFile"  >
+                    <MenuItem.Icon>
+                        <Image Source="/open-folder.png" />
+                    </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Editar">
-                    <MenuItem Header="Tamaño de fuente">
-                        <MenuItem Header="Pequeña" Click="tamPequenio"/>
-                        <MenuItem Header="Mediana" Click="tamMediana"/>
-                        <MenuItem Header="Grande" Click="tamGrande"/>
-                    </MenuItem>
+                <MenuItem Header="Guardar" Click="saveCode">
+                    <MenuItem.Icon>
+                        <Image Source="/save.png" Width="20"/>
+                    </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Formato">
-
-                    <MenuItem Header="_Claro" Click="lightTheme" >
-                        <MenuItem.Icon>
-                            <Image Source="/light-mode.png" />
-                        </MenuItem.Icon> 
-                    </MenuItem>
-                    <MenuItem Header="_Obscuro" Click="darkTheme" >
-                        <MenuItem.Icon>
-                            <Image  Source="/night-mode.png" />
-                        </MenuItem.Icon> 
-                    </MenuItem>
-
-
-
+                <MenuItem Header="Guardar como" Click="saveAs">
+                    <MenuItem.Icon>
+                        <Image Source="/saveas.png" Width="20" Height="20"/>
+                    </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="Cerrar" Click="closeFile" >
+                    <MenuItem.Icon>
+                        <Image Source="/close.png" Width="20" Height="20"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+            </MenuItem>
+            <MenuItem Header="Editar">
+                <MenuItem Header="Tamaño de fuente">
+                    <MenuItem Header="Pequeña" Click="tamPequenio"/>
+                    <MenuItem Header="Mediana" Click="tamMediana"/>
+                    <MenuItem Header="Grande" Click="tamGrande"/>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Formato">
+
+                <MenuItem Header="_Claro" Click="lightTheme" >
+                    <MenuItem.Icon>
+                        <Image Source="/light-mode.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Obscuro" Click="darkTheme" >
+                    <MenuItem.Icon>
+                        <Image  Source="/night-mode.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+
+
+            </MenuItem>
+            <MenuItem x:Name="Ejecutar" Header="Ejecutar" Click="MenuItem_Click">
+                <MenuItem.Icon>
+                    <Image Source="/run.png" />
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem Header="Compilar" Click="compilarFileSource">
-                
-                
+                <MenuItem.Icon>
+                    <Image Source="/comp.png" />
+                </MenuItem.Icon>
+
             </MenuItem>
             <MenuItem Header="Ayuda"/>
 
@@ -150,12 +157,15 @@
 
         </Menu>
 
-        
-    <!--</StackPanel>-->
+
+        <!--</StackPanel>-->
         <Grid Background="LightGray" Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.5*"/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="201*"/>
+                <ColumnDefinition Width="79*"/>
+                <ColumnDefinition Width="15*"/>
+                <ColumnDefinition Width="185*"/>
+                <ColumnDefinition Width="320*"/>
 
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -163,21 +173,21 @@
                 <RowDefinition/>
 
             </Grid.RowDefinitions>
-            <StackPanel x:Name="msgCompila" Visibility="Collapsed" Height="100" Width="200" VerticalAlignment="Center"  Panel.ZIndex="99">
+            <StackPanel x:Name="msgCompila" Visibility="Collapsed" Height="100" Width="200" VerticalAlignment="Center"  Panel.ZIndex="99" Grid.ColumnSpan="4" Margin="140,0,140,0">
                 <Label Background="LightGray">Compilando...</Label>
                 <ProgressBar Width="200" Height="20" Visibility="Visible" Name="progress"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 <Button Width="200" Click="cancelaCompila" >Cancelar</Button>
             </StackPanel>
-            <avalonedit:TextEditor HorizontalScrollBarVisibility="Auto" Style="{StaticResource avalonstyles}" Background="#2E2E2E" x:Name="codigo" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" Grid.Row="0" ShowLineNumbers="True" Margin="0,0,0,0" KeyUp="updatePosition" 
+            <avalonedit:TextEditor HorizontalScrollBarVisibility="Auto" Style="{StaticResource avalonstyles}" Background="#2E2E2E" x:Name="codigo" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" Grid.Row="0" ShowLineNumbers="True" Margin="0,0,0,137" KeyUp="updatePosition" Grid.ColumnSpan="4" Grid.RowSpan="2" 
                                    >
-           
+
             </avalonedit:TextEditor>
 
             <!--<DockPanel Grid.Row="1" Grid.ColumnSpan="2" Background="Gray"  Margin="2,0,2,2"  >-->
-            <DockPanel Grid.Row="2" Grid.ColumnSpan="3" Background="Gray"  Margin="2,2,2,2" >
+            <DockPanel Grid.Row="1" Grid.ColumnSpan="5" Background="Gray"  Margin="2,2,2,2" >
                 <Menu DockPanel.Dock="Top" Name="downbar_menu">
-                    <MenuItem x:Name="feedbackErr" Style="{StaticResource options}" Header="Errores" Click="feedbackErr_Click" />
-                    <MenuItem x:Name="feedbackRes" Style="{StaticResource options}" Header="Resultados" Click="feedbackRes_Click"/>
+                    <!--<MenuItem x:Name="feedbackErr" Style="{StaticResource options}" Header="Errores" Click="feedbackErr_Click" />-->
+                    <MenuItem x:Name="feedbackRes" Style="{StaticResource options}" Header="Resultados" Click="MenuItem_Click"/>
                     <MenuItem x:Name="feedbackTabHash" Style="{StaticResource options}" Header="Tabla Hash" Click="feedbackTabHash_Click"/>
                     <MenuItem  >
                         <MenuItem.Header>
@@ -203,9 +213,9 @@
                 <Frame NavigationUIVisibility="Hidden" Margin="5,5,5,5" x:Name="errorsFrame"  Background="#2e2e2e"></Frame>
             </DockPanel>
 
-            <DockPanel Grid.Row="0" Grid.Column="1" Background="Gray"  Margin="0"
+            <DockPanel Grid.Row="0" Grid.Column="4" Background="Gray"  Margin="0,0,0,0" Grid.RowSpan="1"
                             >
-                    
+
                 <Menu DockPanel.Dock="Top" Name="opt_menu">
                     <MenuItem Header="Lexico" Style="{StaticResource options}" Click="eventoLexico" Name="mnulexico" />
                     <MenuItem Header="Sintactico" Style="{StaticResource options}" Name="mnusintactico" Click="eventoSintactico"/>
@@ -213,7 +223,7 @@
                     <MenuItem Style="{StaticResource options}" Header="Semantico" Name="mnuSemantico" Click="eventoSemantico" />
                     <MenuItem Style="{StaticResource options}" Header="Codigo Intermedio" Name="mnuInter" Click="eventoInter" />
                 </Menu>
-                
+
                 <!--<TextBox DockPanel.Dock="Bottom" IsReadOnly="True" Margin="5,5,5,10" 
                          AcceptsReturn="True" VerticalScrollBarVisibility="Visible"
                          TextWrapping="Wrap" Name="trans">
@@ -223,8 +233,8 @@
                 <!--<avalonedit:TextEditor Style="{StaticResource avalonstyles}" DockPanel.Dock="Bottom"  IsReadOnly="True" x:Name="trans" FontFamily="Consolas" FontSize="20pt" Grid.Column="0" ShowLineNumbers="False" Margin="0"/>
                 -->
             </DockPanel>
-            
+
         </Grid>
     </Grid>
-    
+
 </Window>

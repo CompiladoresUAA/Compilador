@@ -346,9 +346,19 @@ namespace IDE
 
 
                 this.myFrame.Navigate(new System.Uri("./phases/LexicoView.xaml", UriKind.RelativeOrAbsolute));
-                ErrorsView eView = new ErrorsView();
-                this.errorsFrame.Navigate(eView);
-               
+
+                //go over if the error files have content ...
+
+                if (new FileInfo(@"./Archivo_Errores.txt").Length == 0 && new FileInfo(@"./Archivo_ErrorSem.txt").Length == 0 && new FileInfo(@"./Errores_Sintaxis.txt").Length == 0)
+                {
+                    ResultView eView = new ResultView();
+                    this.errorsFrame.Navigate(eView);
+                }
+                else
+                {
+                    ErrorsView eView = new ErrorsView();
+                    this.errorsFrame.Navigate(eView);
+                }
 
             }
         }
@@ -672,14 +682,29 @@ namespace IDE
             this.errorsFrame.Navigate(new TabHashView());
         }
 
-        private void feedbackErr_Click(object sender, RoutedEventArgs e)
-        {
-            this.errorsFrame.Navigate(new ErrorsView());
-        }
+        //private void feedbackErr_Click(object sender, RoutedEventArgs e)
+        //{
+        //    this.errorsFrame.Navigate(new ErrorsView());
+        //}
 
-        private void feedbackRes_Click(object sender, RoutedEventArgs e)
+        //private void feedbackRes_Click(object sender, RoutedEventArgs e)
+        //{
+        //    this.errorsFrame.Navigate(new ResultView());
+        //}
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            this.errorsFrame.Navigate(new ResultView());
+            if (new FileInfo(@"./Archivo_Errores.txt").Length == 0 && new FileInfo(@"./Archivo_ErrorSem.txt").Length == 0 && new FileInfo(@"./Errores_Sintaxis.txt").Length == 0)
+            {
+                ResultView eView = new ResultView();
+                this.errorsFrame.Navigate(eView);
+            }
+            else
+            {
+                ErrorsView eView = new ErrorsView();
+                this.errorsFrame.Navigate(eView);
+            }
+
         }
     }
 }
