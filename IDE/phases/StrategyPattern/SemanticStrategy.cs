@@ -79,7 +79,10 @@ namespace IDE.phases.StrategyPattern
                                 value = node.valor;
                                 break;
                             case (int)Global.expKind.IDK:
-                                value = node.valor + $" type: {Global.decKindDic[node.type]} value: {(node.valCalc != null ? (node.type == 2 ? String.Format("{0,10:f1}", (float)node.valCalc) : node.valCalc) : "")}";
+                                value = node.valor + $" type: {Global.decKindDic[node.type]} value: {(node.valCalc != null ? (node.type == 2 ? String.Format("{0,:f1}", (float)node.valCalc) : node.valCalc) : "")}";
+                                break;
+                            case (int)Global.expKind.STRINGK:
+                                value = node.valor + $" type: string value: {node.valor}";
                                 break;
                         }
                         break;

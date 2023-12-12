@@ -82,6 +82,9 @@ namespace IDE.phases.StrategyPattern
                             case (int)Global.expKind.IDK:
                                 value = node.valor;
                                 break;
+                            case (int)Global.expKind.STRINGK:
+                                value = node.valor;
+                                break;
                         }
                         break;
                     default:

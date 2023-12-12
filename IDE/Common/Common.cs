@@ -8,7 +8,7 @@ namespace IDE.Common
 
         public enum nodeKind { STMTK = 1, EXPK }
         public enum stmtKind { IFK = 1, WHILEK, DOK, UNTILK, CINK, COUTK, ASSIGNS, MAINK, DECK, TYPEDEF, ELSEK }
-        public enum expKind { OPK = 1, CONSTIK, CONSTFK, IDK }
+        public enum expKind { OPK = 1, CONSTIK, CONSTFK, IDK,STRINGK }
         public enum decKind { INTK = 1, REALK, VOIDK, BOOLEANK }
         public class TreeNode
         {
@@ -52,6 +52,7 @@ namespace IDE.Common
         {8, "*"},
         {9, "/"},
         {40, "%"},
+        {41, "string"},
         {11, "<"},
         {12, "<="},
         {13, ">"},

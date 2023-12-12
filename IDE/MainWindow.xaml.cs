@@ -27,6 +27,7 @@ using IDE.phases;
 using System.Xml.Linq;
 using IDE.ErrorViews;
 using System.Reflection;
+using IDE.ResultVieww;
 //using System.Windows.Forms;
 
 enum LNG{LEXICO,SINTACTICO,SEMANTICO,CDGOINTERMEDIO };
@@ -674,6 +675,11 @@ namespace IDE
         private void feedbackErr_Click(object sender, RoutedEventArgs e)
         {
             this.errorsFrame.Navigate(new ErrorsView());
+        }
+
+        private void feedbackRes_Click(object sender, RoutedEventArgs e)
+        {
+            this.errorsFrame.Navigate(new ResultView());
         }
     }
 }
