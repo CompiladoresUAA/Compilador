@@ -191,8 +191,10 @@ int getNum (void)
     if (ch == '.') {
         getCh();
         int decimalPart = 0;
+        int potencia = 0;
         while (isdigit(ch))
         {
+            potencia = potencia + 1;
             decimalPart = decimalPart * 10 + (ch - '0');
             getCh();
         }
@@ -200,7 +202,8 @@ int getNum (void)
         itoa(decimalPart, numberString, 10);
         float wrapper = decimalPart;
         int length = strlen(numberString) * -1;
-        term = term + wrapper * pow(10, length);
+        potencia = potencia * -1;
+        term = term + wrapper * pow(10, potencia);
         clonedNum.type = 'f';
         clonedNum.num.valuef = num + (term * sign);
 

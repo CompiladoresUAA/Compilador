@@ -13,7 +13,7 @@ def genStmt(tree:TreeNode):
             emitComment("-> if")
         p1 = tree.child[0]
         p2 = tree.child[1]
-        p3 = tree.child[2]
+        p3:TreeNode = tree.child[2]
         
         cGen(p1)
         savedLoc1 = emitSkip(1)
@@ -26,7 +26,9 @@ def genStmt(tree:TreeNode):
         emitBackup(savedLoc1)
         emitRM_Abs("JEQ", ac, currentLoc, "if: jmp to else")
         emitRestore()
-        
+        if p3 != None:
+            print(f"kind {p3.kind} kindNode {p3.getNodeKind()}")
+            p3 = p3.child[0]
         cGen(p3)
         currentLoc = emitSkip(0)
         emitBackup(savedLoc2)
