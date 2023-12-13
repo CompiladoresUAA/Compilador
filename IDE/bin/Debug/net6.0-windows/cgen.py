@@ -59,9 +59,11 @@ def genStmt(tree:TreeNode):
         cGen(p1)
         saveLoc2 = emitSkip(1)
         cGen(p2)
+        cGen(p1)
         emitRM_Abs("JNE", ac, savedLoc1, "while: jmp back to exp")
         currentLoc = emitSkip(0)
         emitBackup(saveLoc2)
+        
         emitRM_Abs("JEQ", ac, currentLoc, "while: false")
         emitRestore()
 
